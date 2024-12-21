@@ -7,17 +7,15 @@ pacotes <- c(
   "tidyverse",
   # Customização do plot
   "scales",
+  "patchwork",
   # Temas para gráficos
   "beautyxtrar",
   # Fontes e tabelas
   "extrafont",
+  "kableExtra",
+  "webshot",
   # Teoria dos Jogos
-  "rgamer",
-  # Econometria
-  "irr",
-  "car",
-  "MASS",
-  "forecast"
+  "rgamer"
 )
 
 # Verificar quais pacotes já estão instalados

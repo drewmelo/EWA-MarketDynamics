@@ -41,7 +41,22 @@ s_matriz_bsg <- rgamer::solve_nfg(matriz_bsg, mark_br = T)
 
 s_matriz_meg <- rgamer::solve_nfg(matriz_meg, mark_br = T)
 
-### SIMULAÇÃO DOS DADOS -------------------------------------------------------
+# Exportando os resultados (/tabelas) ------------------------------------------
+
+# Salvar em um arquivo HTML temporário
+save_kable(s_matriz_bsg$table, file = "tabelas/tabela_1.html")
+
+save_kable(s_matriz_meg$table, file = "tabelas/tabela_2.html")
+
+# Salvar como PNG
+webshot("tabelas/tabela_1.html", file = "tabelas/tabela_1.png",
+        vwidth = 435, vheight = 176)
+
+webshot("tabelas/tabela_2.html", file = "tabelas/tabela_2.png",
+        vwidth = 435, vheight = 176)
+
+
+### SIMULAÇÃO DOS DADOS --------------------------------------------------------
 
 # Simulando aprendizado de jogo com os modelos EWA, RL e BL --------------------
 
@@ -72,8 +87,8 @@ for (learning_type in names(learning_types)) {
     # Simulação para a matriz BSG
     result <- sim_learning(
       matriz_bsg,
-      n_samples = 500,
-      n_periods = 500,
+      n_samples = 1000,
+      n_periods = 1000,
       type = config$type,
       lambda = lambda_value,
       delta = config$delta,
@@ -103,8 +118,8 @@ for (learning_type in names(learning_types)) {
     # Simulação para a matriz MEG
     result <- sim_learning(
       matriz_meg,
-      n_samples = 500,
-      n_periods = 500,
+      n_samples = 1000,
+      n_periods = 1000,
       type = config$type,
       lambda = lambda_value,
       delta = config$delta,
@@ -121,3 +136,15 @@ for (learning_type in names(learning_types)) {
 
 # Carregando o script para extração e processamento dos dados simulados
 source("scripts/extração_processamento.R")
+
+### EXPORTANDO AS SIMULAÇÕES --------------------------------------------------
+saveRDS(combined_results_bsg, "dados/simulacao_bsg.rds")
+
+saveRDS(combined_results_meg, "dados/simulacao_meg.rds")
+
+combined_results_bsg <- readRDS("dados/simulacao_bsg.rds")
+
+combined_results_meg <- readRDS("dados/simulacao_meg.rds")
+
+
+
