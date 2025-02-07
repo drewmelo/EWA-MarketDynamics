@@ -8,6 +8,7 @@ pacotes <- c(
   # Customização do plot
   "scales",
   "patchwork",
+  "paletteer",
   # Temas para gráficos
   "beautyxtrar",
   # Fontes e tabelas

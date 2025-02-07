@@ -87,8 +87,8 @@ for (learning_type in names(learning_types)) {
     # Simulação para a matriz BSG
     result <- sim_learning(
       matriz_bsg,
-      n_samples = 1000,
-      n_periods = 1000,
+      n_samples = 500,
+      n_periods = 500,
       type = config$type,
       lambda = lambda_value,
       delta = config$delta,
@@ -118,8 +118,8 @@ for (learning_type in names(learning_types)) {
     # Simulação para a matriz MEG
     result <- sim_learning(
       matriz_meg,
-      n_samples = 1000,
-      n_periods = 1000,
+      n_samples = 500,
+      n_periods = 500,
       type = config$type,
       lambda = lambda_value,
       delta = config$delta,
@@ -138,13 +138,6 @@ for (learning_type in names(learning_types)) {
 source("scripts/extração_processamento.R")
 
 ### EXPORTANDO AS SIMULAÇÕES --------------------------------------------------
-saveRDS(combined_results_bsg, "dados/simulacao_bsg.rds")
-
-saveRDS(combined_results_meg, "dados/simulacao_meg.rds")
-
-combined_results_bsg <- readRDS("dados/simulacao_bsg.rds")
-
-combined_results_meg <- readRDS("dados/simulacao_meg.rds")
 
 
 
