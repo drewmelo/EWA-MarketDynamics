@@ -70,11 +70,13 @@ learning_types <- list(
 )
 
 ## MATRIZ 1 - BSG --------------------------------------------------------------
+
+set.seed(07-02-2025)
 # Inicializando lista de resultados para a matriz BSG
+
 results_bsg <- list()
 
 # Iterando sobre os tipos de aprendizado
-set.seed(21-08-2024)
 for (learning_type in names(learning_types)) {
   # Configurando os parâmetros do tipo de aprendizado
   config <- learning_types[[learning_type]]
