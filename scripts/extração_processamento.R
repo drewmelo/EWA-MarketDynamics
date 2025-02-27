@@ -46,7 +46,7 @@ bsg_df <- bind_rows(combined_results_bsg) |>
   rename(
     amostra = 1, periodo = 2, jogador = 3, estrategia_escolhida = 4
   ) |>
-  mutate(type = factor(type, levels = c("ewa", "rl", "bl"))) |>
+  mutate(type = factor(type, levels = c("EWA", "RL", "BL"))) |>
   relocate(type, sim_id, .before = amostra) |>
   arrange(sim_id, type, amostra, periodo)
 
@@ -98,6 +98,6 @@ meg_df <- bind_rows(combined_results_meg) |>
   rename(
     amostra = 1, periodo = 2, jogador = 3, estrategia_escolhida = 4
   ) |>
-  mutate(type = factor(type, levels = c("ewa", "rl", "bl"))) |>
+  mutate(type = factor(type, levels = c("EWA", "RL", "BL"))) |>
   relocate(type, sim_id, .before = amostra) |>
   arrange(sim_id, type, amostra, periodo)

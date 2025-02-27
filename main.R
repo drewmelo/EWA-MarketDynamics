@@ -64,9 +64,9 @@ lambda_values <- seq(0.1, 1, by = 0.1) # Variação do parâmetro lambda
 
 # Configurações para cada tipo de aprendizado
 learning_types <- list(
-  ewa = list(type = "EWA", delta = 0.75, rho = 0.31, phi = 0.62),
-  rl = list(type = "reinforcement", delta = 0, rho = 0, phi = 1),
-  bl = list(type = "belief", delta = 1, rho = 1, phi = 1)
+  EWA = list(type = "EWA", delta = 0.75, rho = 0.31, phi = 0.62),
+  RL = list(type = "reinforcement", delta = 0, rho = 0, phi = 1),
+  BL = list(type = "belief", delta = 1, rho = 1, phi = 1)
 )
 
 ## MATRIZ 1 - BSG --------------------------------------------------------------
@@ -138,6 +138,25 @@ for (learning_type in names(learning_types)) {
 
 # Carregando o script para extração e processamento dos dados simulados
 source("scripts/extração_processamento.R")
+
+# Manipulando os dados (pequenas alterações)
+bsg_df <- bsg_df |>
+  mutate(lambda = factor(sim_id, levels = 1:10, labels = paste("λ = ",
+                                                               str_replace(lambda_values,
+                                                                           "\\.", ",")
+                                                         )
+                  ),
+  ) |>
+  relocate(lambda, .after = sim_id)
+
+meg_df <- meg_df |>
+  mutate(lambda = factor(sim_id, levels = 1:10, labels = paste("λ = ",
+                                                               str_replace(lambda_values,
+                                                                           "\\.", ",")
+                                                         )
+                  )
+  ) |>
+  relocate(lambda, .after = sim_id)
 
 ### EXPORTANDO AS SIMULAÇÕES --------------------------------------------------
 

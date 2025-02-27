@@ -2,7 +2,7 @@
 
 # Gráficos para BSG
 bsg_p1 <- prop_bsg |>
-  dplyr::filter(type == "ewa" & sim_id == 3) |>
+  dplyr::filter(type == "EWA" & sim_id == 3) |>
   ggplot2::ggplot(ggplot2::aes(periodo, prop, col = estrategias)) +
   ggplot2::geom_line() +
   ggplot2::scale_y_continuous(limits = c(0, 1),
@@ -21,7 +21,7 @@ bsg_p1 <- prop_bsg |>
   ggplot2::guides(col = ggplot2::guide_legend(override.aes = list(linewidth = 1.5)))
 
 bsg_p2 <- prop_bsg |>
-  dplyr::filter(type == "rl" & sim_id == 3) |>
+  dplyr::filter(type == "RL" & sim_id == 3) |>
   ggplot2::ggplot(ggplot2::aes(periodo, prop, col = estrategias)) +
   ggplot2::geom_line() +
   ggplot2::scale_y_continuous(limits = c(0, 1),
@@ -40,7 +40,7 @@ bsg_p2 <- prop_bsg |>
   ggplot2::guides(col = ggplot2::guide_legend(override.aes = list(linewidth = 1.5)))
 
 bsg_p3 <- prop_bsg |>
-  dplyr::filter(type == "bl" & sim_id == 3) |>
+  dplyr::filter(type == "BL" & sim_id == 3) |>
   ggplot2::ggplot(ggplot2::aes(periodo, prop, col = estrategias)) +
   ggplot2::geom_line() +
   ggplot2::scale_y_continuous(limits = c(0, 1),
@@ -60,7 +60,7 @@ bsg_p3 <- prop_bsg |>
 
 # Gráficos para MEG
 meg_p1 <- prop_meg |>
-  dplyr::filter(type == "ewa" & sim_id == 3) |>
+  dplyr::filter(type == "EWA" & sim_id == 3) |>
   ggplot2::ggplot(ggplot2::aes(periodo, prop, col = estrategias)) +
   ggplot2::geom_line() +
   ggplot2::scale_y_continuous(limits = c(0, 1),
@@ -79,7 +79,7 @@ meg_p1 <- prop_meg |>
   ggplot2::guides(col = ggplot2::guide_legend(override.aes = list(linewidth = 1.5)))
 
 meg_p2 <- prop_meg |>
-  dplyr::filter(type == "rl" & sim_id == 3) |>
+  dplyr::filter(type == "RL" & sim_id == 3) |>
   ggplot2::ggplot(ggplot2::aes(periodo, prop, col = estrategias)) +
   ggplot2::geom_line() +
   ggplot2::scale_y_continuous(limits = c(0, 1),
@@ -98,7 +98,7 @@ meg_p2 <- prop_meg |>
   ggplot2::guides(col = ggplot2::guide_legend(override.aes = list(linewidth = 1.5)))
 
 meg_p3 <- prop_meg |>
-  dplyr::filter(type == "bl" & sim_id == 3) |>
+  dplyr::filter(type == "BL" & sim_id == 3) |>
   ggplot2::ggplot(ggplot2::aes(periodo, prop, col = estrategias)) +
   ggplot2::geom_line() +
   ggplot2::scale_y_continuous(limits = c(0, 1),
