@@ -1,4 +1,4 @@
-## PAYOFFS DA MATRIZ 1 -----------------------------------------------------
+### ===================== PAYOFFS DA MATRIZ 1 (BSG) ============================
 
 # Definir o custo de produção globalmente
 c <- 25
@@ -27,22 +27,20 @@ func_payoff1 <- function(preco_vendedor, estrategia_comprador) {
   return(payoff)
 }
 
-
-
 # Função para o payoff do Comprador
 func_payoff2 <- function(preco_vendedor, estrategia_comprador) {
   # Definir um intervalo razoável para V
-  v_min <- c + sample(1:10, 1) # Um valor mínimo superior ao custo
+  v_min <- c + base::sample(1:10, 1) # Um valor mínimo superior ao custo
   v_max <- 45     # Um valor máximo razoável
 
   # Gerar um valor aleatório para o comprador dentro do intervalo
-  v <- runif(1, min = v_min, max = v_max)
+  v <- stats::runif(1, min = v_min, max = v_max)
 
   # Inicializar a variável de payoff
   payoff <- 0
 
   if (estrategia_comprador == "Aceitar") {
-    if (preco_vendedor == 45|| preco_vendedor == "Preço Alto") {
+    if (preco_vendedor == 45 || preco_vendedor == "Preço Alto") {
       p <- 45 # Preço Alto
     } else if (preco_vendedor == 35 || preco_vendedor == "Preço Baixo") {
       p <- 35  # Preço Baixo
@@ -50,7 +48,7 @@ func_payoff2 <- function(preco_vendedor, estrategia_comprador) {
       p <- 0  # Preço não reconhecido
     }
 
-    payoff <- round(v - p, 2)  # Comprador aceita o preço
+    payoff <- base::round(v - p, 2)  # Comprador aceita o preço
   }
 
   return(payoff)

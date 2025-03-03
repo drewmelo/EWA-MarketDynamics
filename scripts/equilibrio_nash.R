@@ -30,7 +30,7 @@ p3 <- ggplot2::ggplot(s_matriz_bsg$br_plot$data, ggplot2::aes(col = player)) +
     y = "Probabilidade do Comprador Escolher Aceitar (p)",
     col = NULL
   ) +
-  theme_xtra(base_family = "Times New Roman", base_size = 18)
+  beautyxtrar::theme_xtra(base_family = "Times New Roman", base_size = 18)
 
 # MEG
 p4 <- ggplot2::ggplot(s_matriz_meg$br_plot$data, ggplot2::aes(col = player)) +
@@ -60,19 +60,4 @@ p4 <- ggplot2::ggplot(s_matriz_meg$br_plot$data, ggplot2::aes(col = player)) +
     y = "Probabilidade da Empresa B Não Entrar (p)",
     col = NULL
   ) +
-  theme_xtra(base_family = "Times New Roman", base_size = 18)
-
-
-## EXPORTAÇÃO DAS FIGURAS ------------------------------------------------------
-
-# Figura 3 (BSG)
-ggplot2::ggsave(
-  plot = p3, filename = "figuras/figura_3.pdf",
-  width = 10.81, height = 7.75, units = "in", device = cairo_pdf
-)
-
-# Figura 4 (MEG)
-ggplot2::ggsave(
-  plot = p4, filename = "figuras/figura_4.pdf",
-  width = 10.81, height = 7.75, units = "in", device = cairo_pdf
-)
+  beautyxtrar::theme_xtra(base_family = "Times New Roman", base_size = 18)
