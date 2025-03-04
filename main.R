@@ -45,7 +45,7 @@ matriz_bsg <- rgamer::normal_form(
   s2 = c("Aceitar", "Rejeitar"),  # Estratégias do comprador
   payoffs1 = func_payoff1,
   payoffs2 = func_payoff2,
-  discretize = TRUE
+  discretize = T
 )
 
 # Criando o jogo Market Entry Game (MEG)
@@ -58,9 +58,18 @@ matriz_meg <- rgamer::normal_form(
 )
 
 # Resolvendo o jogo para encontrar o equilíbrio de Nash
-s_matriz_bsg <- rgamer::solve_nfg(matriz_bsg, mark_br = TRUE)
+s_matriz_bsg <- rgamer::solve_nfg(matriz_bsg, mark_br = T)
 
-s_matriz_meg <- rgamer::solve_nfg(matriz_meg, mark_br = TRUE)
+s_matriz_meg <- rgamer::solve_nfg(matriz_meg, mark_br = T)
+
+# Verificando os resultados diretamente
+ne_m1 |>
+  group_by(NE) |>
+  reframe(n = n()) |>
+  mutate(freq = n / sum(n)) |>
+  filter(n == max(n)) |>
+  (\(df) cat("Durante esta reprodutibilidade, em", i, "iterações, a frequência relativa do NE",
+             df$NE, "no BSG é", paste0(round(df$freq * 100, 2), "%"), "\n"))()
 
 # Carregando script do equilíbrio de Nash (plotagem)
 base::source("scripts/equilibrio_nash.R")
@@ -234,19 +243,16 @@ base::lapply(sim_ids, function(i) {
 })
 
 # Figuras 18 e 19 (análise da distribuição dos dados -- histograma)
-n_m1 <- base::nrow(bsg_df)
-
-n_m2 <- base::nrow(meg_df)
 
 plot_histogram(
   data = bsg_df,
-  bins = base::round(1 + 3.322 * log(n_m1)),
+  bins = grDevices::nclass.Sturges(bsg_df$probabilidade),
   file_name = "figuras/figura_18.pdf"
 )
 
 plot_histogram(
   data = meg_df,
-  bins = base::round(1 + 3.322 * log(n_m2)),
+  bins = grDevices::nclass.Sturges(meg_df$probabilidade),
   file_name = "figuras/figura_19.pdf"
 )
 
@@ -264,13 +270,15 @@ plot_correlation(
 
 
 # Figura 21 (compilação dos Equilíbrios de Nash no BSG) -- APÊNDICE A
-ggplot2::ggsave(plot = p22, filename = "figuras/figura_21.pdf",
+ggplot2::ggsave(plot = p22,
+                filename = "figuras/figura_21.pdf",
                 width = 10.81, height = 7.75, units = "in",
                 device = cairo_pdf)
 
 # Figura 22 (plotagem dos dados das tabelas (8 e 9) de contigência)
 
-ggplot2::ggsave(plot = contigencia$plots$combined_plot, filename = "figuras/figura_22.pdf",
+ggplot2::ggsave(plot = contigencia$plots$combined_plot,
+                filename = "figuras/figura_22.pdf",
                 width = 14, height = 9.02, units = "in",
                 device = cairo_pdf)
 
@@ -283,7 +291,7 @@ export_game_table(
   title = "Tabela 1 - Matriz de ganhos do jogo BSG",
   file = "tabelas/tabela_1.pdf",
   height = 7, width = 10,  # Ajuste o tamanho do PDF
-  overwrite = TRUE
+  overwrite = T
 )
 
 export_game_table(
@@ -291,7 +299,7 @@ export_game_table(
   title = "Tabela 2 - Matriz de ganhos do jogo MEG",
   file = "tabelas/tabela_2.pdf",
   height = 7, width = 10,
-  overwrite = TRUE
+  overwrite = T
 )
 
 # 🔹 Tabelas 3 a 5 (medidas resumo dos dados)
@@ -300,31 +308,31 @@ plot_table(resumo_dados$tab_3,
            footnote = "A presença 'm1' nas colunas implica no jogo BSG, assim como 'm2' em outras colunas são do jogo MEG.",
            file = "tabelas/tabela_3.pdf",
            height = 4, width = 12, font_size = 20,
-           overwrite = TRUE)
+           overwrite = T)
 
 plot_table(resumo_dados$tab_4,
            title = "Table 4 - Summary Measures of BSG and MEG in the RL Learning Model",
            footnote = "A presença 'm1' nas colunas implica no jogo BSG, assim como 'm2' em outras colunas são do jogo MEG.",
            file = "tabelas/tabela_4.pdf",
            height = 4, width = 12, font_size = 20,
-           overwrite = TRUE)
+           overwrite = T)
 
 plot_table(resumo_dados$tab_5,
            title = "Table 5 - Summary Measures of BSG and MEG in the BL Learning Model",
            footnote = "A presença 'm1' nas colunas implica no jogo BSG, assim como 'm2' em outras colunas são do jogo MEG.",
            file = "tabelas/tabela_5.pdf",
            height = 4, width = 12, font_size = 20,
-           overwrite = TRUE)
+           overwrite = T)
 
 # 🔹 Tabelas 6 e 7 (probabilidade média)
 plot_table(resumo_dados$tab_6,
            title = "Table 6 - Average Probability During the BSG Game",
            file = "tabelas/tabela_6.pdf",
            height = 8, width = 10, font_size = 17,
-           overwrite = TRUE)
+           overwrite = T)
 
 plot_table(resumo_dados$tab_7,
            title = "Table 7 - Average Probability During the MEG Game",
            file = "tabelas/tabela_7.pdf",
            height = 8, width = 10, font_size = 17,
-           overwrite = TRUE)
+           overwrite = T)
