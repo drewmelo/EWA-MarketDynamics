@@ -33,10 +33,6 @@ for (i in 1:100) {
 
 ne_m1 <- base::do.call(rbind, lista_dfs)
 
-# Verificando os resultados
-ne_m1 |>
-  dplyr::filter(NE == "[Preço Alto, Rejeitar]")
-
 # Concatenar todos os elementos dentro de cada lista como uma string única
 ne_m1$NE <- base::sapply(ne_m1$NE, function(x) base::paste(x, collapse = ", "))
 

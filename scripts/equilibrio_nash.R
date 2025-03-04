@@ -3,7 +3,8 @@
 ## GRÁFICOS --------------------------------------------------------------------
 
 # BSG
-p3 <- ggplot2::ggplot(s_matriz_bsg$br_plot$data, ggplot2::aes(col = player)) +
+p3 <- ggplot2::ggplot(s_matriz_bsg$br_plot$data, ggplot2::aes(col = factor(player,
+                                                                           levels = c("Vendedor", "Comprador")))) +
   ggplot2::geom_path(
     data = s_matriz_bsg$br_plot$data |> dplyr::filter(player == "Vendedor"),
     ggplot2::aes(x = xs, y = ys), linewidth = 3, lineend = "round", linejoin = "mitre"
@@ -14,11 +15,11 @@ p3 <- ggplot2::ggplot(s_matriz_bsg$br_plot$data, ggplot2::aes(col = player)) +
   ) +
   ggplot2::geom_line(
     data = s_matriz_bsg$br_plot$data |> dplyr::filter(player == "Comprador"),
-    ggplot2::aes(x = xe, y = ye), linewidth = 1.2
+    ggplot2::aes(x = xe, y = ye), linewidth = 1.2, linetype = "dotted"
   ) +
   ggplot2::geom_line(
     data = s_matriz_bsg$br_plot$data |> dplyr::filter(player == "Comprador"),
-    ggplot2::aes(x = xs, y = ys), linewidth = 1.2
+    ggplot2::aes(x = xs, y = ys), linewidth = 1.2, linetype = "dotted"
   ) +
   ggplot2::scale_x_continuous(labels = scales::label_comma(big.mark = ".",
                                                            decimal.mark = ",")) +
@@ -44,11 +45,11 @@ p4 <- ggplot2::ggplot(s_matriz_meg$br_plot$data, ggplot2::aes(col = player)) +
   ) +
   ggplot2::geom_line(
     data = s_matriz_meg$br_plot$data |> dplyr::filter(player == "Empresa B"),
-    ggplot2::aes(x = xe, y = ye), linewidth = 1.2
+    ggplot2::aes(x = xe, y = ye), linewidth = 1.2, linetype = "dotted"
   ) +
   ggplot2::geom_line(
     data = s_matriz_meg$br_plot$data |> dplyr::filter(player == "Empresa B"),
-    ggplot2::aes(x = xs, y = ys), linewidth = 1.2
+    ggplot2::aes(x = xs, y = ys), linewidth = 1.2, linetype = "dotted"
   ) +
   ggplot2::scale_x_continuous(labels = scales::label_comma(big.mark = ".",
                                                            decimal.mark = ",")) +
