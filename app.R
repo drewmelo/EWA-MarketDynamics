@@ -1,4 +1,6 @@
-# app.R (TOPO DO ARQUIVO)
+# app.R — versão “safe” para shinyapps.io e GitHub Pages (Shinylive)
+
+# ---- Pacotes base (sem showtext/sysfonts aqui) ----
 library(shiny)
 library(bslib)
 library(ggplot2)
@@ -7,12 +9,57 @@ library(scales)
 library(tibble)
 library(withr)
 library(readr)
-library(showtext)
-library(sysfonts)
 
-source("main.R")  # depois dos library()
+is_shinylive <- isTRUE(getOption("shinylive.active"))
+MAX_SAMPLES  <- if (is_shinylive) 200 else 2000
+MAX_PERIODS  <- if (is_shinylive) 50  else 500
 
-# ---------- helpers visuais ----------
+# na UI:
+numericInput("n_samples", "Amostras (n)", value = 10, min = 1, max = MAX_SAMPLES, step = 1)
+numericInput("n_periods", "Períodos",     value = 12, min = 1, max = MAX_PERIODS,  step = 1)
+
+# ---- Fontes: só fora do Shinylive ----
+# Usa showtext/sysfonts apenas em shinyapps.io / local nativo.
+gg_family <- NULL
+if (!is_shinylive) {
+  # Carrega namespaces se disponíveis (sem exigir em Shinylive)
+  have_sysfonts <- requireNamespace("sysfonts", quietly = TRUE)
+  have_showtext  <- requireNamespace("showtext",  quietly = TRUE)
+
+  add_font_safe <- function(family, regular, bold = NULL, italic = NULL, bolditalic = NULL) {
+    if (!have_sysfonts || !have_showtext) return(invisible(FALSE))
+    if (!file.exists(regular)) {
+      message("Fonte não encontrada: ", regular)
+      return(invisible(FALSE))
+    }
+    sysfonts::font_add(family,
+      regular = regular, bold = bold, italic = italic, bolditalic = bolditalic
+    )
+    showtext::showtext_auto(enable = TRUE)
+    TRUE
+  }
+
+  if (add_font_safe(
+    family     = "timesnewroman",
+    regular    = file.path("assets","fontes","timesnewroman-regular.ttf"),
+    bold       = file.path("assets","fontes","timesnewroman-bold.ttf"),
+    italic     = file.path("assets","fontes","timesnewroman-italic.ttf"),
+    bolditalic = file.path("assets","fontes","timesnewroman-bolditalic.ttf")
+  )) {
+    gg_family <- "timesnewroman"
+    message("✔️ 'timesnewroman' registrada via showtext/sysfonts.")
+  } else {
+    message("ℹ️ Sem fontes personalizadas (seguindo com padrão do sistema).")
+  }
+} else {
+  message("Shinylive ativo: pulando showtext/sysfonts (use fontes web na UI).")
+}
+
+# ---- Seu código auxiliar/global (objetos, funções, dados, etc.) ----
+# Deixe source() depois dos pacotes e do bloco de fontes
+source("main.R")
+
+# --- helpers visuais (ok manter acima) ---
 theme_safe <- function(...) {
   if (requireNamespace("beautyxtrar", quietly = TRUE)) beautyxtrar::theme_xtra(...)
   else theme_minimal(...)
@@ -25,10 +72,10 @@ order_strats <- function(df, matrix_game = NULL) {
       matrix_game$strategy$s2[[1]], matrix_game$strategy$s2[[2]]
     ))
   } else ord <- unique(df$estrategias)
-  df %>% mutate(estrategias = factor(as.character(estrategias), levels = ord, ordered = TRUE))
+  dplyr::mutate(df, estrategias = factor(as.character(estrategias), levels = ord, ordered = TRUE))
 }
 
-# ---------- padronização + proporção ----------
+# --- padronização + proporção (idem) ---
 .standardize_names <- function(df_long, model_tag) {
   rn <- tolower(names(df_long))
   rename_if <- function(target, alts){
@@ -50,37 +97,18 @@ order_strats <- function(df, matrix_game = NULL) {
 standardize_and_prop <- function(df_long, model_tag) {
   df_long <- .standardize_names(df_long, model_tag)
   need_cols <- c("estrategias","estrategia_escolhida","jogador","periodo")
-  validate(need(all(need_cols %in% names(df_long)),
-                sprintf("Não encontrei colunas para derivar proporção: preciso de %s.",
-                        paste0("'", need_cols, "'", collapse = ", "))))
+  shiny::validate(shiny::need(all(need_cols %in% names(df_long)),
+    sprintf("Não encontrei colunas para derivar proporção: preciso de %s.",
+            paste0("'", need_cols, "'", collapse = ", "))))
   df_prop <- df_long %>%
-    mutate(hit = as.integer(estrategia_escolhida == estrategias)) %>%
-    group_by(type, sim_id, jogador, periodo, estrategias) %>%
-    summarise(prop = mean(hit, na.rm = TRUE), .groups = "drop") %>%
-    mutate(prop = pmin(pmax(prop, 0), 1))
+    dplyr::mutate(hit = as.integer(estrategia_escolhida == estrategias)) %>%
+    dplyr::group_by(type, sim_id, jogador, periodo, estrategias) %>%
+    dplyr::summarise(prop = mean(hit, na.rm = TRUE), .groups = "drop") %>%
+    dplyr::mutate(prop = pmin(pmax(prop, 0), 1))
   list(long = df_long, prop = df_prop)
 }
 
-plot_model <- function(df_prop, model_tag, titulo, palette = NULL) {
-  d <- df_prop
-  if ("type" %in% names(d) && (model_tag %in% unique(d$type))) d <- d %>% filter(type == !!model_tag)
-  d <- d %>% filter(!is.na(prop), !is.na(periodo))
-  validate(need(nrow(d) > 0, "Sem dados para plotar."))
-
-  p <- d %>%
-    ggplot(aes(periodo, prop, col = estrategias, group = interaction(estrategias, jogador))) +
-    geom_line(linewidth = 1) +
-    scale_y_continuous(limits = c(0,1), labels = label_comma(decimal.mark=",", big.mark=".")) +
-    scale_x_continuous(breaks = breaks_pretty(n = 4)) +
-    facet_wrap(~jogador) +
-    labs(x="Período", y="Proporção", col="Estratégias", title=titulo) +
-    theme_safe(base_size = 14) +
-    guides(col = guide_legend(override.aes = list(linewidth = 1.2)))
-  if (!is.null(palette)) p <- p + scale_color_manual(values = palette)
-  p
-}
-
-# Roda simulação -> usa build_simulation_df -> devolve lista {long, prop}
+# --- AQUI: defina run_sim ANTES do server ---
 run_sim <- function(which_game = c("BSG","MEG"), model_tag = "EWA",
                     lambda = 0.5, n_samples = 10, n_periods = 12, seed = NULL) {
   which_game <- match.arg(which_game)
@@ -101,21 +129,48 @@ run_sim <- function(which_game = c("BSG","MEG"), model_tag = "EWA",
     n_samples      = n_samples,
     n_periods      = n_periods
   )
-  res <- if (is.null(seed)) sim_call() else with_seed(as.integer(seed), sim_call())
+  res <- if (is.null(seed)) sim_call() else withr::with_seed(as.integer(seed), sim_call())
 
-  validate(need(exists("build_simulation_df"),
-                "build_simulation_df() não encontrada no main.R"))
+  shiny::validate(shiny::need(exists("build_simulation_df"),
+    "build_simulation_df() não encontrada no main.R"))
   df_long <- build_simulation_df(res, matriz = matriz, jogo = which_game)
 
-  # padroniza nomes, calcula prop e ordena estratégias
   out <- standardize_and_prop(df_long, model_tag)
   out$prop <- order_strats(out$prop, matriz)
   out
 }
 
+# opcional: fail-fast no start
+if (!exists("run_sim")) stop("run_sim não está carregada — verifique app.R/main.R")
+
+plot_model <- function(df_prop, model_tag, titulo, palette = NULL) {
+  d <- df_prop
+  if ("type" %in% names(d) && (model_tag %in% unique(d$type))) d <- d %>% filter(type == !!model_tag)
+  d <- d %>% filter(!is.na(prop), !is.na(periodo))
+  validate(need(nrow(d) > 0, "Sem dados para plotar."))
+
+  p <- d %>%
+    ggplot(aes(periodo, prop, col = estrategias, group = interaction(estrategias, jogador))) +
+    geom_line(linewidth = 1) +
+    scale_y_continuous(limits = c(0,1), labels = label_comma(decimal.mark=",", big.mark=".")) +
+    scale_x_continuous(breaks = breaks_pretty(n = 4)) +
+    facet_wrap(~jogador) +
+    labs(x="Período", y="Proporção", col="Estratégias", title=titulo) +
+    theme_safe(base_size = 14) +
+    theme(text = element_text(family = gg_family)) +
+    guides(col = guide_legend(override.aes = list(linewidth = 1.2)))
+  if (!is.null(palette)) p <- p + scale_color_manual(values = palette)
+  p
+}
+
 # =================== UI ===================
 ui <- page_fluid(
-  theme = bs_theme(bootswatch = "cosmo"),
+  theme = bs_theme(
+    bootswatch   = "cosmo",
+    # Fontes web seguras (funcionam no Shinylive/GitHub Pages)
+    base_font    = font_google("Inter"),
+    heading_font = font_google("Inter")
+  ),
   title = "EWA Market Dynamics — Shiny",
   layout_sidebar(
     sidebar = sidebar(
@@ -175,48 +230,21 @@ ui <- page_fluid(
         )
       )
     ),
-   card(
+    card(
       collapsible = TRUE,
       card_header("Sobre mim"),
       card_body(
         HTML('
           <div style="text-align:center; margin-top:8px; margin-bottom:4px;">
-            <!-- badges -->
-            <img src="https://camo.githubusercontent.com/fdbc0e6ca968e897469a3769f3c8af1b3b7c824be7ecc52c5c26116c9ae575f7/68747470733a2f2f72656c656173652d6261646765732d67656e657261746f722e76657263656c2e6170702f6170692f72656c65617365732e7376673f757365723d7475626f6e653234267265706f3d72656c656173652d6261646765732d67656e657261746f72266772616469656e743d3432353966372c386266616563"
-                alt="releases" style="height:20px;margin-right:6px;">
-            <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg"
-                alt="maintained" style="height:20px;">
+            <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="maintained" style="height:20px;">
           </div>
-
           <h4 style="text-align:center; margin-top:6px;">
             Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado:<br>
             uma aplicação de teoria dos jogos com Experience-Weighted Attraction
           </h4>
-
           <p style="text-align:center; margin-top:6px;">
-            Trabalho de Conclusão de Curso — <em>data</em><br>
-            <a href="https://github.com/othneildrew/Best-README-Template" target="_blank"><strong>Explore o documento »</strong></a> ·
-            <a href="https://github.com/othneildrew/Best-README-Template" target="_blank">Artigo do projeto</a> ·
-            <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md" target="_blank">Reportar bug</a> ·
-            <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md" target="_blank">Solicitar feature</a>
+            Trabalho de Conclusão de Curso — <em>data</em>
           </p>
-
-          <!-- autor -->
-          <div style="text-align:center; margin:18px 0 6px 0;">
-            <a href="https://medium.com/@andremelopix" target="_blank" style="text-decoration:none; color:inherit;">
-              <img src="https://avatars.githubusercontent.com/u/143213346?s=400&u=958912bd274eeaba08ce1ee6ba79ef60e701992a&v=4"
-                  alt="André V. P. de Melo" style="width:110px;height:110px;border-radius:50%;object-fit:cover;">
-              <div style="margin-top:8px;"><strong>André V. P. de Melo</strong></div>
-            </a>
-          </div>
-
-          <!-- tecnologias -->
-          <div style="text-align:center; margin-top:10px;">
-            <span style="display:inline-block; margin:6px 10px;">
-              <img src="https://download.logo.wine/logo/R_(programming_language)/R_(programming_language)-Logo.wine.png"
-                  alt="R" style="height:42px;">
-            </span>
-          </div>
         ')
       )
     )
@@ -325,11 +353,9 @@ server <- function(input, output, session) {
     validate(need(!is.null(rx), "Execute uma simulação (Re-simular) antes de baixar."))
     df <- rx[[kind]]
     validate(need(!is.null(df) && nrow(df) > 0, "Sem dados para exportar."))
-    # Garante colunas informativas no arquivo
     if (kind == "prop") {
       df %>% arrange(jogador, estrategias, periodo)
     } else {
-      # long: mantém colunas principais; se existir amostra, preserva
       keep <- intersect(c("type","sim_id","amostra","jogador","periodo",
                           "estrategias","estrategia_escolhida"), names(df))
       df[, keep, drop = FALSE] %>% arrange(jogador, periodo)
@@ -344,7 +370,6 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       df <- .pick_df(input$dl_model, input$dl_game, input$dl_kind)
-      # readr::write_csv evita problemas de encoding/sep
       readr::write_csv(df, file)
     }
   )
