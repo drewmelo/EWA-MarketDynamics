@@ -1,3 +1,5 @@
+# app.R
+source("main.R")  # (antigo main.R refatorado: pacotes, fontes, funções, dados simulados)
 
 # ---------- helpers visuais ----------
 theme_safe <- function(...) {

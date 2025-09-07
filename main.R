@@ -478,5 +478,3 @@ write_probtex(
 # 5) UI (page_fluid / layout_sidebar / cards ...)
 # 6) server <- function(input, output, session) { ... }
 # 7) shinyApp(ui, server)
-
-base::source("app.R")
