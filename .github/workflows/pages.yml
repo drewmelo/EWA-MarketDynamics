@@ -18,15 +18,11 @@ jobs:
           use-public-rspm: true
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # (opcional) garantir CRAN explícito
-      - name: Force CRAN mirror
-        run: echo 'options(repos=c(CRAN="https://packagemanager.posit.co/cran/latest"))' >> ~/.Rprofile
-
-      # ✅ Instala e exporta no MESMO passo
+      # Instala e exporta no MESMO passo, com repos explícito
       - name: Install + Export Shinylive
         run: |
-          R -q -e 'if (!requireNamespace("shinylive", quietly=TRUE)) install.packages("shinylive")'
-          R -q -e 'shinylive::export(appdir=".", destdir="docs", wasm_packages=FALSE)'
+          R -q -e "install.packages('shinylive', repos='https://packagemanager.posit.co/cran/latest')"
+          R -q -e "shinylive::export(appdir='.', destdir='docs', wasm_packages=FALSE)"
 
       - name: Commit docs if changed
         run: |
