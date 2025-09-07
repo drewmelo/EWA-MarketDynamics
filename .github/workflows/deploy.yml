@@ -2,49 +2,62 @@ name: Deploy to shinyapps.io
 
 on:
   push:
-    branches: [ "master" ]   # ajuste se sua default branch for 'main'
+    branches: [ "master" ]
     tags:
-      - 'v*'                 # v1.0.0, v1.2.3 etc.
+      - 'v*'
 
 jobs:
   deploy:
-    # roda se o commit tiver "deploy:" OU se for push de tag v*
     if: contains(github.event.head_commit.message, 'deploy:') || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: r-lib/actions/setup-r@v2
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # (opcional) espelho CRAN mais estável
+      # CRAN espelho estável
       - name: Set CRAN mirror
         run: |
           echo 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/latest"))' >> ~/.Rprofile
 
+      # pak + rsconnect
       - name: Install pak
-        run: |
-          R -q -e 'install.packages("pak", repos="https://r-lib.github.io/p/pak/stable/")'
+        run: R -q -e 'install.packages("pak", repos="https://r-lib.github.io/p/pak/stable/")'
 
       - name: Install rsconnect
         run: |
           R -q -e 'pak::pak("rsconnect")'
           R -q -e 'if (!requireNamespace("rsconnect", quietly=TRUE)) stop("rsconnect not installed")'
 
+      # restaura renv e ATIVA na sessão
       - name: Restore deps with renv (if present)
+        env:
+          RENV_CONFIG_REPOS_OVERRIDE: https://packagemanager.posit.co/cran/latest
+          RENV_DOWNLOAD_METHOD: curl
         run: |
           R -q -e 'if (!requireNamespace("renv", quietly=TRUE)) install.packages("renv")'
-          R -q -e 'if (file.exists("renv.lock")) renv::restore()'
+          R -q -e 'if (file.exists("renv.lock")) { source("renv/activate.R"); renv::consent(provided=TRUE); renv::restore(prompt=FALSE, clean=TRUE); renv::status() } else { message("Sem renv.lock; seguindo...") }'
 
-      - name: Check dependency detection
+      # DEBUG: mostre libs e verificação de shiny
+      - name: Check dependency detection (renv ACTIVATED)
         run: |
-          R -q -e 'deps <- rsconnect::appDependencies("."); print(deps); if (!"shiny" %in% deps$Package) stop("Manifest não detectou o pacote shiny")'
+          R -q -e 'source("renv/activate.R"); print(.libPaths()); deps <- rsconnect::appDependencies("."); print(deps); if (!"shiny" %in% deps$Package) stop("Manifest não detectou o pacote shiny")'
 
+      # DEBUG extra: escreva e exiba (parte do) manifest.json
+      - name: Emit manifest.json
+        run: |
+          R -q -e 'source("renv/activate.R"); rsconnect::writeManifest(appDir="."); cat(readLines("manifest.json"), sep="\n")'
+
+      # deploy (renv ACTIVATED)
       - name: Deploy
         env:
           SHINYAPPS_NAME:   ${{ secrets.SHINYAPPS_NAME }}
           SHINYAPPS_TOKEN:  ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+          # (opcional) PAT p/ pacotes GitHub (ex.: beautyxtrar); crie um secret GITHUB_PAT
+          GITHUB_PAT:       ${{ secrets.GITHUB_PAT }}
         run: |
-          R -q -e 'rsconnect::setAccountInfo(name=Sys.getenv("SHINYAPPS_NAME"), token=Sys.getenv("SHINYAPPS_TOKEN"), secret=Sys.getenv("SHINYAPPS_SECRET"))'
+          R -q -e 'source("renv/activate.R"); rsconnect::setAccountInfo(name=Sys.getenv("SHINYAPPS_NAME"), token=Sys.getenv("SHINYAPPS_TOKEN"), secret=Sys.getenv("SHINYAPPS_SECRET"))'
           R -q -e 'rsconnect::deployApp(appDir=".", appPrimaryDoc="app.R", appName="ewa-market-dynamics", server="shinyapps.io", forceUpdate=TRUE)'
