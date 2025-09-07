@@ -7,8 +7,16 @@ Depends:
     shiny,
     ggplot2
 Imports:
+    bslib,
     dplyr,
+    scales,
+    tibble,
+    withr,
     readr,
     showtext,
-    sysfonts
+    sysfonts,
+    rmarkdown,
+    knitr,
+    jsonlite,
+    htmltools
 Encoding: UTF-8

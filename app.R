@@ -1,7 +1,4 @@
-# app.R
-source("main.R")  # (antigo main.R refatorado: pacotes, fontes, funções, dados simulados)
-
-# --- Dependências explícitas para detecção do rsconnect ---
+# app.R (TOPO DO ARQUIVO)
 library(shiny)
 library(bslib)
 library(ggplot2)
@@ -12,11 +9,8 @@ library(withr)
 library(readr)
 library(showtext)
 library(sysfonts)
-# se usar mesmo:
-# library(tidyr); library(stringr); library(janitor); library(glue)
-# library(patchwork); library(paletteer); library(ggtext)
-# library(kableExtra); library(webshot); library(flextable); library(grid)
-# library(rmarkdown); library(knitr); library(jsonlite); library(htmltools)
+
+source("main.R")  # depois dos library()
 
 # ---------- helpers visuais ----------
 theme_safe <- function(...) {
