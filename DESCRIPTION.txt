@@ -1,0 +1,14 @@
+Package: ewa-market-dynamics
+Type: Shiny
+Title: EWA Market Dynamics
+Version: 0.0.1
+Depends:
+    R (>= 4.3),
+    shiny,
+    ggplot2
+Imports:
+    dplyr,
+    readr,
+    showtext,
+    sysfonts
+Encoding: UTF-8
