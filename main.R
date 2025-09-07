@@ -8,6 +8,10 @@
 # PACOTES A SEREM UTILIZADOS
 base::source("scripts/pacotes.R")
 
+fonte_base <- "timesnewroman"
+
+color_main <- c("#0B86CA", "#566876", "#9AADB2", "#B1283AFF")
+
 ## FUNÇÕES A ATIVAR -----------------------------------------------------------
 
 # Carregando funções auxiliares
@@ -24,6 +28,14 @@ base::source("scripts/funcoes/funcao_descritiva.R")
 
 # Carregando funções para plotagem das distribuições dos dados
 base::source("scripts/funcoes/funcao_dist_dados.R")
+
+# Carregando o script para extração e processamento dos dados simulados
+base::source("scripts/funcoes/funcao_processar_simulacoes.R")
+
+# Carregando função para simulações do parâmetro lambda de 0.1 a 1
+base::source("scripts/funcoes/funcao_sim_lambda.R")
+
+base::source("scripts/funcoes/funcao_latex.R")
 
 ## OUTROS SCRIPTS ADICIONAIS --------------------------------------------------
 
@@ -87,74 +99,35 @@ learning_types <- base::list(
   BL = base::list(type = "belief", delta = 1, rho = 1, phi = 1)
 )
 
+base::set.seed(07-02-2025)
+
 ## MATRIZ 1 - BSG --------------------------------------------------------------
 
-base::set.seed(07-02-2025)
-# Inicializando lista de resultados para a matriz BSG
-results_bsg <- base::list()
-
-# Iterando sobre os tipos de aprendizado
-for (learning_type in base::names(learning_types)) {
-  # Configurando os parâmetros do tipo de aprendizado
-  config <- learning_types[[learning_type]]
-  results_bsg[[learning_type]] <- base::list()
-
-  # Variando os valores de lambda
-  for (i in base::seq_along(lambda_values)) {
-    lambda_value <- lambda_values[i]
-
-    # Simulação para a matriz BSG
-    result <- sim_learning(
-      matriz_bsg,
-      n_samples = 500,
-      n_periods = 500,
-      type = config$type,
-      lambda = lambda_value,
-      delta = config$delta,
-      rho = config$rho,
-      phi = config$phi
-    )
-
-    # Armazenando resultados da simulação
-    results_bsg[[learning_type]][[i]] <- result
-  }
-}
+results_bsg <- sim_lambda(
+  matriz = matriz_bsg,
+  game_label = "BSG",
+  learning_types = learning_types,
+  lambda_values = lambda_values,
+  n_samples = 500,
+  n_periods = 500
+)
 
 ## MATRIZ 2 - MEG --------------------------------------------------------------
-# Inicializando lista de resultados para a matriz MEG
-results_meg <- base::list()
 
-# Iterando sobre os tipos de aprendizado
-for (learning_type in base::names(learning_types)) {
-  # Configurando os parâmetros do tipo de aprendizado
-  config <- learning_types[[learning_type]]
-  results_meg[[learning_type]] <- base::list()
-
-  # Variando os valores de lambda
-  for (i in base::seq_along(lambda_values)) {
-    lambda_value <- lambda_values[i]
-
-    # Simulação para a matriz MEG
-    result <- sim_learning(
-      matriz_meg,
-      n_samples = 500,
-      n_periods = 500,
-      type = config$type,
-      lambda = lambda_value,
-      delta = config$delta,
-      rho = config$rho,
-      phi = config$phi
-    )
-
-    # Armazenando resultados da simulação
-    results_meg[[learning_type]][[i]] <- result
-  }
-}
+results_meg <- sim_lambda(
+  matriz = matriz_meg,
+  game_label = "MEG",
+  learning_types = learning_types,
+  lambda_values = lambda_values,
+  n_samples = 500,
+  n_periods = 500
+)
 
 ### EXTRAÇÃO E PROCESSAMENTO --------------------------------------------------
 
-# Carregando o script para extração e processamento dos dados simulados
-base::source("scripts/extracao_processamento.R")
+bsg_df <- build_simulation_df(results_bsg, matriz_bsg, jogo = "BSG")
+
+meg_df <- build_simulation_df(results_meg, matriz_meg, jogo = "MEG")
 
 # Manipulando os dados (pequenas alterações)
 bsg_df <- bsg_df |>
@@ -176,7 +149,10 @@ meg_df <- meg_df |>
 ### VISUALIZAÇÃO DAS SIMULAÇÕES (PLOTS) ---------------------------------------
 
 # Criar a lista de plots usando um loop
-sim_ids <- 1:sim_id  # Lista de valores de sim_id (lambda de 0.1 a 1)
+sim_ids <- 1:ifelse( 
+                max(bsg_df$sim_id) == max(bsg_df$sim_id), # Lista de valores de sim_id (lambda de 0.1 a 1)
+                max(bsg_df$sim_id), NA                    # Necessário o mesmo número de simulações para os dois jogos
+             ) 
 
 plots <- stats::setNames(
   base::lapply(sim_ids, function(sim) {
@@ -200,10 +176,8 @@ resumo_dados <- base::list(
   tab_3 = summary_tables(modelo = "EWA", lista_resumo = mr_lista),
   tab_4 = summary_tables(modelo = "RL", lista_resumo = mr_lista),
   tab_5 = summary_tables(modelo = "BL", lista_resumo = mr_lista),
-  tab_6 = frequency_probabilities(df = bsg_df) |>
-    format_summary_table(matrix_game = matriz_bsg),  # Probabilidades do BSG
-  tab_7 = frequency_probabilities(df = meg_df) |>
-    format_summary_table(matrix_game = matriz_meg), # Probabilidades do MEG
+  tab_6 = frequency_probabilities(df = bsg_df),  # Probabilidades do BSG
+  tab_7 = frequency_probabilities(df = meg_df))  # Probabilidades do MEG
 
   # Tabela de contigência (Tipo de modelo e estratégia escolhida)
 contigencia <- contingency_plots(
@@ -214,7 +188,89 @@ contigencia <- contingency_plots(
     tag_label_m1 = "(a) BSG",
     tag_label_m2 = "(b) MEG"
   )
+
+# -------------------------------
+# Jogo A (BSG)
+# -------------------------------
+chi_tbl8a <- chisq.test(contigencia$tables$tab_abs_m1)
+
+tabela_8a <- list(
+  prob = contigencia$tables$tab_rel_total_m1,
+  obs = contigencia$tables$tab_abs_m1 |> addmargins(),
+  esp = chi_tbl8a$expected |> addmargins(),
+  res = (contigencia$tables$tab_abs_m1[1:3, 1:4] -
+         chi_tbl8a$expected[1:3, 1:4])^2 /
+         chi_tbl8a$expected[1:3, 1:4]
 )
+
+# -------------------------------
+# Jogo B (MEG)
+# -------------------------------
+chi_tbl8b <- chisq.test(contigencia$tables$tab_abs_m2)
+
+tabela_8b <- list(
+  prob = contigencia$tables$tab_rel_total_m2,
+  obs = contigencia$tables$tab_abs_m2 |> addmargins(),
+  esp = chi_tbl8b$expected |> addmargins(),
+  res = (contigencia$tables$tab_abs_m2[1:3, 1:4] -
+         chi_tbl8b$expected[1:3, 1:4])^2 /
+         chi_tbl8b$expected[1:3, 1:4]
+)
+
+# -------------------------------
+# Visualização rápida (em milhões, 1 casa decimal)
+# -------------------------------
+
+tabela_8b$esp <- tabela_8b$esp[, colnames(tabela_8b$esp) != "Sum"]
+
+tabela_8b$esp <- tabela_8b$esp[rownames(tabela_8b$esp) != "Sum", ]
+
+tabela_8a$esp <- tabela_8a$esp[, colnames(tabela_8a$esp) != "Sum"]
+
+tabela_8a$esp <- tabela_8a$esp[rownames(tabela_8a$esp) != "Sum", ]
+
+writeLines(
+  tex_matrix(
+      tabela_8a$esp/1e6, tabela_8a$res,
+      tabela_8b$esp/1e6, tabela_8b$res,
+      caption = "Probabilidade média (valor principal) com estatística complementar (entre parênteses)",
+      label   = "tabela_9",
+      digits_main = 1, digits_paren = 1, decimal = ",",
+      show_paren_in_total = FALSE
+  ), "tabelas/tabela_9.tex"
+)
+
+# Jogo A (BSG)
+tabela_8a$prob
+round(tabela_8a$obs / 1e6, 1)   # observados
+round(tabela_8a$esp / 1e6, 1)   # esperados
+round(tabela_8a$res / 1e3, 1)   # desvios
+
+round(tabela_8a$obs / 1e3, 1)   # observados
+round(tabela_8a$esp / 1e3, 1)   # esperados
+round(tabela_8a$res, 1)   # desvios
+
+# Jogo B (MEG)
+tabela_8b$prob
+round(tabela_8b$obs / 1e6, 1)   # observados
+round(tabela_8b$esp / 1e6, 1)   # esperados
+round(tabela_8b$res / 1e3, 1)   # desvios
+
+round(tabela_8a$obs / 1e3, 1)   # observados
+round(tabela_8b$esp / 1e3, 1)   # esperados
+round(tabela_8b$res / 1e3, 1)   # desvios
+
+# tabela 8
+# 2) salvar em arquivo .tex para colar no seu documento
+write_probtex(
+  tabela_8a$prob, tabela_8b$prob,
+  file    = "tabelas/tabela_8.tex",
+  caption = "Probabilidade média por estratégia — BSG e MEG",
+  label   = "tabela_8"
+)
+
+
+# valores observados
 
 ### EXPORTAÇÃO FIGURAS / TABELAS ----------------------------------------------
 
@@ -303,36 +359,124 @@ export_game_table(
 )
 
 # 🔹 Tabelas 3 a 5 (medidas resumo dos dados)
-plot_table(resumo_dados$tab_3,
-           title = "Table 3 - Summary Measures of BSG and MEG in the EWA Learning Model",
-           footnote = "A presença 'm1' nas colunas implica no jogo BSG, assim como 'm2' em outras colunas são do jogo MEG.",
-           file = "tabelas/tabela_3.pdf",
-           height = 4, width = 12, font_size = 20,
-           overwrite = T)
+# Para EWA
+model_stats_table(
+  data   = resumo_dados$tab_3,
+  file   = "tabelas/tabela_3.png",
+  modelo = "EWA",
+  title  = "Tabela 3 — Estatísticas EWA"
+)
 
-plot_table(resumo_dados$tab_4,
-           title = "Table 4 - Summary Measures of BSG and MEG in the RL Learning Model",
-           footnote = "A presença 'm1' nas colunas implica no jogo BSG, assim como 'm2' em outras colunas são do jogo MEG.",
-           file = "tabelas/tabela_4.pdf",
-           height = 4, width = 12, font_size = 20,
-           overwrite = T)
+# Ou salvar direto num arquivo (sem preâmbulo)
+model_stats_tabletex(
+  data     = resumo_dados$tab_3,
+  modelo   = "EWA",
+  caption  = "Estatísticas do Modelo EWA para BSG e MEG",
+  label    = "tabela_3",
+  file_tex = "tabelas/tabela_3.tex"
+)
 
-plot_table(resumo_dados$tab_5,
-           title = "Table 5 - Summary Measures of BSG and MEG in the BL Learning Model",
-           footnote = "A presença 'm1' nas colunas implica no jogo BSG, assim como 'm2' em outras colunas são do jogo MEG.",
-           file = "tabelas/tabela_5.pdf",
-           height = 4, width = 12, font_size = 20,
-           overwrite = T)
+# Para RL
+model_stats_table(
+  data   = resumo_dados$tab_4,
+  file   = "tabelas/tabela_4.png",
+  modelo = "RL",
+  title  = "Tabela 4 — Estatísticas RL"
+)
+
+# Ou salvar direto num arquivo (sem preâmbulo)
+model_stats_tabletex(
+  data     = resumo_dados$tab_4,
+  modelo   = "RL",
+  caption  = "Estatísticas do Modelo RL para BSG e MEG",
+  label    = "tabela_4",
+  file_tex = "tabelas/tabela_4.tex"
+)
+
+# Para BL
+model_stats_table(
+  data   = resumo_dados$tab_5,
+  file   = "tabelas/tabela_5.png",
+  modelo = "BL",
+  title  = "Tabela 5 — Estatísticas BL"
+)
+
+# Ou salvar direto num arquivo (sem preâmbulo)
+model_stats_tabletex(
+  data     = resumo_dados$tab_5,
+  modelo   = "BL",
+  caption  = "Estatísticas do Modelo BL para BSG e MEG",
+  label    = "tabela_5",
+  file_tex = "tabelas/tabela_5.tex"
+)
 
 # 🔹 Tabelas 6 e 7 (probabilidade média)
-plot_table(resumo_dados$tab_6,
-           title = "Table 6 - Average Probability During the BSG Game",
-           file = "tabelas/tabela_6.pdf",
-           height = 8, width = 10, font_size = 17,
-           overwrite = T)
+avg_prob_table(
+  data      = resumo_dados$tab_6,
+  file      = "tabelas/tabela_6.png",
+  p1_player = "Vendedor",
+  p1_pair   = c("Preço Alto","Preço Baixo"),
+  p2_player = "Comprador",
+  p2_pair   = c("Aceitar","Rejeitar"),
+  title     = "Tabela 6 — Preço Alto/Preço Baixo (P1) e Aceitar/Rejeitar (P2)"
+)
 
-plot_table(resumo_dados$tab_7,
-           title = "Table 7 - Average Probability During the MEG Game",
-           file = "tabelas/tabela_7.pdf",
-           height = 8, width = 10, font_size = 17,
-           overwrite = T)
+avg_prob_tabletex(
+  data      = resumo_dados$tab_6,
+  p1_player = "Vendedor",  p1_pair = c("Preço Alto","Preço Baixo"),
+  p2_player = "Comprador", p2_pair = c("Aceitar","Rejeitar"),
+  p1_label  = "P1", p2_label = "P2",
+  caption   = "Probabilidade média — BSG",
+  label     = "tabela_6",
+  font_size = 10,
+  file_tex  = "tabelas/tabela_6.tex"
+)
+
+avg_prob_table(
+  data      =  resumo_dados$tab_7,
+  file      = "tabelas/tabela_7.png",
+  p1_player = "Empresa A",
+  p1_pair   = c("Entrar","Não Entrar"),
+  p2_player = "Empresa B",
+  p2_pair   = c("Entrar","Não Entrar"),
+  title     = "Tabela 7 — Entrar/Não Entrar (P1) e Entrar/Não Entrar (P2)"
+)
+
+avg_prob_tabletex(
+  data      = resumo_dados$tab_7,
+  p1_player = "Empresa A", p1_pair = c("Entrar","Não Entrar"),
+  p2_player = "Empresa B", p2_pair = c("Entrar","Não Entrar"),
+  p1_label  = "P1", p2_label = "P2",
+  caption   = "Probabilidade média — MEG",
+  label     = "tabela_7",
+  font_size = 10,
+  file_tex  = "tabelas/tabela_7.tex"
+)
+
+table_wide(
+  prob_bsg = tabela_8a$prob,
+  prob_meg = tabela_8b$prob,
+  file     = "tabelas/tabela_8.png",
+  title    = "Distribuição (%) por estratégia e modelo",
+  digits   = 1
+)
+
+write_probtex(
+  tabela_8a$prob, tabela_8b$prob,
+  file    = "tabelas/tabela_8.tex",
+  caption = "Probabilidade média por estratégia — BSG e MEG",
+  label   = "tabela_8"
+)
+
+# Dahsboard das simulações
+# 1) Bloco de pacotes/temas/fontes (o que te mandei)
+# 2) Objetos do projeto: matrizes, palettes, fonte_base, learning_types, etc.
+# 3) Funções do projeto:
+#    sim_lambda(), build_simulation_df(), data_extraction(), player_render(),
+#    remove_cols(), sim_plot(), e quaisquer outras helpers que o app usa.
+# 4) Helpers do app: order_strats(), standardize_and_prop(), plot_model(), run_sim() ...
+# 5) UI (page_fluid / layout_sidebar / cards ...)
+# 6) server <- function(input, output, session) { ... }
+# 7) shinyApp(ui, server)
+
+base::source("app.R")
