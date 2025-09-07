@@ -9,8 +9,17 @@ for (learning_type in base::names(results_bsg)) {
   # Lista para armazenar os dataframes de cada simulação do tipo atual
   type_combined <- base::list()
 
+  # Mensagem clara no console
+  message(glue::glue("Processando simulações do jogo BSG ({learning_type})..."))
+
+  # Criar barra de progresso
+  total_sims <- length(results_bsg[[learning_type]])
+  pb <- txtProgressBar(min = 0, max = total_sims, style = 3)
+
   # Processando cada simulação para o tipo de aprendizado atual
   for (sim_id in base::seq_along(results_bsg[[learning_type]])) {
+    setTxtProgressBar(pb, sim_id)  # Atualiza a barra de progresso
+    
     sim_data <- dplyr::bind_rows(
       # Extraindo e processando dados do jogador 1
       results_bsg[[learning_type]][[sim_id]] |>
@@ -39,6 +48,8 @@ for (learning_type in base::names(results_bsg)) {
     type_combined[[sim_id]] <- sim_data
   }
 
+  close(pb)  # Fecha a barra ao terminar a simulação
+
   # Combinando os dataframes de todas as simulações do tipo atual
   combined_results_bsg[[learning_type]] <- dplyr::bind_rows(type_combined)
 }
@@ -61,8 +72,17 @@ for (learning_type in base::names(results_meg)) {
   # Lista para armazenar os dataframes de cada simulação do tipo atual
   type_combined <- base::list()
 
+  message(glue::glue("Processando simulações do jogo MEG ({learning_type})..."))
+
+  # Criar barra de progresso
+  total_sims <- length(results_meg[[learning_type]])
+  pb <- txtProgressBar(min = 0, max = total_sims, style = 3)
+
   # Processando cada simulação para o tipo de aprendizado atual
   for (sim_id in base::seq_along(results_meg[[learning_type]])) {
+
+    setTxtProgressBar(pb, sim_id)  # Atualiza a barra de progresso
+    
     sim_data <- dplyr::bind_rows(
       # Extraindo e processando dados do jogador 1
       results_meg[[learning_type]][[sim_id]] |>
@@ -90,6 +110,8 @@ for (learning_type in base::names(results_meg)) {
     # Armazenando os dados processados na lista
     type_combined[[sim_id]] <- sim_data
   }
+
+  close(pb)
 
   # Combinando os dataframes de todas as simulações do tipo atual
   combined_results_meg[[learning_type]] <- dplyr::bind_rows(type_combined)

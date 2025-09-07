@@ -1,79 +1,85 @@
-### ============================ PACOTES =====================================
+# ===== PACOTES (instalação opcional + carregamento) =====
 
-## Lista de pacotes necessários --------------------------------------------
+# Instalar pacotes em runtime?
+# Localmente deixe TRUE; em deploy (shinyapps.io/Connect) use FALSE e confie em renv.
+INSTALL_MISSING <- interactive()
 
-pacotes <- c(
-  # Pacotes do universo tidy
+quiet_lib <- function(pkg) {
+  suppressPackageStartupMessages(suppressWarnings(require(pkg, character.only = TRUE)))
+}
+
+install_if_missing <- function(pkgs) {
+  if (!INSTALL_MISSING) return(invisible())
+  miss <- pkgs[!(pkgs %in% rownames(installed.packages()))]
+  if (length(miss)) {
+    message("Instalando do CRAN: ", paste(miss, collapse = ", "))
+    install.packages(miss)
+  }
+}
+
+# Pacotes base do app (já usados no código)
+base_pkgs <- c("shiny","bslib","ggplot2","dplyr","scales","tibble","withr","readr")
+invisible(lapply(base_pkgs, quiet_lib))
+
+# Sua lista “completa”
+extra_pkgs <- c(
+  # tidyverse (contém ggplot2/dplyr/readr, mas não tem problema)
   "tidyverse",
-  # Adicionais para manipulação de dados
-  "janitor",
-  # Customização do plot
-  "scales",
-  "patchwork",
-  "paletteer",
-  # Temas para gráficos
+  # dados & utilitários
+  "janitor","glue",
+  # visual
+  "patchwork","paletteer","ggtext",
+  # temas
   "beautyxtrar",
-  # Fontes e tabelas
-  "extrafont",
-  "kableExtra",
-  "webshot",
-  "flextable",
-  "grid",
+  # fontes & tabelas
+  "extrafont","showtext","sysfonts","kableExtra","webshot","flextable","grid",
   # Teoria dos Jogos
   "rgamer"
 )
 
-# Verificar quais pacotes já estão instalados
-pacotes_instalados <- pacotes %in% base::rownames(utils::installed.packages())
+# Instala os CRAN (exceto beautyxtrar, que é GitHub)
+install_if_missing(setdiff(extra_pkgs, "beautyxtrar"))
 
-## Instalar pacotes que não estão instalados ----------------------------------
-
-# Instalar pacotes do CRAN que não estão instalados
-if (base::any(!pacotes_instalados & pacotes != "beautyxtrar")) {
-  utils::install.packages(pacotes[!pacotes_instalados & pacotes != "beautyxtrar"])
-}
-
-# Instalar pacote beautyxtrar do GitHub se não estiver instalado
-if (!"beautyxtrar" %in% base::rownames(utils::installed.packages())) {
-  if (!base::requireNamespace("devtools", quietly = T)) {
-    utils::install.packages("devtools")
+# beautyxtrar via GitHub se faltar
+if (!"beautyxtrar" %in% rownames(installed.packages())) {
+  if (INSTALL_MISSING) {
+    if (!quiet_lib("remotes")) install.packages("remotes")
+    remotes::install_github("drewmelo/beautyxtrar", upgrade = "never")
+  } else {
+    message("Pacote 'beautyxtrar' ausente. Em produção, use renv para pré-instalar.")
   }
-  devtools::install_github("drewmelo/beautyxtrar", force = T)
 }
 
-# Função para carregar pacotes silenciosamente e verificar carregamento
-carregar_pacote <- function(pacote) {
-  base::suppressPackageStartupMessages({
-    base::suppressMessages({
-      base::suppressWarnings({
-        base::library(pacote, character.only = T)
-      })
-    })
-  })
+# Carrega todos os extras (silencioso)
+invisible(lapply(extra_pkgs, quiet_lib))
+
+# ===== FONTES (timesnewroman via showtext/sysfonts) =====
+# Coloque seus .ttf na pasta do app (ex.: "assets/fontes/...").
+# Em Shiny, o caminho é relativo ao diretório do app.
+add_font_safe <- function(family, regular, bold = NULL, italic = NULL, bolditalic = NULL) {
+  ok <- file.exists(regular)
+  if (!ok) {
+    message("Fonte não encontrada em: ", regular)
+    return(invisible(FALSE))
+  }
+  sysfonts::font_add(family, regular = regular, bold = bold, italic = italic, bolditalic = bolditalic)
+  showtext::showtext_auto(enable = TRUE)
+  TRUE
 }
 
-# Carregar todos os pacotes e verificar sucesso
-pacotes_carregados <- base::sapply(pacotes, function(pacote) {
-  carregar_pacote(pacote)
-  pacote %in% base::.packages()
-})
+font_ok <- add_font_safe(
+  family = "timesnewroman",
+  regular    = file.path("assets","fontes","timesnewroman-regular.ttf"),
+  bold       = file.path("assets","fontes","timesnewroman-bold.ttf"),
+  italic     = file.path("assets","fontes","timesnewroman-italic.ttf"),
+  bolditalic = file.path("assets","fontes","timesnewroman-bolditalic.ttf")
+)
 
-# Imprimir resultado do carregamento
-if (base::all(pacotes_carregados)) {
-  base::print("Carregamento dos pacotes concluído com sucesso.")
+if (font_ok) {
+  message("✔️ A fonte 'timesnewroman' foi registrada via showtext.")
 } else {
-  pacotes_falha <- pacotes[!pacotes_carregados]
-  mensagem_falha <- base::paste("Falha ao carregar os seguintes pacotes:",
-                                base::paste(pacotes_falha, collapse = ", "))
-  base::print(mensagem_falha)
+  message("❌ A fonte 'timesnewroman' não foi registrada (arquivos ausentes?).")
 }
 
-# Carregando fontes do dispositivo
-extrafont::loadfonts(device = "win", quiet = T)
-
-# Verificar se a fonte "Times New Roman" está disponível
-if ("Times New Roman" %in% extrafont::fonts()) {
-  base::print("A fonte 'Times New Roman' foi carregada com sucesso.")
-} else {
-  base::print("A fonte 'Times New Roman' não está disponível.")
-}
+# (opcional) listar famílias registradas
+# print(sysfonts::font_families())

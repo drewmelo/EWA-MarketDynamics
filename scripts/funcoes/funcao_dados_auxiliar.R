@@ -62,15 +62,6 @@ data_extraction <- function(sim, probability = NULL, attraction = NULL, n_strate
     stop("É necessário especificar o número de estratégias escolhidas para os jogadores 1 ou 2 através do parâmetro 'n_strategy'.\n")
   }
 
-  # Mensagens de console para o usuário
-  if (!is.null(probability) && !is.null(attraction)) {
-    cat("Tanto probability quanto attraction foram especificados. Processando os dados dos valores de ambos...\n")
-  } else if (!is.null(probability)) {
-    cat("Apenas probability foi especificado. Processando somente os dados dos valores de probabilidade...\n")
-  } else if (!is.null(attraction)) {
-    cat("Apenas attraction foi especificado. Processando somente os dados dos valores de atração...\n")
-  }
-
   return(result)
 }
 
@@ -127,4 +118,108 @@ remove_cols <- function(data) {
   colnames(data)[first_col] <- "period"
 
   return(data)
+}
+
+# ===== utils =====
+.normalize_names <- function(x) {
+  x <- as.character(x)
+  x <- iconv(x, to = "UTF-8")
+  x <- gsub("\\s+", " ", x)
+  trimws(x)
+}
+
+# Converte qualquer coisa (vector/matrix/df) num DF com 'Modelo' + mesmas colunas do main,
+# criando Total se faltar; reordena linhas em EWA, RL, BL, Total
+.coerce_like_main <- function(main_df, paren_df_raw) {
+  main <- as.data.frame(main_df, check.names = FALSE, stringsAsFactors = FALSE)
+  # modelo/colunas "alvo"
+  if (!is.null(rownames(main))) {
+    modelos_target <- rownames(main)
+  } else if ("Modelo" %in% names(main)) {
+    modelos_target <- main$Modelo
+  } else {
+    stop("main_df precisa de rownames (EWA, RL, BL, Total) ou coluna 'Modelo'.")
+  }
+  modelos_target <- .normalize_names(modelos_target)
+  cols_target <- .normalize_names(colnames(main))
+  if ("Modelo" %in% cols_target) {
+    metric_cols <- setdiff(cols_target, "Modelo")
+  } else {
+    # se main não tinha coluna Modelo, vamos assumir que rownames são os modelos
+    metric_cols <- cols_target
+  }
+
+  # pega valores numéricos de paren_df_raw como vetor
+  get_numeric_vector <- function(x) {
+    if (is.null(x)) return(numeric(0))
+    if (is.vector(x)) return(suppressWarnings(as.numeric(x)))
+    if (is.matrix(x)) return(suppressWarnings(as.numeric(t(x))))  # por linha
+    if (is.data.frame(x)) return(suppressWarnings(as.numeric(t(as.matrix(x)))))
+    suppressWarnings(as.numeric(x))
+  }
+  v <- get_numeric_vector(paren_df_raw)
+  k  <- length(metric_cols)
+  r  <- length(modelos_target)
+
+  # tenta dar forma à matriz de parênteses
+  M <- NULL
+  if (length(v) == k * r) {
+    M <- matrix(v, nrow = r, ncol = k, byrow = TRUE)
+    rown <- modelos_target
+  } else if (length(v) == k * (r - 1)) {
+    # faltou Total: usa EWA/RL/BL e computa Total = soma por coluna
+    M3 <- matrix(v, nrow = r - 1, ncol = k, byrow = TRUE)
+    total <- colSums(M3, na.rm = TRUE)
+    M <- rbind(M3, total)
+    rown <- c(modelos_target[1:(r-1)], modelos_target[r])
+  } else {
+    # plano C: tentar “moldar” via ncol do input
+    asmat <- tryCatch(as.matrix(paren_df_raw), error = function(e) NULL)
+    if (!is.null(asmat)) {
+      nr <- nrow(asmat); nc <- ncol(asmat)
+      # se dimensões batem, ok
+      if (nr == r && nc == k) {
+        M <- asmat
+        rown <- modelos_target
+      } else if (nr == r - 1 && nc == k) {
+        total <- colSums(asmat, na.rm = TRUE)
+        M <- rbind(asmat, total)
+        rown <- c(modelos_target[1:(r-1)], modelos_target[r])
+      }
+    }
+  }
+
+  if (is.null(M)) {
+    # não deu para alinhar → cria NAs mas preserva estrutura
+    M <- matrix(NA_real_, nrow = r, ncol = k)
+    rown <- modelos_target
+    warning("Não consegui alinhar 'paren_df' automaticamente; valores entre parênteses ficarão vazios.")
+  }
+
+  colnames(M) <- metric_cols
+  rownames(M) <- rown
+
+  # monta DF final como o main: 'Modelo' + metric_cols, linhas na ordem alvo
+  paren_df <- data.frame(Modelo = rown, M, check.names = FALSE)
+  paren_df$Modelo <- .normalize_names(paren_df$Modelo)
+
+  # reordena linhas p/ EWA, RL, BL, Total (ou o que houver)
+  ord <- intersect(c("EWA","RL","BL","Total","Sum"), paren_df$Modelo)
+  rest <- setdiff(paren_df$Modelo, ord)
+  paren_df <- paren_df[match(c(ord, rest), paren_df$Modelo), , drop = FALSE]
+
+  # garante colunas iguais às do main
+  paren_df <- paren_df[, c("Modelo", metric_cols), drop = FALSE]
+  paren_df
+}
+
+# Reordena colunas (P1 primeiro, P2 depois), preservando 'Modelo'
+.reorder_by_player <- function(df) {
+  cols <- names(df)
+  base <- "Modelo"
+  metrics <- setdiff(cols, base)
+  cols_p1 <- grep("\\(P1\\)", metrics, value = TRUE)
+  cols_p2 <- grep("\\(P2\\)", metrics, value = TRUE)
+  others  <- setdiff(metrics, c(cols_p1, cols_p2))
+  df[, c(base, sort(cols_p1), sort(cols_p2), sort(others)), drop = FALSE]
 }

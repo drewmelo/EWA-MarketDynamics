@@ -52,7 +52,7 @@ sim_plot <- function(df_m1, df_m2, matrix_m1, matrix_m2, sim_id) {
                     x = "Período",
                     y = y_label,  # Define se o primeiro gráfico da linha terá "Proporção"
                     tag = tag_label) +
-      beautyxtrar::theme_xtra(base_family = "Times New Roman", base_size = 15) +
+      beautyxtrar::theme_xtra(base_family = fonte_base, base_size = 15) +
       ggplot2::theme(plot.tag = ggplot2::element_text(size = 18, margin = ggplot2::margin(t = 10)),
                      plot.tag.position = "bottom") +
       ggplot2::guides(col = ggplot2::guide_legend(override.aes = list(linewidth = 1.5)))
@@ -74,11 +74,11 @@ sim_plot <- function(df_m1, df_m2, matrix_m1, matrix_m2, sim_id) {
   # Combinação dos gráficos usando patchwork
   s_m1 <- patchwork::wrap_plots(plots_m1, nrow = 1, guides = "collect") &
     ggplot2::theme(legend.position = "top") &
-    paletteer::scale_colour_paletteer_d("MetBrewer::Egypt")
+    ggplot2::scale_color_manual(values = color_main)
 
   s_m2 <- patchwork::wrap_plots(plots_m2, nrow = 1, guides = "collect") &
     ggplot2::theme(legend.position = "top") &
-    paletteer::scale_colour_paletteer_d("MetBrewer::Egypt")
+    ggplot2::scale_color_manual(values = color_main)
 
   # Layout final (BSG em cima, MEG embaixo)
   p_s <- s_m1 / s_m2

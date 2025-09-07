@@ -44,7 +44,7 @@ ne_m1 <- ne_m1 |>
 
 # Criando o gráfico com ggplot2
 p22 <- ggplot2::ggplot(ne_m1, ggplot2::aes(x = count_n, color = NE, group = NE)) +
-  ggplot2::geom_freqpoly(binwidth = 2, linewidth = .9, position = 'jitter') +
+  ggplot2::geom_freqpoly(binwidth = 3.7, linewidth = 1.6, position = 'jitter') +
   ggplot2::labs(
     # title = "Contagem Acumulada por Categoria de NE"  # Se precisar do título, remova o comentário
     x = "Número de Ocorrências",
@@ -52,8 +52,8 @@ p22 <- ggplot2::ggplot(ne_m1, ggplot2::aes(x = count_n, color = NE, group = NE))
     color = NULL  # Remove o título da legenda
   ) +
   ggplot2::scale_x_continuous(breaks = scales::breaks_pretty(n = 6)) +
-  paletteer::scale_colour_paletteer_d("MetBrewer::Egypt") +  # Define as cores manualmente
-  beautyxtrar::theme_academic() +  # Aplica o tema personalizado
+  ggplot2::scale_color_manual(values = color_main) +  # Define as cores manualmente
+  beautyxtrar::theme_academic(base_family = fonte_base) +  # Aplica o tema personalizado
   ggplot2::theme(
     legend.text = ggplot2::element_text(size = 20),
     axis.text = ggplot2::element_text(size = 20),
@@ -61,3 +61,6 @@ p22 <- ggplot2::ggplot(ne_m1, ggplot2::aes(x = count_n, color = NE, group = NE))
     axis.title.x = ggplot2::element_text(size = 22),
     axis.title.y = ggplot2::element_text(size = 22, angle = 90)
   )
+
+  ggplot(ne_m1, aes(x = count_n, color = NE)) +
+    stat_ecdf(geom = "line", linewidth = 1)

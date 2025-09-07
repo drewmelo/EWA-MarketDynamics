@@ -25,12 +25,13 @@ plot_histogram <- function(data, file_name,
     ggplot2::facet_wrap(~ lambda, nrow = 2) +
     ggplot2::scale_y_continuous(breaks = scales::breaks_pretty(n = 6),
                                 labels = scales::label_comma(big.mark = ".",
-                                                             decimal.mark = ",")) +
+                                                             decimal.mark = ","),
+                                expand = c(0, 0)) +
     ggplot2::scale_x_continuous(labels = scales::label_comma(decimal.mark = ",", big.mark = ".")) +
-    paletteer::scale_fill_paletteer_d("MetBrewer::Egypt") +
-    paletteer::scale_colour_paletteer_d("MetBrewer::Egypt") +
+    ggplot2::scale_fill_manual(values = color_main) +
+    ggplot2::scale_color_manual(values = color_main) +
     ggplot2::labs(x = x_label, y = y_label, fill = "Mediana", col = "Mediana", title = title) +
-    beautyxtrar::theme_xtra(base_family = "Times New Roman", base_size = 14)
+    beautyxtrar::theme_xtra(base_family = fonte_base, base_size = 14)
 
   # Salvar o gráfico como PDF
   ggplot2::ggsave(plot = p, filename = file_name,
@@ -65,17 +66,18 @@ plot_correlation <- function(data_m1, data_m2,
 
   # Criar o gráfico do primeiro conjunto de dados
   p_m1 <- ggplot2::ggplot(df_m1, ggplot2::aes(lambda, correlacao, col = type, group = type)) +
-    ggplot2::geom_line(linewidth = 0.9) +
+    ggplot2::geom_line(linewidth = 1.6) +
     ggrepel::geom_text_repel(data = df_m1 |> dplyr::filter(lambda == "0,1" | lambda == "1"),
                              ggplot2::aes(label = base::paste(stringr::str_replace(correlacao, "\\.", ","))),
-                             family = "Times New Roman", size = 5.5, show.legend = F) +
-    ggplot2::geom_point(size = 2) +
+                             family = fonte_base, size = 5.5, show.legend = F) +
+    ggplot2::geom_point(data = df_m1 |> dplyr::filter(lambda == "0,1" | lambda == "1"),
+                        size = 3) +
     ggplot2::scale_y_continuous(limits = c(0, 1),
                                 labels = scales::label_comma(decimal.mark = ",", big.mark = ".")) +
     ggplot2::labs(x = x_label, y = y_label_m1, col = NULL, tag = tag_label_m1) +
-    beautyxtrar::theme_academic(base_family = "Times New Roman", base_size = 18) +
+    beautyxtrar::theme_academic(base_family = fonte_base, base_size = 18) +
     ggplot2::theme(
-      plot.tag = ggplot2::element_text(size = 19, margin = ggplot2::margin(t = 10)),
+      plot.tag = ggplot2::element_text(size = 19, margin = ggplot2::margin(t = 10), colour = "black"),
       plot.tag.position = "bottom"
     )
 
@@ -96,17 +98,18 @@ plot_correlation <- function(data_m1, data_m2,
 
   # Criar o gráfico do segundo conjunto de dados
   p_m2 <- ggplot2::ggplot(df_m2, ggplot2::aes(lambda, correlacao, col = type, group = type)) +
-    ggplot2::geom_line(linewidth = 0.9) +
+    ggplot2::geom_line(linewidth = 1.6) +
     ggrepel::geom_text_repel(data = df_m2 |> dplyr::filter(lambda == "0,1" | lambda == "1"),
                              ggplot2::aes(label = base::paste(stringr::str_replace(correlacao, "\\.", ","))),
-                             family = "Times New Roman", size = 5.5, show.legend = F) +
-    ggplot2::geom_point(size = 2) +
+                             family = fonte_base, size = 5.5, show.legend = F) +
+    ggplot2::geom_point(data = df_m2 |> dplyr::filter(lambda == "0,1" | lambda == "1"),
+                        size = 3) +
     ggplot2::scale_y_continuous(limits = c(0, 1),
                                 labels = scales::label_comma(decimal.mark = ",", big.mark = ".")) +
     ggplot2::labs(x = x_label, y = y_label_m2, col = NULL, tag = tag_label_m2) +
-    beautyxtrar::theme_academic(base_family = "Times New Roman", base_size = 18) +
+    beautyxtrar::theme_academic(base_family = fonte_base, base_size = 18) +
     ggplot2::theme(
-      plot.tag = ggplot2::element_text(size = 19, margin = ggplot2::margin(t = 10)),
+      plot.tag = ggplot2::element_text(size = 19, margin = ggplot2::margin(t = 10), colour = "black"),
       plot.tag.position = "bottom"
     )
 
@@ -121,7 +124,7 @@ plot_correlation <- function(data_m1, data_m2,
                            axis_titles = "collect",
                            nrow = 2, heights = c(1, 10)) +
     ggplot2::theme(legend.position = "top") &
-    paletteer::scale_colour_paletteer_d("MetBrewer::Egypt")
+    ggplot2::scale_color_manual(values = color_main)
 
   # Salvar o gráfico combinado como PDF
   ggplot2::ggsave(plot = p_combined, filename = file_name_combined,
