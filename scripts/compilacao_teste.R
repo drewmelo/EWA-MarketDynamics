@@ -62,5 +62,5 @@ p22 <- ggplot2::ggplot(ne_m1, ggplot2::aes(x = count_n, color = NE, group = NE))
     axis.title.y = ggplot2::element_text(size = 22, angle = 90)
   )
 
-  ggplot(ne_m1, aes(x = count_n, color = NE)) +
-    stat_ecdf(geom = "line", linewidth = 1)
+  #ggplot(ne_m1, aes(x = count_n, color = NE)) +
+  #  stat_ecdf(geom = "line", linewidth = 1)

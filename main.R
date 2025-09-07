@@ -75,13 +75,13 @@ s_matriz_bsg <- rgamer::solve_nfg(matriz_bsg, mark_br = T)
 s_matriz_meg <- rgamer::solve_nfg(matriz_meg, mark_br = T)
 
 # Verificando os resultados diretamente
-ne_m1 |>
-  group_by(NE) |>
-  reframe(n = n()) |>
-  mutate(freq = n / sum(n)) |>
-  filter(n == max(n)) |>
-  (\(df) cat("Durante esta reprodutibilidade, em", i, "iterações, a frequência relativa do NE",
-             df$NE, "no BSG é", paste0(round(df$freq * 100, 2), "%"), "\n"))()
+#ne_m1 |>
+#  group_by(NE) |>
+#  reframe(n = n()) |>
+#  mutate(freq = n / sum(n)) |>
+#  filter(n == max(n)) |>
+#  (\(df) cat("Durante esta reprodutibilidade, em", i, "iterações, a frequência relativa do NE",
+#             df$NE, "no BSG é", paste0(round(df$freq * 100, 2), "%"), "\n"))()
 
 # Carregando script do equilíbrio de Nash (plotagem)
 base::source("scripts/equilibrio_nash.R")
