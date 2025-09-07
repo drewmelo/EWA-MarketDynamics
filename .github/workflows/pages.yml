@@ -15,30 +15,29 @@ jobs:
 
       - uses: r-lib/actions/setup-r@v2
         with:
-          use-public-rspm: true   # define CRAN (RSPM)
-
+          use-public-rspm: true
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # 🔧 Dependências de sistema para curl/httr2/gh/archive/pkgdepends
+      # Dependências de sistema para instalar shinylive e seus deps
       - name: Install system libs
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libcurl4-openssl-dev \
-            libarchive-dev \
-            pkg-config \
-            libssl-dev \
-            zlib1g-dev \
-            libxml2-dev \
-            build-essential
+            libcurl4-openssl-dev libarchive-dev pkg-config \
+            libssl-dev zlib1g-dev libxml2-dev build-essential
 
-      # ✅ Instala e exporta no MESMO passo (com CRAN explícito)
+      - name: Clean docs
+        run: rm -rf docs
+
       - name: Install + Export Shinylive
         run: |
           R -q -e "install.packages('shinylive', repos='https://packagemanager.posit.co/cran/latest')"
           R -q -e "shinylive::export(appdir='.', destdir='docs', wasm_packages=FALSE)"
 
-      # ✍️ Comita docs/ se mudou
+      - name: Add .nojekyll
+        run: |
+          touch docs/.nojekyll
+
       - name: Commit docs if changed
         run: |
           if [ -n "$(git status --porcelain docs)" ]; then
