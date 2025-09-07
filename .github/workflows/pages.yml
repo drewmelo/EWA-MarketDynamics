@@ -22,14 +22,14 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # (Opcional, mas útil) Força o CRAN se algo sobrescrever as opções
+      # Fallback explícito do mirror (garante que qualquer install.packages use CRAN correto)
       - name: Force CRAN mirror (fallback)
         run: |
           echo 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/latest"))' >> ~/.Rprofile
-          R -q -e 'getOption("repos"); sessionInfo()'
+          R -q -e 'getOption("repos")'
 
       - name: Install shinylive
-        run: R -q -e 'install.packages("shinylive")'
+        run: R -q -e 'install.packages("shinylive", repos="https://packagemanager.posit.co/cran/latest")'
 
       - name: Export app to docs
         run: R -q -e 'shinylive::export(appdir=".", destdir="docs", wasm_packages=FALSE)'
