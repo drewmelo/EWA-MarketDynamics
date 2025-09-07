@@ -12,27 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # Configura R e define CRAN automaticamente (RStudio Public Package Manager)
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
-
       - uses: r-lib/actions/setup-pandoc@v2
 
-      # Fallback explícito do mirror (garante que qualquer install.packages use CRAN correto)
-      - name: Force CRAN mirror (fallback)
+      # (opcional) garantir CRAN explícito
+      - name: Force CRAN mirror
+        run: echo 'options(repos=c(CRAN="https://packagemanager.posit.co/cran/latest"))' >> ~/.Rprofile
+
+      # ✅ Instala e exporta no MESMO passo
+      - name: Install + Export Shinylive
         run: |
-          echo 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/latest"))' >> ~/.Rprofile
-          R -q -e 'getOption("repos")'
-
-      - name: Install shinylive
-        run: R -q -e 'install.packages("shinylive", repos="https://packagemanager.posit.co/cran/latest")'
-
-      - name: Export app to docs
-        run: R -q -e 'shinylive::export(appdir=".", destdir="docs", wasm_packages=FALSE)'
+          R -q -e 'if (!requireNamespace("shinylive", quietly=TRUE)) install.packages("shinylive")'
+          R -q -e 'shinylive::export(appdir=".", destdir="docs", wasm_packages=FALSE)'
 
       - name: Commit docs if changed
         run: |
