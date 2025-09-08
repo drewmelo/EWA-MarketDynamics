@@ -4,19 +4,19 @@ Title: EWA Market Dynamics
 Version: 0.0.1
 Depends:
     R (>= 4.3),
-    shiny,
-    ggplot2
+    shiny
 Imports:
+    ggplot2,
     bslib,
     dplyr,
     scales,
     tibble,
     withr,
     readr,
-    showtext,
-    sysfonts,
-    rmarkdown,
-    knitr,
-    jsonlite,
-    htmltools
+    glue,
+    rgamer,
+    beautyxtrar
+Remotes:
+    yukiyanai/rgamer
+    drewmelo/beautyxtrar
 Encoding: UTF-8

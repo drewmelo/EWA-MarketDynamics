@@ -108,8 +108,8 @@ results_bsg <- sim_lambda(
   game_label = "BSG",
   learning_types = learning_types,
   lambda_values = lambda_values,
-  n_samples = 500,
-  n_periods = 500
+  n_samples = 50,
+  n_periods = 50
 )
 
 ## MATRIZ 2 - MEG --------------------------------------------------------------
@@ -119,8 +119,8 @@ results_meg <- sim_lambda(
   game_label = "MEG",
   learning_types = learning_types,
   lambda_values = lambda_values,
-  n_samples = 500,
-  n_periods = 500
+  n_samples = 50,
+  n_periods = 50
 )
 
 ### EXTRAÇÃO E PROCESSAMENTO --------------------------------------------------

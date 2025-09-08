@@ -13,9 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
- <a href="https://github.com/drewmelo/EWA-MarketDynamics">
-    <img src="assets/logo.png" alt="Logo" style="width:13%; height:auto;">
-  </a>
+ <img src="assets/logo.png" alt="Logo" style="width:13%; height:auto;">
 
   <h1 align="center">Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado: uma aplicação
   de teoria dos jogos com Experience-Weighted Attraction</h1>
@@ -36,7 +34,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Autor
-[<img src="https://avatars.githubusercontent.com/u/143213346?s=400&u=958912bd274eeaba08ce1ee6ba79ef60e701992a&v=4" width=115><br><sub>André V. P. de Melo</sub>](https://medium.com/@andremelopix) 
+
+<div align="center">
+  <a href="https://medium.com/@andremelopix">
+    <img src="https://avatars.githubusercontent.com/u/143213346?s=400&u=958912bd274eeaba08ce1ee6ba79ef60e701992a&v=4" width="115">
+    <br>
+    <sub><b>André V. P. de Melo</b></sub>
+  </a>
+</div>
+
 
 ## :pushpin: Tecnologias utilizadas
 
