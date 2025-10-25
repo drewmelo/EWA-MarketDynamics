@@ -6,3 +6,7 @@
 .quarto
 .Renviron
 /docs/
+_backup/
+README_files/
+tcc-book/_book/
+*.html
