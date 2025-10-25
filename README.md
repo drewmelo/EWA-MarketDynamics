@@ -106,11 +106,6 @@ renv::restore()            # recria o MESMO ambiente do projeto
 targets::tar_make()        # roda o pipeline (executa main.R e gera saídas)
 ```
 
-#### Execução automatizada
-
-O pacote `targets` coordena a execução completa do pipeline do projeto.
-Ele roda o script principal (`main.R`), gera as figuras e tabelas listadas e garante que apenas etapas modificadas sejam recalculadas.
-
 O `targets` detecta automaticamente o que precisa ser atualizado e garante a execução reprodutível de todas as etapas. Além disso, o comando executa o pipeline descrito em `_targets.R`, que por sua vez roda o script principal e gera todos os arquivos de saída (PDFs, PNGs e TEX) automaticamente.
 
 ## Painel Interativo (Shiny Dashboard)
