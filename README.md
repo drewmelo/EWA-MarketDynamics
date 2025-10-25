@@ -2,7 +2,7 @@
 <div align="center">
 
   <p align="center">
-    <img src="assets/logo-main.png?raw=1" alt="Logo" width="120">
+    <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" alt="Logo" width="120">
   </p>
 
   <h1 align="center">
@@ -124,7 +124,7 @@ Ele permite:
 - Gerar automaticamente as mesmas tabelas e figuras utilizadas no TCC.
 
 <p align="center">
-  <img src="assets/painel.png?raw=1"
+  <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/painel.png"
        alt="Painel Shiny — EWA Market Dynamics Dashboard"
        width="850">
   <br>

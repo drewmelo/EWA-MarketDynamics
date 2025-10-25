@@ -114,7 +114,7 @@ window.Quarto = {
 
 <div data-align="center">
 <p align="center">
-<img src="assets/logo-main.png?raw=1" alt="Logo" width="120">
+<img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" alt="Logo" width="120">
 </p>
 <h1 align="center">
 Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado: uma aplicação de teoria dos jogos com Experience-Weighted Attraction
@@ -211,13 +211,7 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"renv"</span>)   <span class="co"># só na 1ª vez</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()            <span class="co"># recria o MESMO ambiente do projeto</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_make</span>()        <span class="co"># roda o pipeline (executa main.R e gera saídas)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="execução-automatizada" class="level4">
-<h4 class="anchored" data-anchor-id="execução-automatizada">Execução automatizada</h4>
-<p>O pacote <code>targets</code> coordena a execução completa do pipeline do projeto. Ele roda o script principal (<code>main.R</code>), gera as figuras e tabelas listadas e garante que apenas etapas modificadas sejam recalculadas.</p>
-<p>Para reproduzir todo o fluxo, basta executar:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_make</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>O <code>targets</code> detecta automaticamente o que precisa ser atualizado e garante a execução reprodutível de todas as etapas. Além disso, o comando executa o pipeline descrito em <code>_targets.R</code>, que por sua vez roda o script principal e gera todos os arquivos de saída (PDFs, PNGs e TEX) automaticamente.</p>
-</section>
 </section>
 </section>
 <section id="painel-interativo-shiny-dashboard" class="level2">
@@ -236,14 +230,14 @@ O painel foi pensado para <strong>usuários low-code</strong>, que desejam <stro
 <li>Gerar automaticamente as mesmas tabelas e figuras utilizadas no TCC.</li>
 </ul>
 <p align="center">
-<img src="assets/painel.png?raw=1" alt="Painel Shiny — EWA Market Dynamics Dashboard" width="850"> <br> <em>EWA Market Dynamics Dashboard — ambiente interativo para simulação e análise</em>
+<img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/painel.png" alt="Painel Shiny — EWA Market Dynamics Dashboard" width="850"> <br> <em>EWA Market Dynamics Dashboard — ambiente interativo para simulação e análise</em>
 </p>
 <blockquote class="blockquote">
 <p><strong>Dica:</strong><br>
 Ao clicar em “Baixar Simulação”, o painel executa o mesmo pipeline automatizado usado no projeto (<code>targets::tar_make()</code>), exportando os resultados diretamente, sem necessidade de rodar scripts manualmente.</p>
 </blockquote>
 <p>Caso queira executar o web app:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Assim, qualquer pessoa pode restaurar o mesmo ambiente e reproduzir integralmente todas as análises e resultados do TCC com apenas dois comandos (<code>renv::restore()</code> e <code>targets::tar_make()</code>) ou via <code>shiny::runApp()</code></em></p>
 </section>
 
