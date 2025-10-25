@@ -44,20 +44,16 @@ O projeto utiliza **R** como base, com ênfase em **Shiny**, **ggplot2**, **dply
 
 Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de aprendizado em cenários de incerteza de mercado**. Investigo três algoritmos de aprendizagem em jogos 2×2 — *Experience-Weighted Attraction* (EWA), *Reinforcement Learning* (RL) e *Belief-based Learning* (BL) — e comparo a trajetória dos agentes com os **equilíbrios teóricos**. O foco recai sobre dois ambientes clássicos: **Buyer–Seller Game (BSG)** e **Market Entry Game (MEG)**.
 
+> **Compatibilidade:**  
+> Este projeto foi desenvolvido e testado em **R 4.3.2 (Windows 11)**.  
+> Versões posteriores (como R 4.4 ou superiores) podem causar falhas no pacote **`rgamer`**, no que diz respeito a função `solve_nfg()`.  
+> Recomenda-se manter a série 4.3 para reprodutibilidade total.
+
 ## O que você encontrará aqui
 
 - **Modelos em forma normal** para BSG e MEG, implementados com `rgamer`, incluindo definição de jogadores, estratégias e payoffs.  
 - **Simulador baseado em agentes** com execução de rodadas sob EWA, RL e BL, controle de parâmetros e de horizontes (amostras e períodos). A metodologia descreve as equações do EWA e seus casos especiais (RL e BL), além da implementação em R.  
 - **Exploração interativa via Shiny** para ajustar $\lambda$ (sensibilidade à atração) e observar a evolução das proporções de escolha por estratégia e por jogador ao longo do tempo.
-
-<p align="center">
-  <img src="assets/painel.png?raw=1"
-       alt="Painel Shiny — Simulações dos jogos BSG e MEG"
-       width="850">
-  <br>
-  <em>Painel Shiny — Simulações dos jogos BSG e MEG</em>
-</p>
-
 - **Geração de tabelas e figuras** (métricas descritivas, distribuições, correlações e matrizes de jogo) prontas para exportação em **PDF**, **PNG** e **LaTeX**.
 
 ## Metodologia (resumo)
@@ -96,3 +92,62 @@ Abaixo vai um guia direto para reproduzir as simulações, figuras e tabelas (e 
 git clone https://github.com/drewmelo/EWA-MarketDynamics.git
 cd EWA-MarketDynamics.git
 ```
+
+## Reprodutibilidade
+
+Este projeto usa [`renv`](https://rstudio.github.io/renv/) para **congelar** as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.
+
+### Como reproduzir
+
+```r
+# dentro do R
+install.packages("renv")   # só na 1ª vez
+renv::restore()            # recria o MESMO ambiente do projeto
+targets::tar_make()        # roda o pipeline (executa main.R e gera saídas)
+```
+
+#### Execução automatizada
+
+O pacote `targets` coordena a execução completa do pipeline do projeto.
+Ele roda o script principal (`main.R`), gera as figuras e tabelas listadas e garante que apenas etapas modificadas sejam recalculadas.
+
+Para reproduzir todo o fluxo, basta executar:
+
+```r
+targets::tar_make()
+```
+
+O `targets` detecta automaticamente o que precisa ser atualizado e garante a execução reprodutível de todas as etapas. Além disso, o comando executa o pipeline descrito em `_targets.R`, que por sua vez roda o script principal e gera todos os arquivos de saída (PDFs, PNGs e TEX) automaticamente.
+
+## Painel Interativo (Shiny Dashboard)
+
+O projeto também inclui um **painel interativo em Shiny** desenvolvido com o tema **bslib** e elementos visuais otimizados para análise de aprendizado em jogos.
+
+> 🎯 **Para quem é:**  
+> O painel foi pensado para **usuários low-code**, que desejam **realizar as simulações e gerar todos os resultados do TCC automaticamente**, **sem precisar escrever código em R**.
+
+Ele permite:
+
+- Escolher parâmetros de simulação (`λ`, número de amostras e períodos);
+- Visualizar em tempo real a evolução das estratégias nos jogos **BSG** e **MEG**;
+- Alternar entre os modelos de aprendizado (**EWA**, **Reinforcement Learning**, **Belief-based Learning**);
+- Baixar **simulações completas** e **resultados agregados** em formato CSV;
+- Gerar automaticamente as mesmas tabelas e figuras utilizadas no TCC.
+
+<p align="center">
+  <img src="assets/painel.png?raw=1"
+       alt="Painel Shiny — EWA Market Dynamics Dashboard"
+       width="850">
+  <br>
+  <em>EWA Market Dynamics Dashboard — ambiente interativo para simulação e análise</em>
+</p>
+
+>  **Dica:**  
+> Ao clicar em “Baixar Simulação”, o painel executa o mesmo pipeline automatizado usado no projeto (`targets::tar_make()`), exportando os resultados diretamente, sem necessidade de rodar scripts manualmente.
+
+Caso queira executar o web app:
+```r
+shiny::runApp("app")
+```
+
+ *Assim, qualquer pessoa pode restaurar o mesmo ambiente e reproduzir integralmente todas as análises e resultados do TCC com apenas dois comandos (`renv::restore()` e `targets::tar_make()`) ou via `shiny::runApp()`*

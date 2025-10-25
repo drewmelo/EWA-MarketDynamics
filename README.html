@@ -139,6 +139,12 @@ Trabalho de Conclusão de Curso defendido em: data <br> <a href="https://github.
 <section id="sobre-este-repositório" class="level2">
 <h2 class="anchored" data-anchor-id="sobre-este-repositório">Sobre este repositório</h2>
 <p>Este repositório concentra o código-fonte do meu TCC sobre <strong>dinâmicas de aprendizado em cenários de incerteza de mercado</strong>. Investigo três algoritmos de aprendizagem em jogos 2×2 — <em>Experience-Weighted Attraction</em> (EWA), <em>Reinforcement Learning</em> (RL) e <em>Belief-based Learning</em> (BL) — e comparo a trajetória dos agentes com os <strong>equilíbrios teóricos</strong>. O foco recai sobre dois ambientes clássicos: <strong>Buyer–Seller Game (BSG)</strong> e <strong>Market Entry Game (MEG)</strong>.</p>
+<blockquote class="blockquote">
+<p><strong>Compatibilidade:</strong><br>
+Este projeto foi desenvolvido e testado em <strong>R 4.3.2 (Windows 11)</strong>.<br>
+Versões posteriores (como R 4.4 ou superiores) podem causar falhas no pacote <strong><code>rgamer</code></strong>, no que diz respeito a função <code>solve_nfg()</code>.<br>
+Recomenda-se manter a série 4.3 para reprodutibilidade total.</p>
+</blockquote>
 </section>
 <section id="o-que-você-encontrará-aqui" class="level2">
 <h2 class="anchored" data-anchor-id="o-que-você-encontrará-aqui">O que você encontrará aqui</h2>
@@ -148,11 +154,6 @@ Trabalho de Conclusão de Curso defendido em: data <br> <a href="https://github.
 <li><strong>Simulador baseado em agentes</strong> com execução de rodadas sob EWA, RL e BL, controle de parâmetros e de horizontes (amostras e períodos). A metodologia descreve as equações do EWA e seus casos especiais (RL e BL), além da implementação em R.<br>
 </li>
 <li><strong>Exploração interativa via Shiny</strong> para ajustar <span class="math inline">\(\lambda\)</span> (sensibilidade à atração) e observar a evolução das proporções de escolha por estratégia e por jogador ao longo do tempo.</li>
-</ul>
-<p align="center">
-<img src="assets/painel.png?raw=1" alt="Painel Shiny — Simulações dos jogos BSG e MEG" width="850"> <br> <em>Painel Shiny — Simulações dos jogos BSG e MEG</em>
-</p>
-<ul>
 <li><strong>Geração de tabelas e figuras</strong> (métricas descritivas, distribuições, correlações e matrizes de jogo) prontas para exportação em <strong>PDF</strong>, <strong>PNG</strong> e <strong>LaTeX</strong>.</li>
 </ul>
 </section>
@@ -200,6 +201,50 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/drewmelo/EWA-MarketDynamics.git</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> EWA-MarketDynamics.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+</section>
+<section id="reprodutibilidade" class="level2">
+<h2 class="anchored" data-anchor-id="reprodutibilidade">Reprodutibilidade</h2>
+<p>Este projeto usa <a href="https://rstudio.github.io/renv/"><code>renv</code></a> para <strong>congelar</strong> as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.</p>
+<section id="como-reproduzir" class="level3">
+<h3 class="anchored" data-anchor-id="como-reproduzir">Como reproduzir</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dentro do R</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"renv"</span>)   <span class="co"># só na 1ª vez</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()            <span class="co"># recria o MESMO ambiente do projeto</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_make</span>()        <span class="co"># roda o pipeline (executa main.R e gera saídas)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="execução-automatizada" class="level4">
+<h4 class="anchored" data-anchor-id="execução-automatizada">Execução automatizada</h4>
+<p>O pacote <code>targets</code> coordena a execução completa do pipeline do projeto. Ele roda o script principal (<code>main.R</code>), gera as figuras e tabelas listadas e garante que apenas etapas modificadas sejam recalculadas.</p>
+<p>Para reproduzir todo o fluxo, basta executar:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>targets<span class="sc">::</span><span class="fu">tar_make</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>O <code>targets</code> detecta automaticamente o que precisa ser atualizado e garante a execução reprodutível de todas as etapas. Além disso, o comando executa o pipeline descrito em <code>_targets.R</code>, que por sua vez roda o script principal e gera todos os arquivos de saída (PDFs, PNGs e TEX) automaticamente.</p>
+</section>
+</section>
+</section>
+<section id="painel-interativo-shiny-dashboard" class="level2">
+<h2 class="anchored" data-anchor-id="painel-interativo-shiny-dashboard">Painel Interativo (Shiny Dashboard)</h2>
+<p>O projeto também inclui um <strong>painel interativo em Shiny</strong> desenvolvido com o tema <strong>bslib</strong> e elementos visuais otimizados para análise de aprendizado em jogos.</p>
+<blockquote class="blockquote">
+<p>🎯 <strong>Para quem é:</strong><br>
+O painel foi pensado para <strong>usuários low-code</strong>, que desejam <strong>realizar as simulações e gerar todos os resultados do TCC automaticamente</strong>, <strong>sem precisar escrever código em R</strong>.</p>
+</blockquote>
+<p>Ele permite:</p>
+<ul>
+<li>Escolher parâmetros de simulação (<code>λ</code>, número de amostras e períodos);</li>
+<li>Visualizar em tempo real a evolução das estratégias nos jogos <strong>BSG</strong> e <strong>MEG</strong>;</li>
+<li>Alternar entre os modelos de aprendizado (<strong>EWA</strong>, <strong>Reinforcement Learning</strong>, <strong>Belief-based Learning</strong>);</li>
+<li>Baixar <strong>simulações completas</strong> e <strong>resultados agregados</strong> em formato CSV;</li>
+<li>Gerar automaticamente as mesmas tabelas e figuras utilizadas no TCC.</li>
+</ul>
+<p align="center">
+<img src="assets/painel.png?raw=1" alt="Painel Shiny — EWA Market Dynamics Dashboard" width="850"> <br> <em>EWA Market Dynamics Dashboard — ambiente interativo para simulação e análise</em>
+</p>
+<blockquote class="blockquote">
+<p><strong>Dica:</strong><br>
+Ao clicar em “Baixar Simulação”, o painel executa o mesmo pipeline automatizado usado no projeto (<code>targets::tar_make()</code>), exportando os resultados diretamente, sem necessidade de rodar scripts manualmente.</p>
+</blockquote>
+<p>Caso queira executar o web app:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Assim, qualquer pessoa pode restaurar o mesmo ambiente e reproduzir integralmente todas as análises e resultados do TCC com apenas dois comandos (<code>renv::restore()</code> e <code>targets::tar_make()</code>) ou via <code>shiny::runApp()</code></em></p>
 </section>
 
 </main>

@@ -21,21 +21,22 @@ install_if_missing <- function(pkgs) {
 base_pkgs <- c("shiny","bslib","ggplot2","dplyr","scales","tibble","withr","readr")
 invisible(lapply(base_pkgs, quiet_lib))
 
-# Sua lista “completa”
+# lista “completa”
 extra_pkgs <- c(
-  # tidyverse (contém ggplot2/dplyr/readr, mas não tem problema)
-  "tidyverse",
-  # dados & utilitários
-  "janitor","glue",
-  # visual
-  "patchwork","paletteer","ggtext",
-  # temas
-  "beautyxtrar",
-  # fontes & tabelas
-  "extrafont","showtext","sysfonts","kableExtra","webshot","flextable","grid",
-  # Teoria dos Jogos
+  # tidyverse e data wrangling
+  "tidyverse", "janitor", "glue",
+  # visualização e layout
+  "patchwork", "paletteer", "ggtext",
+  # temas e fontes
+  "beautyxtrar", "extrafont", "showtext", "sysfonts",
+  # tabelas e exportação
+  "kableExtra", "webshot", "webshot2", "flextable", "magick", "grid",
+  # shiny e frontend
+  "shiny", "bslib",
+  # teoria dos jogos
   "rgamer"
 )
+
 
 # Instala os CRAN (exceto beautyxtrar, que é GitHub)
 install_if_missing(setdiff(extra_pkgs, "beautyxtrar"))
