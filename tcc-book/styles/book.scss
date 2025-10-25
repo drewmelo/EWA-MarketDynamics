@@ -1,0 +1,154 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Lato:wght@400;600;700&display=swap');
+$font-family-base: "Source Serif 4", Georgia, "Times New Roman", serif !default;
+$font-family-sans-serif: "Lato", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+
+
+/*-- scss:uses --*/
+/* (vazio – manter a seção caso queira @use no futuro) */
+
+/*-- scss:rules --*/
+/* Títulos em sans, corpo em serif */
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-sans-serif;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+/* Tirar linha sob h2, h3, h4, h5, h6 */
+main#quarto-document-content h2.anchored,
+main#quarto-document-content h3.anchored,
+main#quarto-document-content h4.anchored,
+main#quarto-document-content h5.anchored,
+main#quarto-document-content h6.anchored {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: .6rem !important;   /* ajuste fino de espaço */
+}
+
+/* (opcional) garantir que o h1 continue com o estilo do tema */
+main#quarto-document-content h1.anchored {
+  /* deixe vazio para manter o padrão; ou defina algo explícito aqui */
+  /* border-bottom: 1px solid var(--bs-border-color); padding-bottom: .5rem; */
+}
+
+
+/* Título do capítulo com “small caps” */
+#title-block-header .title, .quarto-title .title {
+  font-variant-caps: small-caps;
+  letter-spacing: .5px;
+}
+
+/* Coluna mais estreita (livro) */
+#quarto-content .page-column,
+main#quarto-document-content {
+  max-width: 72ch;   /* ajuste 66–80ch conforme gosto */
+  margin-inline: auto;
+}
+
+/* Parágrafos justificados, hifenização (precisa lang: pt no YAML) */
+main#quarto-document-content p {
+  text-align: justify;
+  hyphens: auto;
+  line-height: 1.7;
+}
+
+main#quarto-document-content p { text-indent: 0; }
+section > p:first-of-type { text-indent: 0; }
+main#quarto-document-content :is(blockquote, .callout, pre, figure, table, ul, ol, h2, h3, h4, h5, h6) + p { text-indent: 0; }
+
+
+/* Drop cap (iniciais grandes) no primeiro parágrafo de cada capítulo */
+/* Drop cap só no primeiro parágrafo do capítulo (não em subseções) */
+main#quarto-document-content > p:first-of-type::first-letter{
+  initial-letter: 2;
+  -webkit-initial-letter: 2;
+  margin-right: .1em;
+  font-weight: 600;
+}
+
+/* Não aplicar em páginas “preface” (Sobre a obra, Epígrafe, etc) */
+body.preface main#quarto-document-content > p:first-of-type::first-letter{
+  initial-letter: 0;
+  -webkit-initial-letter: 0;
+}
+
+/* Figuras e legendas */
+.figure, figure { margin: 1.2rem auto; }
+figcaption { font-size: .95rem; opacity: .9; }
+
+/* Sidebar mais “elegante” */
+#quarto-sidebar .sidebar-item .chapter-number { margin-right: .35rem; }
+#quarto-sidebar .sidebar-item { padding-block: .15rem; }
+
+/* Esconder numeração em páginas “preface” (index/epígrafe) */
+body.preface #title-block-header .chapter-number,
+body.preface .quarto-title .chapter-number { display: none !important; }
+#quarto-sidebar a[href$="index.html"] .chapter-number,
+#quarto-sidebar a[href$="epigrafe.html"] .chapter-number { display: none !important; }
+#quarto-sidebar a[href$="index.html"] .chapter-title,
+#quarto-sidebar a[href$="epigrafe.html"] .chapter-title { margin-left: 0 !important; }
+
+/* ====== TUNING TIPOGRÁFICO ====== */
+
+/* 1) Coluna mais estreita e tamanho-base maior */
+#quarto-content .page-column,
+main#quarto-document-content {
+  max-width: 66ch;            /* antes: 72ch */
+  margin-inline: auto;
+  font-size: 18px;            /* ~1.125rem; ajuste 17–19px conforme gosto */
+}
+
+/* 2) Parágrafos: mais ar, melhor kerning e ligaduras */
+main#quarto-document-content p {
+  line-height: 1.85;          /* antes: 1.7 */
+  letter-spacing: .003em;     /* dá um “respiro” leve */
+  word-spacing: .02em;        /* evita aparência “amontoada” */
+  text-align: justify;
+  text-justify: inter-word;   /* alguns navegadores ignoram, mas ajuda */
+  hyphens: auto;              /* PT-BR precisa lang: pt no YAML */
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+}
+
+/* 4) Espaço entre parágrafos um pouquinho maior */
+main#quarto-document-content p + p { margin-top: .35rem; }
+
+/* 5) Título do capítulo menos “pesado” */
+#title-block-header .title, .quarto-title .title {
+  font-variant-caps: small-caps;
+  letter-spacing: .3px;       /* menor tracking */
+  font-weight: 600;           /* antes 700 */
+}
+
+/* 6) Se quiser desabilitar o drop-cap (capitular), comente a linha abaixo */
+section > p:first-of-type::first-letter { initial-letter: 0; -webkit-initial-letter: 0; }
+
+/* 7) Hifenização menos agressiva (nem todo navegador suporta) */
+main#quarto-document-content {
+  hyphenate-limit-chars: 6 3 3;
+}
+
+/* Centraliza imagem + legenda + fonte em qualquer tema */
+figure.figure, figure.quarto-figure { text-align: center; }
+figure.figure img, figure.quarto-figure img { display: block; margin: 0 auto; }
+figure.figure figcaption, figure.quarto-figure figcaption { text-align: center; margin-bottom: .15rem;}
+
+.quarto-figure .quarto-figure-attribution,
+figure .quarto-figure-attribution,
+figure .figure-attribution,
+p.quarto-figure-attribution{
+  display:block !important;
+  text-align:center !important;
+  font-size: 0.95rem;
+  color: var(--bs-secondary-color);
+  margin-top:-.25rem;
+}
+
+
+/*-- scss:mixins --*/
+/* (vazio – opcional) */
+
+/*-- scss:functions --*/
+/* (vazio – opcional) */

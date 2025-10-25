@@ -1,0 +1,14 @@
+---
+include-in-header:
+  - text: |
+      <style>
+      h1.unlisted {
+        display: none;
+      }
+      </style>
+---
+
+# Referências {.unnumbered}
+
+::: {#refs}
+:::

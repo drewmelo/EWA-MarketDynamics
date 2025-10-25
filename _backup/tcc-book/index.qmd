@@ -1,0 +1,20 @@
+---
+include-in-header:
+  - text: |
+      <style>
+      h1.unlisted {
+        display: none;
+      }
+      </style>
+---
+
+# Sobre a obra {.unnumbered .unlisted}
+
+Este trabalho apresenta os resultados do TCC intitulado  
+**“Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado”**, uma aplicação de Teoria dos Jogos utilizando o modelo **Experience-Weighted Attraction (EWA)**.
+
+Este livro foi construído com [Quarto](https://quarto.org) e [R](https://www.r-project.org),
+buscando integrar análise reprodutível, dados e texto científico em um só documento.
+
+---
+
