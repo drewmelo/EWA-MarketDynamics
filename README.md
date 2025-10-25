@@ -2,7 +2,7 @@
 <div align="center">
 
   <p align="center">
-    <img src="assets/logo.png?raw=1" alt="Logo" width="120">
+    <img src="assets/logo-main.png?raw=1" alt="Logo" width="120">
   </p>
 
   <h1 align="center">
@@ -51,7 +51,7 @@ Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de apr
 - **Exploração interativa via Shiny** para ajustar $\lambda$ (sensibilidade à atração) e observar a evolução das proporções de escolha por estratégia e por jogador ao longo do tempo.
 
 <p align="center">
-  <img src="assets/img1.png?raw=1"
+  <img src="assets/painel.png?raw=1"
        alt="Painel Shiny — Simulações dos jogos BSG e MEG"
        width="850">
   <br>
