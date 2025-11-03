@@ -43,22 +43,23 @@ base::source("scripts/funcoes/funcao_latex.R")
 base::source("scripts/payoffs.R")
 
 # (Opcional) compilação dos testes de reprodutibilidade dos NE (equilíbrio de Nash)
-base::source("scripts/compilacao_teste.R")
+#base::source("scripts/compilacao_teste.R")
 
 ## DEFINIÇÃO DA MATRIZ DE JOGO -------------------------------------------------
 # Definindo um jogo de forma normal (payoff matrix)
-base::set.seed(06-08-2024)
 
 # Criando o jogo Buyer-Seller Game (BSG)
+# === agora sim: matriz 2×2 no rgamer com os payoffs MÉDIOS ===
 matriz_bsg <- rgamer::normal_form(
   players = c("Vendedor", "Comprador"),
-  pars = c("preco_vendedor", "estrategia_comprador"),
-  s1 = c("Preço Alto", "Preço Baixo"),  # Estratégias do vendedor
-  s2 = c("Aceitar", "Rejeitar"),  # Estratégias do comprador
-  payoffs1 = func_payoff1,
-  payoffs2 = func_payoff2,
-  discretize = T
+  pars    = c("preco_vendedor", "estrategia_comprador"),
+  s1      = s1,
+  s2      = s2,
+  payoffs1 = pay1_avg,   # usa as médias MC
+  payoffs2 = pay2_avg,
+  discretize = TRUE
 )
+
 
 # Criando o jogo Market Entry Game (MEG)
 matriz_meg <- rgamer::normal_form(
@@ -478,3 +479,23 @@ write_probtex(
 # 5) UI (page_fluid / layout_sidebar / cards ...)
 # 6) server <- function(input, output, session) { ... }
 # 7) shinyApp(ui, server)
+
+tab6 <- resumo_dados$tab_6 |>
+  mutate(
+    lambda_num = as.numeric(gsub(",", ".", gsub("λ\\s*=\\s*", "", as.character(lambda))))
+  ) |>
+  arrange(jogador, estrategia_escolhida, type, lambda_num)
+
+
+ggplot(tab6, aes(x = lambda_num, y = estrategia_escolhida, fill = media_prob)) +
+  geom_tile(color = "white") +
+  facet_wrap(~ interaction(type, jogador), scales = "free_y") +
+  scale_fill_gradient(low = "#f9f9f9", high = "#174A7E") +
+  labs(x = "λ", y = "Estratégia", fill = "Prob. média") +
+  theme_minimal(base_size = 13)
+
+
+
+
+
+

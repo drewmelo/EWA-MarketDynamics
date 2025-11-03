@@ -7,12 +7,12 @@ summary_statistics <- function(df, sufixo) {
     dplyr::filter(estrategia_escolhida == estrategias) |>
     dplyr::group_by(type, lambda) |>
     dplyr::reframe(
-      media = base::round(base::mean(atracao, na.rm = T), 1),
-      mediana = base::round(stats::median(atracao, na.rm = T), 1),
-      dp = base::round(stats::sd(atracao, na.rm = T), 1),
-      min = base::round(base::min(atracao, 1)),
-      max = base::round(base::max(atracao, 1)),
-      cv = base::round(dp / media, 1)
+      media = base::round(base::mean(atracao, na.rm = T)),
+      mediana = base::round(stats::median(atracao, na.rm = T)),
+      dp = base::round(stats::sd(atracao, na.rm = T)),
+      min = base::round(base::min(atracao)),
+      max = base::round(base::max(atracao)),
+      iqr = base::round(IQR(atracao))
     ) |>
     dplyr::rename_with(~ base::paste0(.x, "_", sufixo), .cols = 3:8) # Adiciona sufixo personalizado
 }

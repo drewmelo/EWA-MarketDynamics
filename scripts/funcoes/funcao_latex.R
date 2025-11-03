@@ -1,32 +1,35 @@
 model_stats_tabletex <- function(data,
-                                      modelo    = "EWA",
-                                      caption   = NULL,
-                                      label     = "tabela_stats",
-                                      footnote  = "Fonte: Elaborado pelo autor (2024).",
-                                      font_size = 10,
-                                      file_tex  = NULL) {
+                                 modelo    = "EWA",
+                                 caption   = NULL,
+                                 label     = "tabela_stats",
+                                 footnote  = "Fonte: Elaborado pelo autor (2024).",
+                                 font_size = 10,
+                                 file_tex  = NULL) {
   # ---- 1) preparar dados ----
   df <- data |>
     dplyr::select(
       lambda,
-      media_m1,  mediana_m1,  dp_m1,  min_m1,  max_m1,  cv_m1,
-      media_m2,  mediana_m2,  dp_m2,  min_m2,  max_m2,  cv_m2
+      media_m1,  mediana_m1,  dp_m1,  min_m1,  max_m1,  iqr_m1,
+      media_m2,  mediana_m2,  dp_m2,  min_m2,  max_m2,  iqr_m2
     ) |>
     dplyr::rename(
       media_bsg = media_m1,  md_bsg = mediana_m1, dp_bsg = dp_m1,
-      min_bsg   = min_m1,    max_bsg= max_m1,     cv_bsg = cv_m1,
+      min_bsg   = min_m1,    max_bsg= max_m1,     iqr_bsg = iqr_m1,
       media_meg = media_m2,  md_meg = mediana_m2, dp_meg = dp_m2,
-      min_meg   = min_m2,    max_meg= max_m2,     cv_meg = cv_m2
+      min_meg   = min_m2,    max_meg= max_m2,     iqr_meg = iqr_m2
     )
 
-  # formatador numérico PT-BR
+  # formatador numérico PT-BR sem casas decimais
   fmt <- function(x) {
-    if (is.numeric(x)) formatC(x, format = "f", digits = 1, big.mark = ".", decimal.mark = ",")
-    else as.character(x)
+    if (is.numeric(x)) {
+      formatC(x, format = "f", digits = 0, big.mark = ".", decimal.mark = ",")
+    } else {
+      as.character(x)
+    }
   }
   df[] <- lapply(df, fmt)
 
-  # transforma "λ =  0,1" -> "$\lambda = 0,1$"
+  # transforma "λ =  0,1" -> "$\\lambda = 0,1$"
   to_lambda_tex <- function(s) {
     s <- as.character(s)
     val <- sub(".*=\\s*", "", s)
@@ -38,8 +41,8 @@ model_stats_tabletex <- function(data,
   row_cells <- function(i) {
     c(
       lambdas[i],
-      df$media_bsg[i], df$md_bsg[i], df$dp_bsg[i], df$min_bsg[i], df$max_bsg[i], df$cv_bsg[i],
-      df$media_meg[i], df$md_meg[i], df$dp_meg[i], df$min_meg[i], df$max_meg[i], df$cv_meg[i]
+      df$media_bsg[i], df$md_bsg[i], df$dp_bsg[i], df$min_bsg[i], df$max_bsg[i], df$iqr_bsg[i],
+      df$media_meg[i], df$md_meg[i], df$dp_meg[i], df$min_meg[i], df$max_meg[i], df$iqr_meg[i]
     )
   }
 
@@ -52,8 +55,8 @@ model_stats_tabletex <- function(data,
   header_top <- paste0(
     "\t\t\\Xhline{2\\arrayrulewidth}\n",
     "\t\t& \\multicolumn{6}{c|}{BSG} & \\multicolumn{6}{c}{MEG} \\\\ \\hline\n",
-    "\t\t\\multicolumn{1}{c|}{", modelo, "} & Média & Md & DP & Min & Máx & CV & ",
-    "Média & Md & DP & Min & Máx & CV \\\\ \\hline\n"
+    "\t\t\\multicolumn{1}{c|}{", modelo, "} & Média & Md & DP & Min & Máx & IQR & ",
+    "Média & Md & DP & Min & Máx & IQR \\\\ \\hline\n"
   )
 
   # linhas da tabela

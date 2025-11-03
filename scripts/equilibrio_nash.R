@@ -56,7 +56,7 @@ p3 <- ggplot2::ggplot(
     data = data.frame(
       xs = 0.639,
       ys = 0.03,
-      label = "<b style='color: #566876;'>p = 0,649 (Aceitar)</b><br><b style='color: #0B86CA;'>q = 1 (Preço Alto)</b>"
+      label = "<b style='color: #566876;'>p = 0,277 (Aceitar)</b><br><b style='color: #0B86CA;'>q = 1 (Preço Alto)</b>"
     ),
     aes(x = xs, y = ys, label = label),
     fill = "white", label.color = NA,

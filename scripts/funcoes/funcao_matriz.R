@@ -73,15 +73,15 @@ model_stats_table <- function(data, file,
   df <- data |>
     dplyr::select(
       lambda,
-      media_m1,  mediana_m1,  dp_m1,  min_m1,  max_m1,  cv_m1,
-      media_m2,  mediana_m2,  dp_m2,  min_m2,  max_m2,  cv_m2
+      media_m1,  mediana_m1,  dp_m1,  min_m1,  max_m1,  iqr_m1,
+      media_m2,  mediana_m2,  dp_m2,  min_m2,  max_m2,  iqr_m2
     ) |>
     dplyr::rename(
       `λ`      = lambda,
       `Média_BSG` = media_m1,  `Md_BSG` = mediana_m1, `DP_BSG` = dp_m1,
-      `Min_BSG`   = min_m1,    `Máx_BSG`= max_m1,     `CV_BSG` = cv_m1,
+      `Min_BSG`   = min_m1,    `Máx_BSG`= max_m1,     `IQR_BSG` = iqr_m1,
       `Média_MEG` = media_m2,  `Md_MEG` = mediana_m2, `DP_MEG` = dp_m2,
-      `Min_MEG`   = min_m2,    `Máx_MEG`= max_m2,     `CV_MEG` = cv_m2
+      `Min_MEG`   = min_m2,    `Máx_MEG`= max_m2,     `IQR_MEG` = iqr_m2
     )
 
   keys <- colnames(df)
@@ -90,8 +90,8 @@ model_stats_table <- function(data, file,
   header_map <- data.frame(
     keys   = keys,
     top    = c(modelo, rep("BSG", 6), rep("MEG", 6)),  
-    bottom = c("λ", "Média","Md","DP","Min","Máx","CV",
-               "Média","Md","DP","Min","Máx","CV"),
+    bottom = c("λ", "Média","Md","DP","Min","Máx","IQR",
+               "Média","Md","DP","Min","Máx","IQR"),
     check.names = FALSE
   )
 
