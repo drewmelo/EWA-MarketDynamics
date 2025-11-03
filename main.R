@@ -365,14 +365,14 @@ model_stats_table(
   data   = resumo_dados$tab_3,
   file   = "tabelas/tabela_3.png",
   modelo = "EWA",
-  title  = "Tabela 3 — Estatísticas EWA"
+  title  = "Tabela 3 — Medidas-resumo das atrações no modelo EWA"
 )
 
 # Ou salvar direto num arquivo (sem preâmbulo)
 model_stats_tabletex(
   data     = resumo_dados$tab_3,
   modelo   = "EWA",
-  caption  = "Estatísticas do Modelo EWA para BSG e MEG",
+  caption  = "Medidas-resumo das atrações no modelo EWA",
   label    = "tabela_3",
   file_tex = "tabelas/tabela_3.tex"
 )
@@ -382,14 +382,14 @@ model_stats_table(
   data   = resumo_dados$tab_4,
   file   = "tabelas/tabela_4.png",
   modelo = "RL",
-  title  = "Tabela 4 — Estatísticas RL"
+  title  = "Tabela 4 — Medidas-resumo das atrações no modelo de reforço"
 )
 
 # Ou salvar direto num arquivo (sem preâmbulo)
 model_stats_tabletex(
   data     = resumo_dados$tab_4,
   modelo   = "RL",
-  caption  = "Estatísticas do Modelo RL para BSG e MEG",
+  caption  = "Medidas-resumo das atrações no modelo de reforço",
   label    = "tabela_4",
   file_tex = "tabelas/tabela_4.tex"
 )
@@ -399,14 +399,14 @@ model_stats_table(
   data   = resumo_dados$tab_5,
   file   = "tabelas/tabela_5.png",
   modelo = "BL",
-  title  = "Tabela 5 — Estatísticas BL"
+  title  = "Tabela 5 — Medidas-resumo das atrações no modelo baseado em crenças"
 )
 
 # Ou salvar direto num arquivo (sem preâmbulo)
 model_stats_tabletex(
   data     = resumo_dados$tab_5,
   modelo   = "BL",
-  caption  = "Estatísticas do Modelo BL para BSG e MEG",
+  caption  = "Medidas-resumo das atrações no modelo baseado em crenças",
   label    = "tabela_5",
   file_tex = "tabelas/tabela_5.tex"
 )

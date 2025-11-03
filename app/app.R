@@ -23,20 +23,19 @@ library(shinybusy)   # <<< ADICIONE
 base::source("scripts/funcoes/funcao_dados_auxiliar.R")
 base::source("scripts/funcoes/funcao_processar_simulacoes.R")
 base::source("scripts/funcoes/funcao_sim_lambda.R")
-base::source("scripts/payoffs.R")
+#base::source("scripts/payoffs.R")
 
 # ---- Configurações iniciais ----
 color_main <- c("#0B86CA", "#566876", "#9AADB2", "#B1283AFF")
 
 # Buyer–Seller Game (BSG)
 matriz_bsg <- rgamer::normal_form(
-  players   = c("Vendedor", "Comprador"),
-  pars      = c("preco_vendedor", "estrategia_comprador"),
-  s1        = c("Preço Alto", "Preço Baixo"),
-  s2        = c("Aceitar", "Rejeitar"),
-  payoffs1  = func_payoff1,
-  payoffs2  = func_payoff2,
-  discretize = TRUE
+  players  = c("Vendedor", "Comprador"),
+  s1       = c("Preço Alto", "Preço Baixo"),
+  s2       = c("Aceitar", "Rejeitar"),
+  # ordem: (PA, A) | (PB, A) | (PA, R) | (PB, R)
+  payoffs1 = c(20, 10, 0, 0),
+  payoffs2 = c(-7.242103, 2.771034, 0, 0)
 )
 
 # Market Entry Game (MEG)
@@ -212,7 +211,7 @@ summary_statistics <- function(df, sufixo) {
       dp      = round(stats::sd(atracao,    na.rm = TRUE), 1),
       min     = round(min(atracao,         na.rm = TRUE), 1),
       max     = round(max(atracao,         na.rm = TRUE), 1),
-      cv      = round(stats::sd(atracao, na.rm = TRUE) / mean(atracao, na.rm = TRUE), 2),
+      iqr      = round(IQR(atracao), 1),
       .groups = "drop"
     ) |>
     dplyr::rename_with(~ paste0(.x, "_", sufixo), .cols = 3:8)
@@ -897,7 +896,7 @@ server <- function(input, output, session){
     bsg_dp <- mr_bsg$dp_bsg[1]
     bsg_min <- mr_bsg$min_bsg[1]
     bsg_max <- mr_bsg$max_bsg[1]
-    bsg_cv  <- mr_bsg$cv_bsg[1]
+    bsg_iqr  <- mr_bsg$iqr_bsg[1]
 
     # ---------- MEG: estratégia mais provável por empresa ----------
     a_ent <- get_media_prob(rx_meg$long, mdl, "Empresa A", "Entrar")
@@ -916,7 +915,7 @@ server <- function(input, output, session){
     meg_dp <- mr_meg$dp_meg[1]
     meg_min <- mr_meg$min_meg[1]
     meg_max <- mr_meg$max_meg[1]
-    meg_cv  <- mr_meg$cv_meg[1]
+    meg_iqr  <- mr_meg$iqr_meg[1]
 
     # ---------- Parágrafos (BSG/MEG) ----------
     p_bsg <- htmltools::tags$p(
@@ -925,7 +924,7 @@ server <- function(input, output, session){
         "enquanto o <em>Comprador</em> tende a <strong>{comp_lab}</strong> ({fmt_pct(comp_val)}). ",
         "Nas medidas de atração, observou-se média de <strong>{fmt_num(bsg_m)}</strong> ",
         "(dp {fmt_num(bsg_dp)}), mínimo {fmt_num(bsg_min)} e máximo {fmt_num(bsg_max)}, ",
-        "com coeficiente de variação de {fmt_num(bsg_cv, 2)}."
+        "com intervalo interquartil de {fmt_num(bsg_iqr, 2)}."
       ))
     )
     p_meg <- htmltools::tags$p(
@@ -934,7 +933,7 @@ server <- function(input, output, session){
         "e a <em>Empresa B</em> tende a <strong>{b_lab}</strong> ({fmt_pct(b_val)}). ",
         "Para a atração, a média foi <strong>{fmt_num(meg_m)}</strong> ",
         "(dp {fmt_num(meg_dp)}), mínimo {fmt_num(meg_min)} e máximo {fmt_num(meg_max)}, ",
-        "com coeficiente de variação de {fmt_num(meg_cv, 2)}."
+        "com intervalo interquartil de {fmt_num(meg_iqr, 2)}."
       ))
     )
 
@@ -1143,13 +1142,13 @@ server <- function(input, output, session){
       norm(tb_bsg, "BSG"),
       norm(tb_meg, "MEG")
     ) |>
-      dplyr::select(Jogo, lambda, media, mediana, dp, min, max, cv)
+      dplyr::select(Jogo, lambda, media, mediana, dp, min, max, iqr)
   }
 
   # ------- Reactable para cada aba -------
   output$mr_ewa_rt <- reactable::renderReactable({
     tab <- make_mr_tab(ewa_bsg(), ewa_meg(), "EWA"); req(nrow(tab) > 0)
-    right_nums <- intersect(c("media","mediana","dp","min","max","cv"), names(tab))
+    right_nums <- intersect(c("media","mediana","dp","min","max","iqr"), names(tab))
     cols <- c(
       list(
         Jogo   = reactable::colDef(name = "Jogo", sticky = "left"),
@@ -1164,7 +1163,7 @@ server <- function(input, output, session){
 
   output$mr_rl_rt <- reactable::renderReactable({
     tab <- make_mr_tab(rl_bsg(), rl_meg(), "RL"); req(nrow(tab) > 0)
-    right_nums <- intersect(c("media","mediana","dp","min","max","cv"), names(tab))
+    right_nums <- intersect(c("media","mediana","dp","min","max","iqr"), names(tab))
     cols <- c(
       list(
         Jogo   = reactable::colDef(name = "Jogo", sticky = "left"),
@@ -1179,7 +1178,7 @@ server <- function(input, output, session){
 
   output$mr_bl_rt <- reactable::renderReactable({
     tab <- make_mr_tab(bl_bsg(), bl_meg(), "BL"); req(nrow(tab) > 0)
-    right_nums <- intersect(c("media","mediana","dp","min","max","cv"), names(tab))
+    right_nums <- intersect(c("media","mediana","dp","min","max","iqr"), names(tab))
     cols <- c(
       list(
         Jogo   = reactable::colDef(name = "Jogo", sticky = "left"),
