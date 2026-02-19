@@ -5,6 +5,6 @@ account: drewmelo
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15373139
-bundleId: 11118147
+bundleId: 11135083
 url: https://drewmelo.shinyapps.io/ewa-market-dynamics/
 version: 1
