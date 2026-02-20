@@ -327,10 +327,10 @@ plot_correlation(
 
 
 # Figura 21 (compilação dos Equilíbrios de Nash no BSG) -- APÊNDICE A
-ggplot2::ggsave(plot = p22,
-                filename = "figuras/figura_21.pdf",
-                width = 10.81, height = 7.75, units = "in",
-                device = cairo_pdf)
+#ggplot2::ggsave(plot = p22,
+#                filename = "figuras/figura_21.pdf",
+#                width = 10.81, height = 7.75, units = "in",
+#                device = cairo_pdf)
 
 # Figura 22 (plotagem dos dados das tabelas (8 e 9) de contigência)
 
