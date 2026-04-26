@@ -10,7 +10,6 @@ _targets/
 tcc-book/_book/
 _freeze/
 .quarto/
-docs/
 *.html
 !README.html
 _backup/
