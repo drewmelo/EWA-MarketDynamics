@@ -12,6 +12,8 @@ _freeze/
 .quarto/
 *.html
 !README.html
+!docs/**/*.html
+!docs/*.html
 _backup/
 README_files/
 app/rsconnect/
