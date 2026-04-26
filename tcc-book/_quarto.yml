@@ -34,14 +34,16 @@ book:
 
 format:
   html:
-    theme: cosmo
+    theme:
+      - cosmo
+      - styles/book.scss
+    css: styles/styles.css
     mainfont: "Source Serif 4"
     monofont: "Fira Code"
     toc: true
     number-sections: true
     code-fold: show
     lang: pt
-    css: [styles/book.scss, styles/styles.css]
 
 suppress-bibliography: true
 bibliography: referencias.bib
