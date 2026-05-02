@@ -22,9 +22,9 @@ jobs:
         run: |
           install.packages(c(
             "dplyr", "tidyr", "stringr", "glue",
-            "purrr", "tibble", "zoo", "remotes"
+            "purrr", "tibble", "zoo", "renv"
           ))
-          remotes::install_github("yukiyanai/rgamer")
+          renv::install("rgamer")
         shell: Rscript {0}
 
       - name: Run check script
