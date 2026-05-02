@@ -18,23 +18,28 @@ install_if_missing <- function(pkgs) {
 }
 
 # Pacotes base do app (já usados no código)
-base_pkgs <- c("shiny","bslib","ggplot2","dplyr","scales","tibble","withr","readr")
+base_pkgs <- c("shiny", "bslib", "ggplot2", "dplyr", "scales", "tibble", "withr", "readr")
 invisible(lapply(base_pkgs, quiet_lib))
 
 # lista “completa”
 extra_pkgs <- c(
   # tidyverse e data wrangling
   "tidyverse", "janitor", "glue",
+
   # visualização e layout
-  "patchwork", "paletteer", "ggtext",
+  "patchwork", "paletteer", "ggtext", "ggrepel",
+
   # temas e fontes
   "beautyxtrar", "extrafont", "showtext", "sysfonts",
+
   # tabelas e exportação
   "kableExtra", "webshot", "webshot2", "flextable", "magick", "grid",
-  # shiny e frontend
-  "shiny", "bslib",
+
   # teoria dos jogos
-  "rgamer"
+  "rgamer",
+
+  # janelas móveis
+  "zoo"
 )
 
 
