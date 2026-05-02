@@ -8,21 +8,23 @@ options(
 
 cat("Iniciando checagem do projeto...\n")
 
-# Pacotes e objetos globais
-source("scripts/pacotes.R")
+# Pacotes 
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(glue)
+library(purrr)
+library(tibble)
+library(zoo)
+library(rgamer)
 
 fonte_base <- "sans"
 color_main <- c("#0B86CA", "#566876", "#9AADB2", "#B1283AFF")
 
 # Funções do projeto
 source("scripts/funcoes/funcao_dados_auxiliar.R")
-source("scripts/funcoes/funcao_matriz.R")
-source("scripts/funcoes/funcao_sim_plot.R")
-source("scripts/funcoes/funcao_descritiva.R")
-source("scripts/funcoes/funcao_dist_dados.R")
 source("scripts/funcoes/funcao_processar_simulacoes.R")
 source("scripts/funcoes/funcao_sim_lambda.R")
-source("scripts/funcoes/funcao_latex.R")
 source("scripts/funcoes/funcao_analise_sim.R")
 
 # Payoffs

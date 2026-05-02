@@ -9,9 +9,6 @@ jobs:
   check:
     runs-on: ubuntu-latest
 
-    env:
-      RENV_CONFIG_REPOS_OVERRIDE: https://cloud.r-project.org
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,10 +18,13 @@ jobs:
         with:
           r-version: '4.5.1'
 
-      - name: Restore packages (renv)
+      - name: Install minimal packages
         run: |
-          install.packages("renv")
-          renv::restore(prompt = FALSE)
+          install.packages(c(
+            "dplyr", "tidyr", "stringr", "glue",
+            "purrr", "tibble", "zoo", "remotes"
+          ))
+          remotes::install_github("yukiyanai/rgamer")
         shell: Rscript {0}
 
       - name: Run check script
