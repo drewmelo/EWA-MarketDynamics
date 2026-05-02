@@ -15,7 +15,7 @@ matriz <- list(
   )
 )
 
-df <- build_simulation_df(sim_teste, matriz, jogo = "MEG")
+df <- build_simulation_df(sim_teste, matriz)
 
 stopifnot(nrow(df) > 0)
 stopifnot(all(c("type", "sim_id", "jogador", "periodo", "estrategia_escolhida") %in% names(df)))
