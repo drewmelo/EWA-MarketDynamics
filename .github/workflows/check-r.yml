@@ -22,9 +22,8 @@ jobs:
         run: |
           install.packages(c(
             "dplyr", "tidyr", "stringr", "glue",
-            "purrr", "tibble", "zoo", "renv"
+            "purrr", "tibble", "zoo"
           ))
-          renv::install("rgamer")
         shell: Rscript {0}
 
       - name: Run check script
