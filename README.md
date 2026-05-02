@@ -1,54 +1,74 @@
-![R](https://img.shields.io/badge/R-4.3.2%20%7C%204.5.1-blue)
-![renv](https://img.shields.io/badge/reproducibility-renv-brightgreen)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
-![License](https://img.shields.io/badge/license-MIT-green)
-![GitHub branch](https://img.shields.io/github/v/release/drewmelo/EWA-MarketDynamics)
-![GitHub last release](https://img.shields.io/github/release-date/drewmelo/EWA-MarketDynamics)
+<p align="center">
+  <img src="https://img.shields.io/badge/-4.3.2%20%7C%204.5.1-276DC3?style=for-the-badge&logo=r&logoColor=white"/>
+  <img src="https://img.shields.io/badge/environment-renv-009E73?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/actions/workflow/status/drewmelo/EWA-MarketDynamics/check-r.yml?style=for-the-badge&label=CI"/>
+  <img src="https://img.shields.io/github/v/release/drewmelo/EWA-MarketDynamics?style=for-the-badge&label=version"/>
+  <img src="https://img.shields.io/badge/models-EWA%20%7C%20RL%20%7C%20BL-6f42c1?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/app-Shiny-75AADB?style=for-the-badge"/>
+</p>
 
 <div align="center">
 
   <p align="center">
-    <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" alt="Logo" width="120">
+    <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" alt="Logo" width="110">
   </p>
 
-  <h1 align="center">
-    Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado: uma
-    aplicação de teoria dos jogos com Experience-Weighted Attraction
+  <h1 align="center" style="margin-bottom: 0;">
+    Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado
   </h1>
 
-  <p align="center">
-    Trabalho de Conclusão de Curso defendido em: data <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore
-    o documento em »</strong></a> <br /><br />
-    <a href="https://github.com/othneildrew/Best-README-Template">Veja o artigo sobre este projeto</a> ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md">Reportar bug</a> ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Solicitar feature</a>
+  <h3 align="center" style="margin-top: 5px; margin-bottom: 20px;">
+    Aplicação de teoria dos jogos com Experience-Weighted Attraction
+  </h3>
+
+  <p align="center" style="margin-top: 25px;">
+    Trabalho de Conclusão de Curso<br/>
+    <sub>Defesa: data</sub>
+  </p>
+
+  <p align="center" style="margin-top: 10px;">
+    📖 <a href="https://drewmelo.github.io/EWA-MarketDynamics/">Ler TCC (versão digital)</a> ·
+    🐛 <a href="https://github.com/drewmelo/EWA-MarketDynamics/issues/new?labels=bug&template=bug_report.md">Bug</a> ·
+    🚀 <a href="https://github.com/drewmelo/EWA-MarketDynamics/issues/new?labels=enhancement&template=solicitacao_funcionalidade.md">Feature</a>
   </p>
 
 </div>
-
 
 ## Autor
 
-<div align="center">
-
-<a href="https://medium.com/@andremelopix">
-<img src="https://avatars.githubusercontent.com/u/143213346?s=400&u=958912bd274eeaba08ce1ee6ba79ef60e701992a&v=4" width="115">
-<br> <sub><b>André V. P. de Melo</b></sub> </a>
-
-</div>
-
-## Tecnologias utilizadas
-
-<p align="left">
-  <img src="https://download.logo.wine/logo/R_(programming_language)/R_(programming_language)-Logo.wine.png" width="100"/>
+<p align="center">
+  <a href="https://drewmelo.github.io/blogr/">
+    <img src="https://avatars.githubusercontent.com/u/143213346?s=400&v=4" width="110" style="border-radius:50%">
+    <br/>
+    <sub><b>André V. P. de Melo</b></sub>
+  </a>
 </p>
 
-O projeto utiliza R como base, com ênfase em *Shiny*, *ggplot2*, *dplyr*, *bslib* e *rgamer* para modelagem de jogos, simulação e visualização.
+### Stack principal
+
+- **Modelagem e simulação**
+  - `rgamer`: implementação dos modelos *Experience-Weighted Attraction* (EWA), *Reinforcement Learning* (RL) e *Belief-based Learning* (BL) 
+
+- **Manipulação de dados**
+  - `dplyr`, `tidyr`, `purrr`, `tibble`  
+
+- **Visualização**
+  - `ggplot2`, `patchwork`, `scales`  
+
+- **Aplicação interativa**
+  - Shiny: interface para exploração das simulações  
+
+- **Documentação**
+  - Quarto: versão digital do TCC  
+
+- **Reprodutibilidade**
+  - `renv`  
+
+Além disso, o projeto utiliza GitHub Actions para rodar testes leves que verificam funções centrais com base em dados simulados, o que garante a consistência dos resultados sem depender da execução completa das simulações.
 
 ## Sobre este repositório
 
-Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de aprendizado em cenários de incerteza de mercado**. Investigo três algoritmos de aprendizagem em jogos 2×2, *Experience-Weighted Attraction* (EWA), *Reinforcement Learning* (RL) e *Belief-based Learning* (BL), e comparo a trajetória dos agentes com os **equilíbrios teóricos**. O foco recai sobre dois ambientes clássicos: **Buyer–Seller Game (BSG)** e **Market Entry Game (MEG)**.
+Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de aprendizado em cenários de incerteza de mercado**. Investigo três algoritmos de aprendizagem em jogos 2×2, EWA, RL e BL, e comparo a trajetória dos agentes com os **equilíbrios teóricos**. O foco recai sobre dois ambientes clássicos: **Buyer–Seller Game (BSG)** e **Market Entry Game (MEG)**.
 
 > **Compatibilidade:**  
 > Este projeto foi desenvolvido em **R 4.3.2** e também testado em **R 4.5.1**.  
@@ -65,16 +85,6 @@ Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de apr
 
 As matrizes de BSG e MEG são definidas via `rgamer::normal_form`, com payoffs especificados por funções (BSG) ou vetores (MEG). A infraestrutura de simulação cria amostras e períodos, agrega os resultados e produz visualizações por jogador e estratégia.  
 Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemplo, $\phi \approx 0{,}62$, $\delta \approx 0{,}75$, $\rho \le \phi$), com ajustes para jogos 2×2.
-
-## Como executar rapidamente
-
-1. Instale **R** (e **RStudio/Positron**, opcional).  
-2. Instale as dependências (veja `scripts/pacotes.R`).  
-3. Para **gerar figuras e tabelas**: execute `main.R`.  
-4. Para **usar o painel interativo**: rode `app/app.R` e abra o Shiny no navegador  
-   (ou acesse: <https://drewmelo.shinyapps.io/ewa-market-dynamics/>).
-
-**Observação.** O repositório inclui *helpers* para exportação de figuras (`ggsave`) e tabelas (LaTeX/PNG), além de rotinas para varrer valores de $\lambda$ e comparar as curvas de aprendizado entre modelos.
 
 ## Como replicar o repositório
 
@@ -100,10 +110,9 @@ cd EWA-MarketDynamics
 
 ## Reprodutibilidade
 
-Este projeto usa [`renv`](https://rstudio.github.io/renv/) para congelar as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.
+Este projeto usa `renv` para congelar as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.
 
 ### Como reproduzir
-
 ```r
 # dentro do R
 install.packages("renv")   # só na 1ª vez
@@ -118,7 +127,7 @@ O `targets` detecta automaticamente o que precisa ser atualizado e garante a exe
 O projeto também inclui um painel interativo em Shiny desenvolvido com o tema *bslib* e elementos visuais otimizados para análise de aprendizado em jogos.
 
 > **Para quem é:**  
-> O painel foi pensado para **usuários low-code**, que desejam **realizar as simulações e gerar todos os resultados do TCC automaticamente**, **sem precisar escrever código em R**.
+> O painel foi pensado para **usuários low-code**, que desejam realizar as simulações e gerar todos os resultados do TCC automaticamente, **sem precisar escrever código em R**.
 
 Ele permite:
 
@@ -130,10 +139,10 @@ Ele permite:
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/painel.png"
-       alt="Painel Shiny — EWA Market Dynamics Dashboard"
+       alt="Painel Shiny: EWA Market Dynamics Dashboard"
        width="850">
   <br>
-  <em>EWA Market Dynamics Dashboard — ambiente interativo para simulação e análise</em>
+  <em>EWA Market Dynamics Dashboard: ambiente interativo para simulação e análise</em>
 </p>
 
 >  **Dica:**  

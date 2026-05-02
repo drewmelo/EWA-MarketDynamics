@@ -112,34 +112,65 @@ window.Quarto = {
 
 
 
-<p><img src="https://img.shields.io/badge/R-4.3.2%20%7C%204.5.1-blue" class="img-fluid" alt="R"> <img src="https://img.shields.io/badge/reproducibility-renv-brightgreen.png" class="img-fluid" alt="renv"> <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow.png" class="img-fluid" alt="Status"> <img src="https://img.shields.io/badge/license-MIT-green.png" class="img-fluid" alt="License"> <img src="https://img.shields.io/github/v/release/drewmelo/EWA-MarketDynamics.png" class="img-fluid" alt="GitHub branch"> <img src="https://img.shields.io/github/release-date/drewmelo/EWA-MarketDynamics.png" class="img-fluid" alt="GitHub last release"></p>
+<p align="center">
+<img src="https://img.shields.io/badge/-4.3.2%20%7C%204.5.1-276DC3?style=for-the-badge&amp;logo=r&amp;logoColor=white"> <img src="https://img.shields.io/badge/environment-renv-009E73?style=for-the-badge"> <img src="https://img.shields.io/github/actions/workflow/status/drewmelo/EWA-MarketDynamics/check-r.yml?style=for-the-badge&amp;label=CI"> <img src="https://img.shields.io/github/v/release/drewmelo/EWA-MarketDynamics?style=for-the-badge&amp;label=version"> <img src="https://img.shields.io/badge/models-EWA%20%7C%20RL%20%7C%20BL-6f42c1?style=for-the-badge"> <img src="https://img.shields.io/badge/app-Shiny-75AADB?style=for-the-badge">
+</p>
 <div data-align="center">
 <p align="center">
-<img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" alt="Logo" width="120">
+<img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" alt="Logo" width="110">
 </p>
-<h1 align="center">
-Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado: uma aplicação de teoria dos jogos com Experience-Weighted Attraction
+<h1 align="center" style="margin-bottom: 0;">
+Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado
 </h1>
-<p align="center">
-Trabalho de Conclusão de Curso defendido em: data <br> <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore o documento em »</strong></a> <br><br> <a href="https://github.com/othneildrew/Best-README-Template">Veja o artigo sobre este projeto</a> · <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&amp;template=bug-report---.md">Reportar bug</a> · <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&amp;template=feature-request---.md">Solicitar feature</a>
+<h3 align="center" style="margin-top: 5px; margin-bottom: 20px;" class="anchored">
+Aplicação de teoria dos jogos com Experience-Weighted Attraction
+</h3>
+<p align="center" style="margin-top: 25px;">
+Trabalho de Conclusão de Curso<br> <sub>Defesa: data</sub>
+</p>
+<p align="center" style="margin-top: 10px;">
+📖 <a href="https://drewmelo.github.io/EWA-MarketDynamics/">Ler TCC (versão digital)</a> · 🐛 <a href="https://github.com/drewmelo/EWA-MarketDynamics/issues/new?labels=bug&amp;template=bug_report.md">Bug</a> · 🚀 <a href="https://github.com/drewmelo/EWA-MarketDynamics/issues/new?labels=enhancement&amp;template=solicitacao_funcionalidade.md">Feature</a>
 </p>
 </div>
 <section id="autor" class="level2">
 <h2 class="anchored" data-anchor-id="autor">Autor</h2>
-<div data-align="center">
-<p><a href="https://medium.com/@andremelopix"> <img src="https://avatars.githubusercontent.com/u/143213346?s=400&amp;u=958912bd274eeaba08ce1ee6ba79ef60e701992a&amp;v=4" width="115"> <br> <sub><b>André V. P. de Melo</b></sub> </a></p>
-</div>
-</section>
-<section id="tecnologias-utilizadas" class="level2">
-<h2 class="anchored" data-anchor-id="tecnologias-utilizadas">Tecnologias utilizadas</h2>
-<p align="left">
-<img src="https://download.logo.wine/logo/R_(programming_language)/R_(programming_language)-Logo.wine.png" width="100">
+<p align="center">
+<a href="https://drewmelo.github.io/blogr/"> <img src="https://avatars.githubusercontent.com/u/143213346?s=400&amp;v=4" width="110" style="border-radius:50%"> <br> <sub><b>André V. P. de Melo</b></sub> </a>
 </p>
-<p>O projeto utiliza R como base, com ênfase em <em>Shiny</em>, <em>ggplot2</em>, <em>dplyr</em>, <em>bslib</em> e <em>rgamer</em> para modelagem de jogos, simulação e visualização.</p>
+<section id="stack-principal" class="level3">
+<h3 class="anchored" data-anchor-id="stack-principal">Stack principal</h3>
+<ul>
+<li><strong>Modelagem e simulação</strong>
+<ul>
+<li><code>rgamer</code>: implementação dos modelos <em>Experience-Weighted Attraction</em> (EWA), <em>Reinforcement Learning</em> (RL) e <em>Belief-based Learning</em> (BL)</li>
+</ul></li>
+<li><strong>Manipulação de dados</strong>
+<ul>
+<li><code>dplyr</code>, <code>tidyr</code>, <code>purrr</code>, <code>tibble</code></li>
+</ul></li>
+<li><strong>Visualização</strong>
+<ul>
+<li><code>ggplot2</code>, <code>patchwork</code>, <code>scales</code></li>
+</ul></li>
+<li><strong>Aplicação interativa</strong>
+<ul>
+<li>Shiny: interface para exploração das simulações</li>
+</ul></li>
+<li><strong>Documentação</strong>
+<ul>
+<li>Quarto: versão digital do TCC</li>
+</ul></li>
+<li><strong>Reprodutibilidade</strong>
+<ul>
+<li><code>renv</code></li>
+</ul></li>
+</ul>
+<p>Além disso, o projeto utiliza GitHub Actions para rodar testes leves que verificam funções centrais com base em dados simulados, o que garante a consistência dos resultados sem depender da execução completa das simulações.</p>
+</section>
 </section>
 <section id="sobre-este-repositório" class="level2">
 <h2 class="anchored" data-anchor-id="sobre-este-repositório">Sobre este repositório</h2>
-<p>Este repositório concentra o código-fonte do meu TCC sobre <strong>dinâmicas de aprendizado em cenários de incerteza de mercado</strong>. Investigo três algoritmos de aprendizagem em jogos 2×2, <em>Experience-Weighted Attraction</em> (EWA), <em>Reinforcement Learning</em> (RL) e <em>Belief-based Learning</em> (BL), e comparo a trajetória dos agentes com os <strong>equilíbrios teóricos</strong>. O foco recai sobre dois ambientes clássicos: <strong>Buyer–Seller Game (BSG)</strong> e <strong>Market Entry Game (MEG)</strong>.</p>
+<p>Este repositório concentra o código-fonte do meu TCC sobre <strong>dinâmicas de aprendizado em cenários de incerteza de mercado</strong>. Investigo três algoritmos de aprendizagem em jogos 2×2, EWA, RL e BL, e comparo a trajetória dos agentes com os <strong>equilíbrios teóricos</strong>. O foco recai sobre dois ambientes clássicos: <strong>Buyer–Seller Game (BSG)</strong> e <strong>Market Entry Game (MEG)</strong>.</p>
 <blockquote class="blockquote">
 <p><strong>Compatibilidade:</strong><br>
 Este projeto foi desenvolvido em <strong>R 4.3.2</strong> e também testado em <strong>R 4.5.1</strong>.<br>
@@ -161,20 +192,6 @@ Para reprodutibilidade completa, recomenda-se restaurar o ambiente com <strong><
 <h2 class="anchored" data-anchor-id="metodologia-resumo">Metodologia (resumo)</h2>
 <p>As matrizes de BSG e MEG são definidas via <code>rgamer::normal_form</code>, com payoffs especificados por funções (BSG) ou vetores (MEG). A infraestrutura de simulação cria amostras e períodos, agrega os resultados e produz visualizações por jogador e estratégia.<br>
 Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemplo, <span class="math inline">\(\phi \approx 0{,}62\)</span>, <span class="math inline">\(\delta \approx 0{,}75\)</span>, <span class="math inline">\(\rho \le \phi\)</span>), com ajustes para jogos 2×2.</p>
-</section>
-<section id="como-executar-rapidamente" class="level2">
-<h2 class="anchored" data-anchor-id="como-executar-rapidamente">Como executar rapidamente</h2>
-<ol type="1">
-<li>Instale <strong>R</strong> (e <strong>RStudio/Positron</strong>, opcional).<br>
-</li>
-<li>Instale as dependências (veja <code>scripts/pacotes.R</code>).<br>
-</li>
-<li>Para gerar figuras e tabelas: execute <code>main.R</code>.<br>
-</li>
-<li>Para usar o painel interativo: rode <code>app/app.R</code> e abra o Shiny no navegador<br>
-(ou acesse: <a href="https://drewmelo.shinyapps.io/ewa-market-dynamics/" class="uri">https://drewmelo.shinyapps.io/ewa-market-dynamics/</a>).</li>
-</ol>
-<p><strong>Observação.</strong> O repositório inclui <em>helpers</em> para exportação de figuras (<code>ggsave</code>) e tabelas (LaTeX/PNG), além de rotinas para varrer valores de <span class="math inline">\(\lambda\)</span> e comparar as curvas de aprendizado entre modelos.</p>
 </section>
 <section id="como-replicar-o-repositório" class="level2">
 <h2 class="anchored" data-anchor-id="como-replicar-o-repositório">Como replicar o repositório</h2>
@@ -204,7 +221,7 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 </section>
 <section id="reprodutibilidade" class="level2">
 <h2 class="anchored" data-anchor-id="reprodutibilidade">Reprodutibilidade</h2>
-<p>Este projeto usa <a href="https://rstudio.github.io/renv/"><code>renv</code></a> para congelar as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.</p>
+<p>Este projeto usa <code>renv</code> para congelar as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.</p>
 <section id="como-reproduzir" class="level3">
 <h3 class="anchored" data-anchor-id="como-reproduzir">Como reproduzir</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dentro do R</span></span>
@@ -219,7 +236,7 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 <p>O projeto também inclui um painel interativo em Shiny desenvolvido com o tema <em>bslib</em> e elementos visuais otimizados para análise de aprendizado em jogos.</p>
 <blockquote class="blockquote">
 <p><strong>Para quem é:</strong><br>
-O painel foi pensado para <strong>usuários low-code</strong>, que desejam <strong>realizar as simulações e gerar todos os resultados do TCC automaticamente</strong>, <strong>sem precisar escrever código em R</strong>.</p>
+O painel foi pensado para <strong>usuários low-code</strong>, que desejam realizar as simulações e gerar todos os resultados do TCC automaticamente, <strong>sem precisar escrever código em R</strong>.</p>
 </blockquote>
 <p>Ele permite:</p>
 <ul>
@@ -230,7 +247,7 @@ O painel foi pensado para <strong>usuários low-code</strong>, que desejam <stro
 <li>Gerar automaticamente as mesmas tabelas e figuras utilizadas no TCC.</li>
 </ul>
 <p align="center">
-<img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/painel.png" alt="Painel Shiny — EWA Market Dynamics Dashboard" width="850"> <br> <em>EWA Market Dynamics Dashboard — ambiente interativo para simulação e análise</em>
+<img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/painel.png" alt="Painel Shiny: EWA Market Dynamics Dashboard" width="850"> <br> <em>EWA Market Dynamics Dashboard: ambiente interativo para simulação e análise</em>
 </p>
 <blockquote class="blockquote">
 <p><strong>Dica:</strong><br>
