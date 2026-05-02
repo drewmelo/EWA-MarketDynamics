@@ -400,3 +400,92 @@ table_wide <- function(prob_bsg, prob_meg,
 
   invisible(ft)
 }
+
+# ------------------------------------------------------------
+# Função: order_table_p1_p2
+# Objetivo:
+# Reorganizar colunas das tabelas agrupando por jogador (P1 e P2)
+# e mantendo a coluna "Sum" (se existir) ao final.
+# ------------------------------------------------------------
+order_table_p1_p2 <- function(table) {
+  
+  lapply(table, function(x) {
+    
+    # Identifica colunas do Jogador 1 (P1)
+    cols_p1 <- grep("\\(P1\\)", colnames(x), value = TRUE)
+    
+    # Identifica colunas do Jogador 2 (P2)
+    cols_p2 <- grep("\\(P2\\)", colnames(x), value = TRUE)
+    
+    # Verifica se existe coluna de soma
+    cols_sum <- intersect("Sum", colnames(x))
+    
+    # Reordena colunas: primeiro P1, depois P2, depois Sum (se houver)
+    x[, c(cols_p1, cols_p2, cols_sum), drop = FALSE]
+  })
+}
+
+# ------------------------------------------------------------
+# Função: drop_sum_esp
+# Objetivo:
+# Remover linha e coluna "Sum" da matriz de valores esperados.
+# Evita que totais interfiram na análise (ex: resíduos).
+# ------------------------------------------------------------
+drop_sum_esp <- function(table) {
+  
+  table$esp <- table$esp[
+    # Remove linha "Sum"
+    rownames(table$esp) != "Sum",
+    
+    # Remove coluna "Sum"
+    colnames(table$esp) != "Sum",
+    
+    # Mantém estrutura de matriz/data.frame
+    drop = FALSE
+  ]
+  
+  # Retorna tabela modificada
+  table
+}
+
+# ------------------------------------------------------------
+# Função: print_table
+# Objetivo:
+# Exibir no console os principais componentes da tabela
+# com escalas ajustadas para facilitar leitura.
+# ------------------------------------------------------------
+print_table <- function(table, game_name) {
+  
+  # Cabeçalho visual
+  cat("\n==============================\n")
+  cat(game_name, "\n")
+  cat("==============================\n\n")
+  
+  # Probabilidades (já em % ou proporção)
+  cat("Probabilidades (%)\n")
+  print(table$prob)
+  
+  # Observados convertidos para milhões (escala grande)
+  cat("\nObservados em milhões\n")
+  print(round(table$obs / 1e6, 1))
+  
+  # Esperados convertidos para milhões
+  cat("\nEsperados em milhões\n")
+  print(round(table$esp / 1e6, 1))
+  
+  # Desvios convertidos para milhares (escala intermediária)
+  cat("\nDesvios em milhares\n")
+  print(round(table$res / 1e3, 1))
+  
+  # Observados em milhares (mais granular)
+  cat("\nObservados em milhares\n")
+  print(round(table$obs / 1e3, 1))
+  
+  # Esperados em milhares
+  cat("\nEsperados em milhares\n")
+  print(round(table$esp / 1e3, 1))
+  
+  # Desvios na escala original (sem transformação)
+  cat("\nDesvios\n")
+  print(round(table$res, 1))
+}
