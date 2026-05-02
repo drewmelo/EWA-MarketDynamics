@@ -45,9 +45,8 @@ O projeto utiliza **R** como base, com ênfase em **Shiny**, **ggplot2**, **dply
 Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de aprendizado em cenários de incerteza de mercado**. Investigo três algoritmos de aprendizagem em jogos 2×2 — *Experience-Weighted Attraction* (EWA), *Reinforcement Learning* (RL) e *Belief-based Learning* (BL) — e comparo a trajetória dos agentes com os **equilíbrios teóricos**. O foco recai sobre dois ambientes clássicos: **Buyer–Seller Game (BSG)** e **Market Entry Game (MEG)**.
 
 > **Compatibilidade:**  
-> Este projeto foi desenvolvido e testado em **R 4.3.2 (Windows 11)**.  
-> Versões posteriores (como R 4.4 ou superiores) podem causar falhas no pacote **`rgamer`**, no que diz respeito a função `solve_nfg()`.  
-> Recomenda-se manter a série 4.3 para reprodutibilidade total.
+> Este projeto foi desenvolvido em **R 4.3.2** e também testado em **R 4.5.1**.  
+> Para reprodutibilidade completa, recomenda-se restaurar o ambiente com **`renv::restore()`** antes de executar os scripts.
 
 ## O que você encontrará aqui
 
@@ -66,7 +65,7 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 1. Instale **R** (e **RStudio/Positron**, opcional).  
 2. Instale as dependências (veja `scripts/pacotes.R`).  
 3. Para **gerar figuras e tabelas**: execute `main.R`.  
-4. Para **usar o painel interativo**: rode `app.R` e abra o Shiny no navegador  
+4. Para **usar o painel interativo**: rode `app/app.R` e abra o Shiny no navegador  
    (ou acesse: <https://drewmelo.shinyapps.io/ewa-market-dynamics/>).
 
 **Observação.** O repositório inclui *helpers* para exportação de figuras (`ggsave`) e tabelas (LaTeX/PNG), além de rotinas para varrer valores de $\lambda$ e comparar as curvas de aprendizado entre modelos.
@@ -90,7 +89,7 @@ Abaixo vai um guia direto para reproduzir as simulações, figuras e tabelas (e 
 
 ```bash
 git clone https://github.com/drewmelo/EWA-MarketDynamics.git
-cd EWA-MarketDynamics.git
+cd EWA-MarketDynamics
 ```
 
 ## Reprodutibilidade
@@ -136,7 +135,7 @@ Ele permite:
 
 Caso queira executar o web app:
 ```r
-shiny::runApp("app")
+shiny::runApp("app")  # ou source("app/app.R")
 ```
 
  *Assim, qualquer pessoa pode restaurar o mesmo ambiente e reproduzir integralmente todas as análises e resultados do TCC com apenas dois comandos (`renv::restore()` e `targets::tar_make()`) ou via `shiny::runApp()`*
