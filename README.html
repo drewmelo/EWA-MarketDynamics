@@ -112,6 +112,7 @@ window.Quarto = {
 
 
 
+<p><img src="https://img.shields.io/badge/R-4.3.2%20%7C%204.5.1-blue" class="img-fluid" alt="R"> <img src="https://img.shields.io/badge/reproducibility-renv-brightgreen.png" class="img-fluid" alt="renv"> <img src="https://img.shields.io/badge/status-em%20desenvolvimento-yellow.png" class="img-fluid" alt="Status"> <img src="https://img.shields.io/badge/license-MIT-green.png" class="img-fluid" alt="License"> <img src="https://img.shields.io/github/v/release/drewmelo/EWA-MarketDynamics.png" class="img-fluid" alt="GitHub branch"> <img src="https://img.shields.io/github/release-date/drewmelo/EWA-MarketDynamics.png" class="img-fluid" alt="GitHub last release"></p>
 <div data-align="center">
 <p align="center">
 <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" alt="Logo" width="120">
@@ -134,16 +135,15 @@ Trabalho de Conclusão de Curso defendido em: data <br> <a href="https://github.
 <p align="left">
 <img src="https://download.logo.wine/logo/R_(programming_language)/R_(programming_language)-Logo.wine.png" width="100">
 </p>
-<p>O projeto utiliza <strong>R</strong> como base, com ênfase em <strong>Shiny</strong>, <strong>ggplot2</strong>, <strong>dplyr</strong>, <strong>bslib</strong> e <strong>rgamer</strong> para modelagem de jogos, simulação e visualização.</p>
+<p>O projeto utiliza R como base, com ênfase em <em>Shiny</em>, <em>ggplot2</em>, <em>dplyr</em>, <em>bslib</em> e <em>rgamer</em> para modelagem de jogos, simulação e visualização.</p>
 </section>
 <section id="sobre-este-repositório" class="level2">
 <h2 class="anchored" data-anchor-id="sobre-este-repositório">Sobre este repositório</h2>
-<p>Este repositório concentra o código-fonte do meu TCC sobre <strong>dinâmicas de aprendizado em cenários de incerteza de mercado</strong>. Investigo três algoritmos de aprendizagem em jogos 2×2 — <em>Experience-Weighted Attraction</em> (EWA), <em>Reinforcement Learning</em> (RL) e <em>Belief-based Learning</em> (BL) — e comparo a trajetória dos agentes com os <strong>equilíbrios teóricos</strong>. O foco recai sobre dois ambientes clássicos: <strong>Buyer–Seller Game (BSG)</strong> e <strong>Market Entry Game (MEG)</strong>.</p>
+<p>Este repositório concentra o código-fonte do meu TCC sobre <strong>dinâmicas de aprendizado em cenários de incerteza de mercado</strong>. Investigo três algoritmos de aprendizagem em jogos 2×2, <em>Experience-Weighted Attraction</em> (EWA), <em>Reinforcement Learning</em> (RL) e <em>Belief-based Learning</em> (BL), e comparo a trajetória dos agentes com os <strong>equilíbrios teóricos</strong>. O foco recai sobre dois ambientes clássicos: <strong>Buyer–Seller Game (BSG)</strong> e <strong>Market Entry Game (MEG)</strong>.</p>
 <blockquote class="blockquote">
 <p><strong>Compatibilidade:</strong><br>
-Este projeto foi desenvolvido e testado em <strong>R 4.3.2 (Windows 11)</strong>.<br>
-Versões posteriores (como R 4.4 ou superiores) podem causar falhas no pacote <strong><code>rgamer</code></strong>, no que diz respeito a função <code>solve_nfg()</code>.<br>
-Recomenda-se manter a série 4.3 para reprodutibilidade total.</p>
+Este projeto foi desenvolvido em <strong>R 4.3.2</strong> e também testado em <strong>R 4.5.1</strong>.<br>
+Para reprodutibilidade completa, recomenda-se restaurar o ambiente com <strong><code>renv::restore()</code></strong> antes de executar os scripts.</p>
 </blockquote>
 </section>
 <section id="o-que-você-encontrará-aqui" class="level2">
@@ -169,9 +169,9 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 </li>
 <li>Instale as dependências (veja <code>scripts/pacotes.R</code>).<br>
 </li>
-<li>Para <strong>gerar figuras e tabelas</strong>: execute <code>main.R</code>.<br>
+<li>Para gerar figuras e tabelas: execute <code>main.R</code>.<br>
 </li>
-<li>Para <strong>usar o painel interativo</strong>: rode <code>app.R</code> e abra o Shiny no navegador<br>
+<li>Para usar o painel interativo: rode <code>app/app.R</code> e abra o Shiny no navegador<br>
 (ou acesse: <a href="https://drewmelo.shinyapps.io/ewa-market-dynamics/" class="uri">https://drewmelo.shinyapps.io/ewa-market-dynamics/</a>).</li>
 </ol>
 <p><strong>Observação.</strong> O repositório inclui <em>helpers</em> para exportação de figuras (<code>ggsave</code>) e tabelas (LaTeX/PNG), além de rotinas para varrer valores de <span class="math inline">\(\lambda\)</span> e comparar as curvas de aprendizado entre modelos.</p>
@@ -183,13 +183,13 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 <h3 class="anchored" data-anchor-id="pré-requisitos">1) Pré-requisitos</h3>
 <ul>
 <li><strong>R ≥ 4.3</strong></li>
-<li>(Opcional) <strong>RStudio/Positron</strong></li>
+<li>(Opcional) RStudio/Positron</li>
 <li><strong>Sistema:</strong>
 <ul>
-<li><strong>Windows:</strong> instale o <strong>Rtools</strong> correspondente à versão do R.<br>
+<li>Windows: instale o <em>Rtools</em> correspondente à versão do R.<br>
 </li>
-<li><strong>Linux:</strong> garanta as libs de gráficos para PDF (ex.: <code>libcairo2</code>, <code>libharfbuzz</code>, <code>libfribidi</code>).</li>
-<li><strong>macOS:</strong> <em>Xcode Command Line Tools</em> já resolve o essencial.</li>
+<li>Linux: garanta as libs de gráficos para PDF (ex.: <code>libcairo2</code>, <code>libharfbuzz</code>, <code>libfribidi</code>).</li>
+<li>macOS: <em>Xcode Command Line Tools</em> já resolve o essencial.</li>
 </ul></li>
 </ul>
 <blockquote class="blockquote">
@@ -199,12 +199,12 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 <section id="clonar-o-projeto" class="level3">
 <h3 class="anchored" data-anchor-id="clonar-o-projeto">2) Clonar o projeto</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/drewmelo/EWA-MarketDynamics.git</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> EWA-MarketDynamics.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> EWA-MarketDynamics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="reprodutibilidade" class="level2">
 <h2 class="anchored" data-anchor-id="reprodutibilidade">Reprodutibilidade</h2>
-<p>Este projeto usa <a href="https://rstudio.github.io/renv/"><code>renv</code></a> para <strong>congelar</strong> as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.</p>
+<p>Este projeto usa <a href="https://rstudio.github.io/renv/"><code>renv</code></a> para congelar as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.</p>
 <section id="como-reproduzir" class="level3">
 <h3 class="anchored" data-anchor-id="como-reproduzir">Como reproduzir</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dentro do R</span></span>
@@ -216,17 +216,17 @@ Os parâmetros do EWA seguem faixas e relações comuns na literatura (por exemp
 </section>
 <section id="painel-interativo-shiny-dashboard" class="level2">
 <h2 class="anchored" data-anchor-id="painel-interativo-shiny-dashboard">Painel Interativo (Shiny Dashboard)</h2>
-<p>O projeto também inclui um <strong>painel interativo em Shiny</strong> desenvolvido com o tema <strong>bslib</strong> e elementos visuais otimizados para análise de aprendizado em jogos.</p>
+<p>O projeto também inclui um painel interativo em Shiny desenvolvido com o tema <em>bslib</em> e elementos visuais otimizados para análise de aprendizado em jogos.</p>
 <blockquote class="blockquote">
-<p>🎯 <strong>Para quem é:</strong><br>
+<p><strong>Para quem é:</strong><br>
 O painel foi pensado para <strong>usuários low-code</strong>, que desejam <strong>realizar as simulações e gerar todos os resultados do TCC automaticamente</strong>, <strong>sem precisar escrever código em R</strong>.</p>
 </blockquote>
 <p>Ele permite:</p>
 <ul>
-<li>Escolher parâmetros de simulação (<code>λ</code>, número de amostras e períodos);</li>
-<li>Visualizar em tempo real a evolução das estratégias nos jogos <strong>BSG</strong> e <strong>MEG</strong>;</li>
-<li>Alternar entre os modelos de aprendizado (<strong>EWA</strong>, <strong>Reinforcement Learning</strong>, <strong>Belief-based Learning</strong>);</li>
-<li>Baixar <strong>simulações completas</strong> e <strong>resultados agregados</strong> em formato CSV;</li>
+<li>Escolher parâmetros de simulação (<span class="math inline">\(\lambda\)</span>, número de amostras e períodos);</li>
+<li>Visualizar em tempo real a evolução das estratégias nos jogos BSG e MEG;</li>
+<li>Alternar entre os modelos de aprendizado (EWA, <em>Reinforcement Learning</em>, <em>Belief-based Learning</em>);</li>
+<li>Baixar simulações completas e resultados agregados em formato CSV;</li>
 <li>Gerar automaticamente as mesmas tabelas e figuras utilizadas no TCC.</li>
 </ul>
 <p align="center">
@@ -237,7 +237,7 @@ O painel foi pensado para <strong>usuários low-code</strong>, que desejam <stro
 Ao clicar em “Baixar Simulação”, o painel executa o mesmo pipeline automatizado usado no projeto (<code>targets::tar_make()</code>), exportando os resultados diretamente, sem necessidade de rodar scripts manualmente.</p>
 </blockquote>
 <p>Caso queira executar o web app:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>shiny<span class="sc">::</span><span class="fu">runApp</span>(<span class="st">"app"</span>)  <span class="co"># ou source("app/app.R")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>Assim, qualquer pessoa pode restaurar o mesmo ambiente e reproduzir integralmente todas as análises e resultados do TCC com apenas dois comandos (<code>renv::restore()</code> e <code>targets::tar_make()</code>) ou via <code>shiny::runApp()</code></em></p>
 </section>
 

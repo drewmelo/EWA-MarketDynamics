@@ -1,3 +1,9 @@
+![R](https://img.shields.io/badge/R-4.3.2%20%7C%204.5.1-blue)
+![renv](https://img.shields.io/badge/reproducibility-renv-brightgreen)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![License](https://img.shields.io/badge/license-MIT-green)
+![GitHub branch](https://img.shields.io/github/v/release/drewmelo/EWA-MarketDynamics)
+![GitHub last release](https://img.shields.io/github/release-date/drewmelo/EWA-MarketDynamics)
 
 <div align="center">
 
@@ -38,11 +44,11 @@
   <img src="https://download.logo.wine/logo/R_(programming_language)/R_(programming_language)-Logo.wine.png" width="100"/>
 </p>
 
-O projeto utiliza **R** como base, com ênfase em **Shiny**, **ggplot2**, **dplyr**, **bslib** e **rgamer** para modelagem de jogos, simulação e visualização.
+O projeto utiliza R como base, com ênfase em *Shiny*, *ggplot2*, *dplyr*, *bslib* e *rgamer* para modelagem de jogos, simulação e visualização.
 
 ## Sobre este repositório
 
-Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de aprendizado em cenários de incerteza de mercado**. Investigo três algoritmos de aprendizagem em jogos 2×2 — *Experience-Weighted Attraction* (EWA), *Reinforcement Learning* (RL) e *Belief-based Learning* (BL) — e comparo a trajetória dos agentes com os **equilíbrios teóricos**. O foco recai sobre dois ambientes clássicos: **Buyer–Seller Game (BSG)** e **Market Entry Game (MEG)**.
+Este repositório concentra o código-fonte do meu TCC sobre **dinâmicas de aprendizado em cenários de incerteza de mercado**. Investigo três algoritmos de aprendizagem em jogos 2×2, *Experience-Weighted Attraction* (EWA), *Reinforcement Learning* (RL) e *Belief-based Learning* (BL), e comparo a trajetória dos agentes com os **equilíbrios teóricos**. O foco recai sobre dois ambientes clássicos: **Buyer–Seller Game (BSG)** e **Market Entry Game (MEG)**.
 
 > **Compatibilidade:**  
 > Este projeto foi desenvolvido em **R 4.3.2** e também testado em **R 4.5.1**.  
@@ -77,11 +83,11 @@ Abaixo vai um guia direto para reproduzir as simulações, figuras e tabelas (e 
 ### 1) Pré-requisitos
 
 - **R ≥ 4.3**
-- (Opcional) **RStudio/Positron**
+- (Opcional) RStudio/Positron
 - **Sistema:**  
-  - **Windows:** instale o **Rtools** correspondente à versão do R.  
-  - **Linux:** garanta as libs de gráficos para PDF (ex.: `libcairo2`, `libharfbuzz`, `libfribidi`).
-  - **macOS:** *Xcode Command Line Tools* já resolve o essencial.
+  - Windows: instale o *Rtools* correspondente à versão do R.  
+  - Linux: garanta as libs de gráficos para PDF (ex.: `libcairo2`, `libharfbuzz`, `libfribidi`).
+  - macOS: *Xcode Command Line Tools* já resolve o essencial.
 
 > Se o `cairo_pdf` não estiver disponível no seu sistema, troque `device = cairo_pdf` por `device = "pdf"` nas chamadas `ggsave(...)` ou instale as libs de Cairo.
 
@@ -94,7 +100,7 @@ cd EWA-MarketDynamics
 
 ## Reprodutibilidade
 
-Este projeto usa [`renv`](https://rstudio.github.io/renv/) para **congelar** as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.
+Este projeto usa [`renv`](https://rstudio.github.io/renv/) para congelar as versões dos pacotes de R e permitir que qualquer pessoa recrie exatamente o mesmo ambiente.
 
 ### Como reproduzir
 
@@ -109,17 +115,17 @@ O `targets` detecta automaticamente o que precisa ser atualizado e garante a exe
 
 ## Painel Interativo (Shiny Dashboard)
 
-O projeto também inclui um **painel interativo em Shiny** desenvolvido com o tema **bslib** e elementos visuais otimizados para análise de aprendizado em jogos.
+O projeto também inclui um painel interativo em Shiny desenvolvido com o tema *bslib* e elementos visuais otimizados para análise de aprendizado em jogos.
 
-> 🎯 **Para quem é:**  
+> **Para quem é:**  
 > O painel foi pensado para **usuários low-code**, que desejam **realizar as simulações e gerar todos os resultados do TCC automaticamente**, **sem precisar escrever código em R**.
 
 Ele permite:
 
-- Escolher parâmetros de simulação (`λ`, número de amostras e períodos);
-- Visualizar em tempo real a evolução das estratégias nos jogos **BSG** e **MEG**;
-- Alternar entre os modelos de aprendizado (**EWA**, **Reinforcement Learning**, **Belief-based Learning**);
-- Baixar **simulações completas** e **resultados agregados** em formato CSV;
+- Escolher parâmetros de simulação ($\lambda$, número de amostras e períodos);
+- Visualizar em tempo real a evolução das estratégias nos jogos BSG e MEG;
+- Alternar entre os modelos de aprendizado (EWA, *Reinforcement Learning*, *Belief-based Learning*);
+- Baixar simulações completas e resultados agregados em formato CSV;
 - Gerar automaticamente as mesmas tabelas e figuras utilizadas no TCC.
 
 <p align="center">

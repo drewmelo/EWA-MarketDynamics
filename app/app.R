@@ -737,11 +737,51 @@ ui <- page_fluid(
       collapsible = TRUE,
       card_header("Sobre o projeto"),
       card_body(HTML('
-        <div style="text-align:center; margin-top:8px; margin-bottom:4px;">
-          <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="maintained" style="height:20px;">
-        </div>
-        <p style="text-align:center; margin-top:6px;">Trabalho de Conclusão de Curso — <em>data</em></p>
-      '))
+          <div style="text-align:center;">
+
+            <!-- Logo -->
+            <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" 
+                alt="Logo" width="100" style="margin-bottom:10px;">
+
+            <!-- Título -->
+            <h4 style="margin-bottom:6px;">
+              Dinâmicas de Aprendizado em Cenários de Incerteza de Mercado
+            </h4>
+
+            <!-- Subtítulo -->
+            <p style="margin-top:4px; color:#64748b;">
+              Trabalho de Conclusão de Curso — <em>data</em>
+            </p>
+
+            <!-- Autor -->
+            <div style="margin-top:12px;">
+              <a href="https://medium.com/@andremelopix" target="_blank">
+                <img src="https://avatars.githubusercontent.com/u/143213346?s=400&v=4"
+                    width="80" style="border-radius:50%;">
+                <br>
+                <strong>André V. P. de Melo</strong>
+              </a>
+            </div>
+
+            <!-- Links -->
+            <div style="margin-top:10px; font-size:0.9rem;">
+              <a href="https://orcid.org/0009-0002-5181-3901" target="_blank">ORCID</a> ·
+              <a href="https://github.com/drewmelo" target="_blank">GitHub</a>
+            </div>
+
+            <!-- Descrição -->
+            <p style="margin-top:14px; font-size:0.9rem; color:#475569;">
+              Este projeto implementa modelos de aprendizado estratégico em jogos 2×2,
+              comparando <strong>EWA</strong>, <strong>Reinforcement Learning</strong> e
+              <strong>Belief-based Learning</strong> em ambientes como BSG e MEG.
+            </p>
+
+            <p style="font-size:0.8rem; color:#94a3b8;">
+                Desenvolvido em R (Shiny, ggplot2, dplyr, rgamer)
+            </p>
+
+          </div>
+        '))
     )
   )
 )
