@@ -252,7 +252,7 @@ frequency_probabilities <- function(df) {
 # =================== UI ===================
 # URLs (ajuste para os seus perfis)
 github_url   <- "https://github.com/drewmelo"
-linkedin_url <- "https://www.linkedin.com/in/seu-perfil/"
+linkedin_url <- "https://www.linkedin.com/in/drewmelo/"
 
 ui <- page_fluid(
   # Overlay simples acionado por body.shiny-busy (Shiny liga/desliga pra você)
@@ -337,9 +337,28 @@ ui <- page_fluid(
     /* Contêiner dos ícones */
     .app-header .social{ display:flex; align-items:center; gap:10px; }
     /* Botões dos ícones – cinzas, com leve “pill” */
-    .app-header .social a{ display:grid; place-items:center; width:36px; height:36px; border-radius:9999px; text-decoration:none; color:#94a3b8; background:#ffffff; border:1px solid #e6edf4; box-shadow:0 2px 8px rgba(16,36,56,.06); transition:all .15s ease-in-out; }
-    .app-header .social a:hover{ color:#475569; background:#f8fafc; border-color:#dbe6f1; box-shadow:0 4px 12px rgba(16,36,56,.10); }
-    .app-header .social svg{ width:20px; height:20px; }
+      .app-header .social a{
+    display:grid;
+    place-items:center;
+    width:28px;
+    height:28px;
+    text-decoration:none;
+    color:#94a3b8;
+    background:transparent;
+    border:none;
+    box-shadow:none;
+    transition:all .15s ease-in-out;
+  }
+
+  .app-header .social a:hover{
+    color:#475569;
+    transform:translateY(-1px);
+  }
+
+  .app-header .social svg{
+    width:20px;
+    height:20px;
+  }
 
     /* --- Cards suaves --- */
     .card, .bslib-card{ border:0; border-radius:16px !important; overflow:hidden; box-shadow:0 6px 18px rgba(16,36,56,.06); }
@@ -734,55 +753,150 @@ ui <- page_fluid(
 
     # (opcional) card de 'Sobre o projeto' depois do layout_sidebar
     card(
-      collapsible = TRUE,
-      card_header("Sobre o projeto"),
-      card_body(HTML('
-          <div style="text-align:center;">
+  collapsible = TRUE,
+  card_header("Sobre o projeto"),
+  card_body(
+    HTML('
+      <style>
+        .social-icon svg {
+          width: 22px;
+          height: 22px;
+          fill: #94a3b8;
+          transition: fill 0.2s ease, transform 0.2s ease;
+        }
 
-            <!-- Logo -->
-            <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png" 
-                alt="Logo" width="100" style="margin-bottom:10px;">
+        .social-icon:hover svg {
+          fill: #334155;
+          transform: translateY(-1px);
+        }
+      </style>
 
-            <!-- Título -->
-            <h4 style="margin-bottom:6px;">
-              Dinâmicas de Aprendizado em Cenários de Incerteza de Mercado
-            </h4>
+      <div style="
+        text-align:center;
+        max-width:520px;
+        margin:0 auto;
+        padding:6px 4px;
+      ">
 
-            <!-- Subtítulo -->
-            <p style="margin-top:4px; color:#64748b;">
-              Trabalho de Conclusão de Curso — <em>data</em>
-            </p>
+        <img src="https://raw.githubusercontent.com/drewmelo/EWA-MarketDynamics/refs/heads/master/assets/logo-main.png"
+             alt="Logo"
+             width="82"
+             style="margin-bottom:14px;">
 
-            <!-- Autor -->
-            <div style="margin-top:12px;">
-              <a href="https://medium.com/@andremelopix" target="_blank">
-                <img src="https://avatars.githubusercontent.com/u/143213346?s=400&v=4"
-                    width="80" style="border-radius:50%;">
-                <br>
-                <strong>André V. P. de Melo</strong>
-              </a>
-            </div>
+        <h4 style="
+          margin:0;
+          font-weight:700;
+          line-height:1.25;
+          color:#1e293b;
+        ">
+          Dinâmicas de aprendizado em cenários de incerteza de mercado
+        </h4>
 
-            <!-- Links -->
-            <div style="margin-top:10px; font-size:0.9rem;">
-              <a href="https://orcid.org/0009-0002-5181-3901" target="_blank">ORCID</a> ·
-              <a href="https://github.com/drewmelo" target="_blank">GitHub</a>
-            </div>
+        <p style="
+          margin:6px 0 10px 0;
+          font-size:0.95rem;
+          color:#64748b;
+        ">
+          Aplicação de teoria dos jogos com Experience-Weighted Attraction
+        </p>
 
-            <!-- Descrição -->
-            <p style="margin-top:14px; font-size:0.9rem; color:#475569;">
-              Este projeto implementa modelos de aprendizado estratégico em jogos 2×2,
-              comparando <strong>EWA</strong>, <strong>Reinforcement Learning</strong> e
-              <strong>Belief-based Learning</strong> em ambientes como BSG e MEG.
-            </p>
+        <p style="
+          margin:8px 0 16px 0;
+          font-size:0.9rem;
+          color:#64748b;
+        ">
+          Trabalho de Conclusão de Curso — <em>data</em>
+        </p>
 
-            <p style="font-size:0.8rem; color:#94a3b8;">
-                Desenvolvido em R (Shiny, ggplot2, dplyr, rgamer)
-            </p>
+        <div style="margin-bottom:12px;">
+          <a href="https://drewmelo.medium.com/"
+             target="_blank"
+             style="text-decoration:none; color:#334155;">
+            <img src="https://avatars.githubusercontent.com/u/143213346?s=400&v=4"
+                 width="64"
+                 style="
+                   border-radius:50%;
+                   margin-bottom:6px;
+                   box-shadow:0 2px 8px rgba(15,23,42,0.12);
+                 ">
+            <br>
+            <strong>André V. P. de Melo</strong>
+          </a>
+        </div>
 
-          </div>
-        '))
-    )
+        <div style="
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          gap:16px;
+          margin-bottom:16px;
+        ">
+
+          <a class="social-icon"
+             href="https://orcid.org/0009-0002-5181-3901"
+             target="_blank"
+             aria-label="ORCID">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 5.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.516.431-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V8.416zm3.562 0h3.9c3.703 0 5.331 2.647 5.331 5.022 0 2.581-2.019 5.019-5.313 5.019h-3.918V8.416zm1.444 1.303v7.444h2.297c3.263 0 4.006-2.475 4.006-3.725 0-2.034-1.297-3.719-4.081-3.719h-2.222z"/>
+            </svg>
+          </a>
+
+          <a class="social-icon"
+             href="https://github.com/drewmelo"
+             target="_blank"
+             aria-label="GitHub">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 .297C5.37.297 0 5.667 0 12.297c0 5.303 3.438 9.8 8.207 11.387.6.111.82-.26.82-.577v-2.234c-3.338.726-4.043-1.416-4.043-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.419-1.305.762-1.605-2.665-.303-5.466-1.332-5.466-5.93 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.301 1.23A11.51 11.51 0 0 1 12 6.1c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.653.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.805 5.624-5.477 5.921.43.371.814 1.102.814 2.222v3.293c0 .32.216.694.825.576C20.565 22.092 24 17.596 24 12.297c0-6.63-5.373-12-12-12z"/>
+            </svg>
+          </a>
+
+          <a class="social-icon"
+             href="https://www.linkedin.com/in/drewmelo/"
+             target="_blank"
+             aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.447-2.136 2.943v5.663H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.852 3.369-1.852 3.602 0 4.267 2.371 4.267 5.455v6.288zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.114 20.452H3.56V9h3.554v11.452z"/>
+            </svg>
+          </a>
+
+        </div>
+
+        <p style="
+          margin:0 auto 16px auto;
+          font-size:0.9rem;
+          line-height:1.5;
+          color:#475569;
+        ">
+          Modelos de aprendizado estratégico em jogos 2×2, com <strong>EWA</strong>, <strong>RL</strong> e <strong>BL</strong> nos cenários BSG e MEG.
+        </p>
+
+        <div style="
+          display:flex;
+          flex-wrap:wrap;
+          justify-content:center;
+          gap:6px;
+          margin:12px 0 16px 0;
+        ">
+          <img src="https://img.shields.io/badge/-4.3.2%20%7C%204.5.1-276DC3?style=for-the-badge&logo=r&logoColor=white"/>
+          <img src="https://img.shields.io/badge/environment-renv-009E73?style=for-the-badge"/>
+          <img src="https://img.shields.io/github/actions/workflow/status/drewmelo/EWA-MarketDynamics/check-r.yml?style=for-the-badge&label=CI"/>
+          <img src="https://img.shields.io/github/v/release/drewmelo/EWA-MarketDynamics?style=for-the-badge&label=version"/>
+          <img src="https://img.shields.io/badge/models-EWA%20%7C%20RL%20%7C%20BL-6f42c1?style=for-the-badge"/>
+          <img src="https://img.shields.io/badge/app-Shiny-75AADB?style=for-the-badge"/>
+        </div>
+
+        <p style="
+          margin:0;
+          font-size:0.78rem;
+          color:#94a3b8;
+        ">
+          Desenvolvido em R com Shiny
+        </p>
+
+      </div>
+    ')
+  )
+)
   )
 )
 
