@@ -149,7 +149,7 @@ plot_base <- function(dados, tag_lab) {
     theme(
       legend.position = "none",
       plot.tag = element_text(
-        size = 18,
+        size = 20,
         family = fonte_base,
         color = "black"
       ),

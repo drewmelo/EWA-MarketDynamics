@@ -70,12 +70,12 @@ ne_m1 <- ne_m1 |>
   dplyr::ungroup()
 
 # Criando o gráfico com ggplot2
-p19 <- ggplot2::ggplot(ne_m1, ggplot2::aes(x = count_n, color = NE, group = NE)) +
+p18 <- ggplot2::ggplot(ne_m1, ggplot2::aes(x = count_n, color = NE, group = NE)) +
   ggplot2::geom_freqpoly(binwidth = 3.7, linewidth = 1.6, position = 'jitter') +
   ggplot2::labs(
     # title = "Contagem Acumulada por Categoria de NE"  # Se precisar do título, remova o comentário
-    x = "Número de Ocorrências",
-    y = "Contagem Acumulada",
+    x = "Número de ocorrências",
+    y = "Contagem acumulada",
     color = NULL  # Remove o título da legenda
   ) +
   ggplot2::scale_x_continuous(breaks = scales::breaks_pretty(n = 6)) +

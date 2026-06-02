@@ -506,6 +506,11 @@ plot_ks_lambda <- function(
       panel.grid.minor = element_blank(),
       axis.title = element_text(color = "#666666", size = 18),
       axis.text = element_text(color = "#666666", size = 16),
+      strip.text = element_text(
+        size = 17,
+        family = fonte_base,
+        color = "black"
+      ),
       panel.grid.major.x = element_blank(),
       panel.grid.major.y = element_line(color = "grey85", linewidth = 0.3)
     ) +

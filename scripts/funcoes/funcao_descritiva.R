@@ -224,7 +224,7 @@ contingency_plots <- function(data_m1, data_m2, matrix_m1, matrix_m2, tag_label_
     ggplot2::scale_fill_manual(values = color_main) +
     ggplot2::labs(
       x = "Estratégias",
-      y = "Frequência Relativa",
+      y = "Frequência relativa",
       fill = NULL,
       tag = tag_label_m1
     ) +
@@ -488,4 +488,8 @@ print_table <- function(table, game_name) {
   # Desvios na escala original (sem transformação)
   cat("\nDesvios\n")
   print(round(table$res, 1))
+
+  # Desvios padronizados (sinal positivo ou negativo)
+  cat("\nDesvios padronizados\n")
+  print(round(table$res_pad, 1))
 }
