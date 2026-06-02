@@ -121,6 +121,8 @@ ne_m1 |>
   (\(df) cat("Durante esta reprodutibilidade, em", i, "iterações, a frequência relativa do NE",
              df$NE, "no BSG é", paste0(round(df$freq * 100, 2), "%"), "\n"))()
 
+p18
+
 # Carregando script do equilíbrio de Nash (plotagem)
 base::source("scripts/equilibrio_nash.R")
 
@@ -285,13 +287,18 @@ contigencia <- contingency_plots(
 
 chi_tbl9a <- chisq.test(contigencia$tables$tab_abs_m1)
 
+chi_tbl9a$expected      # frequências esperadas
+chi_tbl9a$residuals     # resíduos de Pearson com sinal
+chi_tbl9a$stdres        # resíduos padronizados com sinal
+
 tabela_9a <- list(
   prob = contigencia$tables$tab_rel_total_m1,
   obs = contigencia$tables$tab_abs_m1 |> addmargins(),
   esp = chi_tbl9a$expected |> addmargins(),
   res = (contigencia$tables$tab_abs_m1[1:3, 1:4] -
          chi_tbl9a$expected[1:3, 1:4])^2 /
-         chi_tbl9a$expected[1:3, 1:4]
+         chi_tbl9a$expected[1:3, 1:4],
+  res_pad = chi_tbl9a$stdres
 )
 
 
@@ -304,13 +311,22 @@ tabela_9a <- list(
 
 chi_tbl9b <- chisq.test(contigencia$tables$tab_abs_m2)
 
+chi_tbl9b$expected      # frequências esperadas
+chi_tbl9b$residuals     # resíduos de Pearson com sinal
+chi_tbl9b$stdres        # resíduos padronizados com sinal
+
+# melhor
+chi_tbl9b$stdres
+
+
 tabela_9b <- list(
   prob = contigencia$tables$tab_rel_total_m2,
   obs = contigencia$tables$tab_abs_m2 |> addmargins(),
   esp = chi_tbl9b$expected |> addmargins(),
   res = (contigencia$tables$tab_abs_m2[1:3, 1:4] -
          chi_tbl9b$expected[1:3, 1:4])^2 /
-         chi_tbl9b$expected[1:3, 1:4]
+         chi_tbl9b$expected[1:3, 1:4],
+  res_pad = chi_tbl9b$stdres
 )
 
 
@@ -361,49 +377,74 @@ prop_meg <- get_props(meg_df)
 
 
 # ------------------------------------------------------------
-# Definição do limiar de estabilidade
+# Definição dos limiares de estabilidade
 # 
-# Definir a variação máxima permitida entre períodos para considerar
-# que a trajetória está estável.
+# Testar a sensibilidade dos resultados para diferentes valores
+# de variação máxima permitida entre períodos.
 # ------------------------------------------------------------
 
-# Limiar usado para classificar estabilidade.
-epslon <- 0.03
+epslons <- seq(0.01, 0.05, by = 0.01)
 
 
 # ------------------------------------------------------------
-# Análise de estabilidade para todos os valores de lambda
+# Análise de estabilidade para todos os valores de epsilon e lambda
 # 
-# Aplicar a função get_stability() às 10 simulações, associando cada
-# simulação ao respectivo valor de lambda.
+# Aplicar a função get_stability() às 10 simulações para cada
+# limiar de estabilidade.
 # ------------------------------------------------------------
 
-estabilidades <- map(
+estabilidades_eps <- purrr::map(
   
-  # Cria uma sequência nomeada:
-  # lambda_0.1, lambda_0.2, ..., lambda_1
-  set_names(1:10, paste0("lambda_", seq(0.1, 1, by = 0.1))),
+  # Cria lista nomeada:
+  # eps_0.01, eps_0.02, ..., eps_0.05
+  rlang::set_names(epslons, paste0("eps_", epslons)),
   
-  ~ get_stability(
+  ~ purrr::map(
     
-    # Seleciona a base do BSG correspondente à simulação atual.
-    bsg = prop_bsg[[paste0("sim", .x)]],
+    # Cria sequência nomeada:
+    # lambda_0.1, lambda_0.2, ..., lambda_1
+    rlang::set_names(1:10, paste0("lambda_", seq(0.1, 1, by = 0.1))),
     
-    # Seleciona a base do MEG correspondente à simulação atual.
-    meg = prop_meg[[paste0("sim", .x)]],
-    
-    # Parâmetros da análise de estabilidade.
-    limiar = epslon,
-    janela = 10,
-    min_estavel = 0.8
+    function(i) {
+      get_stability(
+        
+        # Seleciona a base do BSG correspondente à simulação atual.
+        bsg = prop_bsg[[paste0("sim", i)]],
+        
+        # Seleciona a base do MEG correspondente à simulação atual.
+        meg = prop_meg[[paste0("sim", i)]],
+        
+        # Parâmetros da análise de estabilidade.
+        limiar = .x,
+        janela = 10,
+        min_estavel = 0.8
+      )
+    }
   )
 )
+
+estabilidades_eps$eps_0.01$lambda_0.1
+estabilidades_eps$eps_0.03$lambda_0.5
+estabilidades_eps$eps_0.05$lambda_1
+
+purrr::map(estabilidades_eps$eps_0.01, ~ .x$resumo)
+purrr::map(estabilidades_eps$eps_0.02, ~ .x$resumo)
+purrr::map(estabilidades_eps$eps_0.03, ~ .x$resumo)
+purrr::map(estabilidades_eps$eps_0.04, ~ .x$resumo)
+purrr::map(estabilidades_eps$eps_0.05, ~ .x$resumo)
+
+# ------------------------------------------------------------
+# Seleção do limiar principal adotado no trabalho
+# 
+# O limiar de 0.03 é usado como referência principal da análise.
+# Os demais valores servem para análise de sensibilidade.
+# ------------------------------------------------------------
+
+estabilidades <- estabilidades_eps$eps_0.03
 
 
 # ------------------------------------------------------------
 # Visualização dos resumos de estabilidade
-# 
-# Exibir no console o resumo de estabilidade de cada lambda.
 # ------------------------------------------------------------
 
 lapply(estabilidades, function(x) x$resumo)
@@ -411,9 +452,6 @@ lapply(estabilidades, function(x) x$resumo)
 
 # ------------------------------------------------------------
 # Extração dos resumos em uma lista nomeada
-# 
-# Criar uma lista contendo apenas os resumos de estabilidade,
-# preservando os nomes associados aos valores de lambda.
 # ------------------------------------------------------------
 
 props_listas <- setNames(
@@ -424,56 +462,112 @@ props_listas <- setNames(
 
 # ------------------------------------------------------------
 # Seleção de colunas principais
-# 
-# Manter apenas as informações centrais para análise e possível
-# exportação das proporções estáveis.
 # ------------------------------------------------------------
 
 props <- props_listas |> 
-  map(~ .x |> 
-        select(jogo:estrategia_escolhida,
-               periodo_estabilidade,
-               prop_media_estavel)
+  purrr::map(~ .x |> 
+        dplyr::select(
+          jogo:estrategia_escolhida,
+          periodo_estabilidade,
+          prop_media_estavel
+        )
       )
 
 
 # ------------------------------------------------------------
 # Seleção de informações sobre estabilidade temporal
-# 
-# Exibir, para cada lambda, o período de estabilidade e a variação
-# média no trecho classificado como estável.
 # ------------------------------------------------------------
 
-map(estabilidades, ~select(
+purrr::map(estabilidades, ~ dplyr::select(
   .x$resumo, 
   jogo, 
   modelo, 
   jogador, 
   periodo_estabilidade, 
-  variacao_media_estavel))
+  variacao_media_estavel
+))
 
-tab_3 <- props_listas |>
+# ------------------------------------------------------------
+# Função para construir tabela de estabilidade
+# ------------------------------------------------------------
+
+build_stab_tab <- function(props_listas) {
+  
+  props_listas |>
+    purrr::imap_dfr(~ {
+      .x |>
+        dplyr::mutate(
+          lambda = .y,
+          lambda = stringr::str_remove(lambda, "lambda_"),
+          lambda = stringr::str_replace(lambda, "\\.", ","),
+          lambda = paste0("λ = ", lambda),
+          type = modelo,
+          media_prob = taxa_estabilidade,
+          prop_n = taxa_estabilidade * 100,
+          estrategia_escolhida = jogador
+        )
+    }) |>
+    dplyr::select(
+      jogador = jogo,                  
+      type,
+      lambda,
+      estrategia_escolhida,
+      media_prob,
+      prop_n
+    )
+}
+
+
+# ------------------------------------------------------------
+# Tabela principal de estabilidade
+# 
+# Esta tabela usa o limiar principal epsilon = 0.03.
+# ------------------------------------------------------------
+
+tab_3 <- build_stab_tab(props_listas)
+
+
+# ------------------------------------------------------------
+# Tabelas de sensibilidade
+# 
+# Exclui epsilon = 0.03, pois ele já corresponde à tab_3.
+# ------------------------------------------------------------
+
+tabelas_sensibilidade <- estabilidades_eps[names(estabilidades_eps) != "eps_0.03"] |>
+  purrr::map(~ {
+    
+    props_listas_eps <- purrr::map(
+      .x,
+      ~ .x$resumo
+    )
+    
+    build_stab_tab(props_listas_eps)
+  })
+
+
+# ------------------------------------------------------------
+# Tabela longa de sensibilidade
+# 
+# Junta epsilon = 0.01, 0.02, 0.04 e 0.05 em uma única tabela.
+# ------------------------------------------------------------
+
+tab_sensibilidade <- estabilidades_eps[names(estabilidades_eps) != "eps_0.03"] |>
   purrr::imap_dfr(~ {
-    .x |>
+    
+    props_listas_eps <- purrr::map(
+      .x,
+      ~ .x$resumo
+    )
+    
+    build_stab_tab(props_listas_eps) |>
       dplyr::mutate(
-        lambda = .y,
-        lambda = stringr::str_remove(lambda, "lambda_"),
-        lambda = stringr::str_replace(lambda, "\\.", ","),
-        lambda = paste0("λ =  ", lambda),
-        type = modelo,
-        media_prob = taxa_estabilidade,
-        prop_n = taxa_estabilidade * 100,
-        estrategia_escolhida = jogador
+        epsilon = .y,
+        epsilon = stringr::str_remove(epsilon, "eps_"),
+        epsilon = stringr::str_replace(epsilon, "\\.", ","),
+        epsilon = paste0("ε = ", epsilon),
+        .before = lambda
       )
-  }) |>
-  dplyr::select(
-    jogador = jogo,                  
-    type,
-    lambda,
-    estrategia_escolhida,
-    media_prob,
-    prop_n
-  ) 
+  })
 
 #--------------------------------------------------
 # Definição dos pares estratégicos comparados
@@ -538,11 +632,13 @@ probs_lista <- purrr::imap(
 # probabilidades para construção das curvas ECDF.
 # ------------------------------------------------------------
 
+set.seed(05052026)
+
 # Reduz a quantidade de observações por grupo para deixar
 # os gráficos mais leves e legíveis.
 probs_plot_lista <- map(
   probs_lista,
-  ~ prep_ecdf(.x, n_por_grupo = 3000)
+  ~ prep_ecdf(.x, n_por_grupo = 200000)
 )
 
 # Acesso opcional às bases preparadas:
@@ -561,8 +657,8 @@ comparacao_p1 <- make_ecdf_subpatch(
   prefixo = "a",
   pal_jogo = c(BSG = color_main[1], MEG = color_main[2]),
   fonte_base = fonte_base,
-  base_size = 18,
-  n_por_grupo = 3000,
+  base_size = 16,
+  n_por_grupo = 200000,
   preparar = TRUE
 )
 
@@ -578,8 +674,8 @@ comparacao_p2 <- make_ecdf_subpatch(
   prefixo = "b",
   pal_jogo = c(BSG = color_main[1], MEG = color_main[2]),
   fonte_base = fonte_base,
-  base_size = 18,
-  n_por_grupo = 3000,
+  base_size = 16,
+  n_por_grupo = 200000,
   preparar = TRUE
 )
 
@@ -590,7 +686,7 @@ comparacao_p2 <- make_ecdf_subpatch(
 # com legenda comum no topo.
 # ------------------------------------------------------------
 
-p16 <- (comparacao_p1$patch / comparacao_p2$patch) +
+p15 <- (comparacao_p1$patch / comparacao_p2$patch) +
   patchwork::plot_layout(guides = "collect", heights = c(1, 1)) &
   theme(
     legend.position = "top",
@@ -599,12 +695,60 @@ p16 <- (comparacao_p1$patch / comparacao_p2$patch) +
   )
 
 # Exibe a figura final.
-p16
+p15
 
 # Visualização individual dos blocos, se necessário.
-comparacao_p1$patch 
+comparacao_p1$patch
 comparacao_p2$patch
 
+probs_plot_lista$p1 |>
+  dplyr::mutate(
+    faixa_prob = cut(
+      prob,
+      breaks = seq(0, 1, by = 0.1),
+      include.lowest = TRUE
+    )
+  ) |>
+  dplyr::count(modelo, jogo, jogador, estrategia, faixa_prob) |>
+  dplyr::group_by(modelo, jogo, jogador, estrategia) |>
+  dplyr::mutate(
+    prop = n / sum(n),
+    prop_pct = prop * 100
+  ) |>
+  dplyr::ungroup() |> 
+  print(n=60)
+
+probs_plot_lista$p2 |>
+  dplyr::mutate(
+    faixa_prob = cut(
+      prob,
+      breaks = seq(0, 1, by = 0.1),
+      include.lowest = TRUE
+    )
+  ) |>
+  dplyr::count(modelo, jogo, jogador, estrategia, faixa_prob) |>
+  dplyr::group_by(modelo, jogo, jogador, estrategia) |>
+  dplyr::mutate(
+    prop = n / sum(n),
+    prop_pct = prop * 100
+  ) |>
+  dplyr::ungroup() |> 
+  print(n=60)
+
+comparacao_p1$dados_plot |>
+  dplyr::mutate(
+    faixa_prob = dplyr::case_when(
+      prob < 0.25 ~ "Baixa (< 0,25)",
+      prob >= 0.25 & prob < 0.50 ~ "Média-baixa (0,25–0,50)",
+      prob >= 0.50 & prob < 0.75 ~ "Média-alta (0,50–0,75)",
+      prob >= 0.75 ~ "Alta (≥ 0,75)"
+    )
+  ) |>
+  dplyr::count(modelo, jogo, jogador, estrategia, faixa_prob) |>
+  dplyr::group_by(modelo, jogo, jogador, estrategia) |>
+  dplyr::mutate(prop_faixa = n / sum(n)) |>
+  dplyr::ungroup() #|> 
+  #print(n=60)
 
 #--------------------------------------------------
 # Teste KS principal entre jogos
@@ -646,19 +790,32 @@ ks_lambda_all <- purrr::imap_dfr(
   }
 )
 
-ks_lambda_all
+ks_lambda_all |> 
+  print(n=nrow(ks_lambda_all))
 
+probs_lista$p2 |>
+  dplyr::filter(modelo == "RL") |>
+  dplyr::group_by(jogo) |>
+  dplyr::summarise(
+    n = dplyr::n(),
+    media = mean(prob),
+    mediana = median(prob),
+    prop_0_01 = mean(prob <= 0.01),
+    prop_099_1 = mean(prob >= 0.99),
+    prop_0_01_a_01 = mean(prob > 0.01 & prob <= 0.1),
+    prop_09_a_099 = mean(prob >= 0.9 & prob < 0.99)
+  )
 
 #--------------------------------------------------
 # Visualização dos resultados KS por lambda
 #--------------------------------------------------
 # Gera gráfico com a evolução das distâncias KS ao longo de lambda.
-p17 <- plot_ks_lambda(
+p16 <- plot_ks_lambda(
   ks_lambda_all = ks_lambda_all,
   fonte_base = fonte_base
 )
 
-p17
+p16
 
 
 #--------------------------------------------------
@@ -763,10 +920,10 @@ conv_m2 <- plot_base(
 #   (b) MEG
 #
 # O argumento axis_titles = "collect" compartilha os títulos dos eixos.
-p18 <- conv_m1 + conv_m2 +
+p17 <- conv_m1 + conv_m2 +
   plot_layout(axis_titles = "collect")
 
-p18
+p17
 
 
 # ------------------------------------------------------------
@@ -785,19 +942,19 @@ p18
 
 # Figura 3 (BSG)
 ggplot2::ggsave(
-  plot = p3, filename = "figuras/figura_3.pdf",
+  plot = p4, filename = "figuras/figura_4.pdf",
   width = 10.81, height = 7.75, units = "in", device = cairo_pdf
 )
 
 # Figura 4 (MEG)
 ggplot2::ggsave(
-  plot = p4, filename = "figuras/figura_4.pdf",
+  plot = p5, filename = "figuras/figura_5.pdf",
   width = 10.81, height = 7.75, units = "in", device = cairo_pdf
 )
 
 
 # ------------------------------------------------------------
-# Figuras 9 a 13 — Lambdas principais
+# Figuras 8 a 12 — Lambdas principais
 # Exporta os gráficos das simulações para os valores principais
 # de lambda: 0,1; 0,3; 0,5; 0,8; 1.
 # ------------------------------------------------------------
@@ -805,7 +962,7 @@ ggplot2::ggsave(
 # lambdas principais: figuras 9 a 13
 sim_principais <- c(1, 3, 5, 8, 10)
 
-fig_principais <- 9:13
+fig_principais <- 8:12
 
 purrr::walk2(sim_principais, fig_principais, \(i, fig) {
   ggplot2::ggsave(
@@ -817,7 +974,7 @@ purrr::walk2(sim_principais, fig_principais, \(i, fig) {
 })
 
 # ------------------------------------------------------------
-# Figuras 21 a 25 — Demais lambdas
+# Figuras 19 a 23 — Demais lambdas
 # Exporta os gráficos das simulações para os demais valores:
 # 0,2; 0,4; 0,6; 0,7; 0,9.
 # ------------------------------------------------------------
@@ -825,7 +982,7 @@ purrr::walk2(sim_principais, fig_principais, \(i, fig) {
 # demais lambdas: 0,2; 0,4; 0,6; 0,7; 0,9
 sim_outros <- c(2, 4, 6, 7, 9)
 
-fig_outros <- 21:25
+fig_outros <- 20:24
 
 purrr::walk2(sim_outros, fig_outros, \(i, fig) {
   ggplot2::ggsave(
@@ -838,34 +995,34 @@ purrr::walk2(sim_outros, fig_outros, \(i, fig) {
 
 
 # ------------------------------------------------------------
-# Figuras 14 e 15 — Distribuição das probabilidades
+# Figuras 13 e 14 — Distribuição das probabilidades
 # Salva os histogramas das probabilidades simuladas para BSG e MEG.
 # ------------------------------------------------------------
 
-# Figuras 18 e 19 (análise da distribuição dos dados -- histograma)
+# Figuras 13 e 14 (análise da distribuição dos dados -- histograma)
 
 plot_histogram(
   data = bsg_df,
   bins = grDevices::nclass.Sturges(bsg_df$probabilidade),
-  file_name = "figuras/figura_14.pdf"
+  file_name = "figuras/figura_13.pdf"
 )
 
 plot_histogram(
   data = meg_df,
   bins = grDevices::nclass.Sturges(meg_df$probabilidade),
-  file_name = "figuras/figura_15.pdf"
+  file_name = "figuras/figura_14.pdf"
 )
 
 
 # ------------------------------------------------------------
-# Figura 16 — Curvas ECDF
+# Figura 15 — Curvas ECDF
 # Salva a figura consolidada das distribuições acumuladas empíricas.
 # ------------------------------------------------------------
 
 # Salva a figura consolidada no diretório "figuras".
 ggplot2::ggsave(
-  filename = "figuras/figura_16.pdf",
-  plot = p16,
+  filename = "figuras/figura_15.pdf",
+  plot = p15,
   width = 12.13, 
   height = 9.02,
   units = "in",
@@ -874,57 +1031,57 @@ ggplot2::ggsave(
 
 
 # ------------------------------------------------------------
-# Figura 17 — Distâncias KS por lambda
+# Figura 16 — Distâncias KS por lambda
 # Salva o gráfico das distâncias de Kolmogorov-Smirnov ao longo
 # dos valores de lambda.
 # ------------------------------------------------------------
 
 ggplot2::ggsave(
-  filename = "figuras/figura_17.pdf",
-  plot = p17,
-  width = 12.13, 
-  height = 9.02,
+  filename = "figuras/figura_16.pdf",
+  plot = p16,
+  width = 10.81, 
+  height = 7.75,
   units = "in",
   device = cairo_pdf
 )
 
 
 # ------------------------------------------------------------
-# Figura 18 — Convergência ao alvo teórico
+# Figura 17 — Convergência ao alvo teórico
 # Salva o gráfico da distância média ao equilíbrio teórico.
 # ------------------------------------------------------------
 
 ggplot2::ggsave(
-  filename = "figuras/figura_18.pdf",
-  plot = p18,
-  width = 12.13, 
-  height = 9.02,
+  filename = "figuras/figura_17.pdf",
+  plot = p17,
+  width = 10.81, 
+  height = 7.75,
   units = "in",
   device = cairo_pdf
 )
 
 
 # ------------------------------------------------------------
-# Figura 19 — Equilíbrios de Nash no BSG
+# Figura 18 — Equilíbrios de Nash no BSG
 # Figura complementar destinada ao Apêndice A.
 # ------------------------------------------------------------
 
-# Figura 19 (compilação dos Equilíbrios de Nash no BSG) -- APÊNDICE A
-ggplot2::ggsave(plot = p19,
-                filename = "figuras/figura_19.pdf",
+# Figura 18 (compilação dos Equilíbrios de Nash no BSG) -- APÊNDICE A
+ggplot2::ggsave(plot = p18,
+                filename = "figuras/figura_18.pdf",
                 width = 10.81, height = 7.75, units = "in",
                 device = cairo_pdf)
 
 
 # ------------------------------------------------------------
-# Figura 20 — Tabelas de contingência
+# Figura 19 — Tabelas de contingência
 # Salva a visualização combinada das tabelas de contingência.
 # ------------------------------------------------------------
 
-# Figura 20 (plotagem dos dados da tabela 9 de contigência)
+# Figura 19 (plotagem dos dados da tabela 9 de contigência)
 
 ggplot2::ggsave(plot = contigencia$plots$combined_plot,
-                filename = "figuras/figura_20.pdf",
+                filename = "figuras/figura_19.pdf",
                 width = 14, height = 9.02, units = "in",
                 device = cairo_pdf)
 
@@ -943,18 +1100,20 @@ ggplot2::ggsave(plot = contigencia$plots$combined_plot,
 
 export_game_table(
   game_matrix = matriz_bsg,
-  title = "Tabela 1 - Matriz de ganhos do jogo BSG",
+  title = "Tabela 1: Matriz de ganhos do jogo BSG",
   file = "tabelas/tabela_1.pdf",
-  height = 7, width = 10,
-  overwrite = T
+  height = 7,
+  width = 10,
+  overwrite = TRUE
 )
 
 export_game_table(
   game_matrix = matriz_meg,
-  title = "Tabela 2 - Matriz de ganhos do jogo MEG",
+  title = "Tabela 2: Matriz de ganhos do jogo MEG",
   file = "tabelas/tabela_2.pdf",
-  height = 7, width = 10,
-  overwrite = T
+  height = 7,
+  width = 10,
+  overwrite = TRUE
 )
 
 
@@ -982,7 +1141,7 @@ avg_prob_tabletex(
   p2_pair   = c("Empresa A", "Empresa B"),
   p1_label  = "P1",
   p2_label  = "P2",
-  caption   = "Taxa de estabilidade — BSG",
+  caption   = "Taxa de estabilidade em porcentagem nos jogos BSG e MEG por modelo",
   label     = "tabela_3",
   font_size = 10,
   file_tex  = "tabelas/tabela_3.tex"
@@ -999,13 +1158,13 @@ model_stats_table(
   data   = resumo_dados$tab_4,
   file   = "tabelas/tabela_4.png",
   modelo = "EWA",
-  title  = "Tabela 4 — Medidas-resumo das atrações no modelo EWA"
+  title  = "Tabela 4: Medidas-resumo das atrações no modelo EWA para variações de λ entre 0,1 e 1"
 )
 
 model_stats_tabletex(
   data     = resumo_dados$tab_4,
   modelo   = "EWA",
-  caption  = "Medidas-resumo das atrações no modelo EWA",
+  caption  = "Medidas-resumo das atrações no modelo EWA para variações de $\\lambda$ entre 0,1 e 1",
   label    = "tabela_4",
   file_tex = "tabelas/tabela_4.tex"
 )
@@ -1015,13 +1174,13 @@ model_stats_table(
   data   = resumo_dados$tab_5,
   file   = "tabelas/tabela_5.png",
   modelo = "RL",
-  title  = "Tabela 5 — Medidas-resumo das atrações no modelo de reforço"
+  title  = "Tabela 5: Medidas-resumo das atrações no modelo RL para variações de λ entre 0,1 e 1"
 )
 
 model_stats_tabletex(
   data     = resumo_dados$tab_5,
   modelo   = "RL",
-  caption  = "Medidas-resumo das atrações no modelo de reforço",
+  caption  = "Medidas-resumo das atrações no modelo RL para variações de $\\lambda$ entre 0,1 e 1",
   label    = "tabela_5",
   file_tex = "tabelas/tabela_5.tex"
 )
@@ -1031,13 +1190,13 @@ model_stats_table(
   data   = resumo_dados$tab_6,
   file   = "tabelas/tabela_6.png",
   modelo = "BL",
-  title  = "Tabela 6: Medidas-resumo das atrações no modelo baseado em crenças"
+  title  = "Tabela 6: Medidas-resumo das atrações no modelo BL para variações de λ entre 0,1 e 1"
 )
 
 model_stats_tabletex(
   data     = resumo_dados$tab_6,
   modelo   = "BL",
-  caption  = "Medidas-resumo das atrações no modelo baseado em crenças",
+  caption  = "Medidas-resumo das atrações no modelo BL para variações de $\\lambda$ entre 0,1 e 1",
   label    = "tabela_6",
   file_tex = "tabelas/tabela_6.tex"
 )
@@ -1053,21 +1212,21 @@ avg_prob_table(
   data      = resumo_dados$tab_7,
   file      = "tabelas/tabela_7.png",
   p1_player = "Vendedor",
-  p1_pair   = c("Preço Alto","Preço Baixo"),
+  p1_pair   = c("Preço Alto", "Preço Baixo"),
   p2_player = "Comprador",
-  p2_pair   = c("Aceitar","Rejeitar"),
-  title     = "Tabela 7 — Preço Alto/Preço Baixo (P1) e Aceitar/Rejeitar (P2)"
+  p2_pair   = c("Aceitar", "Rejeitar"),
+  title     = "Tabela 7: Probabilidades médias das estratégias no BSG segundo modelo de aprendizagem e λ"
 )
 
 avg_prob_tabletex(
   data      = resumo_dados$tab_7,
   p1_player = "Vendedor",
-  p1_pair   = c("Preço Alto","Preço Baixo"),
+  p1_pair   = c("Preço Alto", "Preço Baixo"),
   p2_player = "Comprador",
-  p2_pair   = c("Aceitar","Rejeitar"),
+  p2_pair   = c("Aceitar", "Rejeitar"),
   p1_label  = "P1",
   p2_label  = "P2",
-  caption   = "Probabilidade média — BSG",
+  caption   = "Probabilidades médias das estratégias no BSG segundo modelo de aprendizagem e $\\lambda$",
   label     = "tabela_7",
   font_size = 10,
   file_tex  = "tabelas/tabela_7.tex"
@@ -1078,21 +1237,21 @@ avg_prob_table(
   data      = resumo_dados$tab_8,
   file      = "tabelas/tabela_8.png",
   p1_player = "Empresa A",
-  p1_pair   = c("Entrar","Não Entrar"),
+  p1_pair   = c("Entrar", "Não Entrar"),
   p2_player = "Empresa B",
-  p2_pair   = c("Entrar","Não Entrar"),
-  title     = "Tabela 8 — Entrar/Não Entrar (P1) e Entrar/Não Entrar (P2)"
+  p2_pair   = c("Entrar", "Não Entrar"),
+  title     = "Tabela 8: Probabilidades médias das estratégias no MEG segundo modelo de aprendizagem e λ"
 )
 
 avg_prob_tabletex(
   data      = resumo_dados$tab_8,
   p1_player = "Empresa A",
-  p1_pair   = c("Entrar","Não Entrar"),
+  p1_pair   = c("Entrar", "Não Entrar"),
   p2_player = "Empresa B",
-  p2_pair   = c("Entrar","Não Entrar"),
+  p2_pair   = c("Entrar", "Não Entrar"),
   p1_label  = "P1",
   p2_label  = "P2",
-  caption   = "Probabilidade média — MEG",
+  caption   = "Probabilidades médias das estratégias no MEG segundo modelo de aprendizagem e $\\lambda$",
   label     = "tabela_8",
   font_size = 10,
   file_tex  = "tabelas/tabela_8.tex"
@@ -1108,33 +1267,108 @@ table_wide(
   prob_bsg = tabela_9a$prob,
   prob_meg = tabela_9b$prob,
   file     = "tabelas/tabela_9.png",
-  title    = "Distribuição (%) por estratégia e modelo",
+  title    = "Tabela 9: Distribuição percentual das estratégias nos jogos BSG e MEG segundo modelo de aprendizagem",
   digits   = 1
 )
 
 write_probtex(
-  tabela_9a$prob, tabela_9b$prob,
+  tabela_9a$prob,
+  tabela_9b$prob,
   file    = "tabelas/tabela_9.tex",
-  caption = "Probabilidade média por estratégia — BSG e MEG",
+  caption = "Distribuição percentual das estratégias nos jogos BSG e MEG segundo modelo de aprendizagem",
   label   = "tabela_9"
 )
 
 
 # ------------------------------------------------------------
-# Tabela 10 — Probabilidades com estatística complementar
+# Tabela 10 — Frequências esperadas e resíduos padronizados
 # Exporta tabela LaTeX com valores principais e resíduos entre parênteses.
 # ------------------------------------------------------------
 
 writeLines(
   tex_matrix(
-      tabela_9a$esp/1e6, tabela_9a$res,
-      tabela_9b$esp/1e6, tabela_9b$res,
-      caption = "Probabilidade média (valor principal) com estatística complementar (entre parênteses)",
-      label   = "tabela_10",
-      digits_main = 1, digits_paren = 1, decimal = ",",
-      show_paren_in_total = FALSE
+    tabela_9a$esp / 1e6,
+    tabela_9a$res_pad,
+    tabela_9b$esp / 1e6,
+    tabela_9b$res_pad,
+    caption = "Frequências esperadas e resíduos padronizados do teste $\\chi^2$ nos jogos BSG e MEG",
+    label   = "tabela_10",
+    digits_main = 1,
+    digits_paren = 1,
+    decimal = ",",
+    show_paren_in_total = FALSE
   ),
   "tabelas/tabela_10.tex"
+)
+
+
+# ------------------------------------------------------------
+# Controle das tabelas de sensibilidade
+# 
+# Tabelas 11 a 14, excluindo epsilon = 0,03,
+# pois este já corresponde à Tabela 3.
+# ------------------------------------------------------------
+
+controle_sensibilidade <- tibble::tibble(
+  eps_nome   = c("eps_0.01", "eps_0.02", "eps_0.04", "eps_0.05"),
+  eps_label  = c("0,01", "0,02", "0,04", "0,05"),
+  num_tabela = 11:14
+)
+
+
+# ------------------------------------------------------------
+# Tabelas 11 a 14 — Sensibilidade do critério de estabilidade
+# Exportação das tabelas de sensibilidade em PNG.
+# ------------------------------------------------------------
+
+purrr::pwalk(
+  controle_sensibilidade,
+  function(eps_nome, eps_label, num_tabela) {
+    
+    avg_prob_table(
+      data      = tabelas_sensibilidade[[eps_nome]],
+      file      = paste0("tabelas/tabela_", num_tabela, ".png"),
+      p1_player = "BSG",
+      p1_pair   = c("Comprador", "Vendedor"),
+      p2_player = "MEG",
+      p2_pair   = c("Empresa A", "Empresa B"),
+      title     = paste0(
+        "Tabela ", num_tabela,
+        ": Taxa de estabilidade nos jogos BSG e MEG com ε = ",
+        eps_label
+      )
+    )
+  }
+)
+
+
+# ------------------------------------------------------------
+# Tabelas 11 a 14 — Sensibilidade do critério de estabilidade
+# Exportação das tabelas de sensibilidade em LaTeX.
+# ------------------------------------------------------------
+
+purrr::pwalk(
+  controle_sensibilidade,
+  function(eps_nome, eps_label, num_tabela) {
+    
+    avg_prob_tabletex(
+      data      = tabelas_sensibilidade[[eps_nome]],
+      p1_player = "BSG",
+      p1_pair   = c("Comprador", "Vendedor"),
+      p2_player = "MEG",
+      p2_pair   = c("Empresa A", "Empresa B"),
+      p1_label  = "P1",
+      p2_label  = "P2",
+      caption   = paste0(
+        "Taxa de estabilidade nos jogos BSG e MEG com $\\epsilon = ",
+        eps_label,
+        "$"
+      ),
+      label     = paste0("tabela_", num_tabela),
+      font_size = 10,
+      file_tex  = paste0("tabelas/tabela_", num_tabela, ".tex")
+    )
+  }
 )
 
 # ------------------------------------------------------------
