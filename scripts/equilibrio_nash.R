@@ -3,7 +3,7 @@
 ## GRÁFICOS --------------------------------------------------------------------
 
 # BSG
-p3 <- ggplot2::ggplot(
+p4 <- ggplot2::ggplot(
   s_matriz_bsg$br_plot$data,
   ggplot2::aes(col = factor(player, levels = c("Vendedor", "Comprador")))
 ) +
@@ -81,7 +81,7 @@ p3 <- ggplot2::ggplot(
 
 
 # MEG
-p4 <- ggplot2::ggplot(
+p5 <- ggplot2::ggplot(
   s_matriz_meg$br_plot$data,
   ggplot2::aes(col = player)
 ) +
