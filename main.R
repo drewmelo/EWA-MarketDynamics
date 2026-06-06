@@ -681,74 +681,165 @@ comparacao_p2 <- make_ecdf_subpatch(
 
 
 # ------------------------------------------------------------
-# Montagem da figura final com os dois blocos
-# Empilha os blocos do par 1 e do par 2 em uma única figura,
-# com legenda comum no topo.
+# Distribuição das probabilidades por intervalos
+#
+# Classificar as probabilidades dos pares estratégicos em faixas
+# de amplitude 0,1 e calcular a participação de cada faixa dentro
+# de cada combinação de modelo, jogo, jogador e estratégia.
 # ------------------------------------------------------------
 
-p15 <- (comparacao_p1$patch / comparacao_p2$patch) +
-  patchwork::plot_layout(guides = "collect", heights = c(1, 1)) &
-  theme(
-    legend.position = "top",
-    legend.margin = margin(b = 10),
-    legend.box.margin = margin(b = 10)
-  )
 
-# Exibe a figura final.
-p15
-
-# Visualização individual dos blocos, se necessário.
-comparacao_p1$patch
-comparacao_p2$patch
+# ------------------------------------------------------------
+# Distribuição das probabilidades do par 1
+#
+# O primeiro par compara:
+# - Comprador no BSG, com a estratégia Rejeitar;
+# - Empresa A no MEG, com a estratégia Entrar.
+#
+# As probabilidades são distribuídas em dez intervalos entre
+# 0 e 1. Em seguida, calcula-se a frequência absoluta e relativa
+# de observações em cada faixa.
+# ------------------------------------------------------------
 
 probs_plot_lista$p1 |>
   dplyr::mutate(
-    faixa_prob = cut(
+    
+    # Divide as probabilidades em intervalos de amplitude 0,1.
+    faixa_prob = base::cut(
       prob,
-      breaks = seq(0, 1, by = 0.1),
+      breaks = base::seq(0, 1, by = 0.1),
       include.lowest = TRUE
     )
   ) |>
-  dplyr::count(modelo, jogo, jogador, estrategia, faixa_prob) |>
-  dplyr::group_by(modelo, jogo, jogador, estrategia) |>
+  
+  # Conta as observações em cada faixa de probabilidade.
+  dplyr::count(
+    modelo,
+    jogo,
+    jogador,
+    estrategia,
+    faixa_prob
+  ) |>
+  
+  # Define os grupos usados no cálculo das proporções.
+  dplyr::group_by(
+    modelo,
+    jogo,
+    jogador,
+    estrategia
+  ) |>
+  
+  # Calcula a frequência relativa e o percentual de cada faixa.
   dplyr::mutate(
-    prop = n / sum(n),
+    prop = n / base::sum(n),
     prop_pct = prop * 100
   ) |>
-  dplyr::ungroup() |> 
-  print(n=60)
+  
+  # Remove o agrupamento da tabela final.
+  dplyr::ungroup() |>
+  
+  # Exibe até 60 linhas no console.
+  print(n = 60)
+
+
+# ------------------------------------------------------------
+# Distribuição das probabilidades do par 2
+#
+# O segundo par compara:
+# - Vendedor no BSG, com a estratégia Preço Alto;
+# - Empresa B no MEG, com a estratégia Entrar.
+#
+# A estrutura do cálculo é igual à aplicada ao primeiro par.
+# ------------------------------------------------------------
 
 probs_plot_lista$p2 |>
   dplyr::mutate(
-    faixa_prob = cut(
+    
+    # Divide as probabilidades em intervalos de amplitude 0,1.
+    faixa_prob = base::cut(
       prob,
-      breaks = seq(0, 1, by = 0.1),
+      breaks = base::seq(0, 1, by = 0.1),
       include.lowest = TRUE
     )
   ) |>
-  dplyr::count(modelo, jogo, jogador, estrategia, faixa_prob) |>
-  dplyr::group_by(modelo, jogo, jogador, estrategia) |>
+  
+  # Conta as observações em cada faixa de probabilidade.
+  dplyr::count(
+    modelo,
+    jogo,
+    jogador,
+    estrategia,
+    faixa_prob
+  ) |>
+  
+  # Define os grupos usados no cálculo das proporções.
+  dplyr::group_by(
+    modelo,
+    jogo,
+    jogador,
+    estrategia
+  ) |>
+  
+  # Calcula a frequência relativa e o percentual de cada faixa.
   dplyr::mutate(
-    prop = n / sum(n),
+    prop = n / base::sum(n),
     prop_pct = prop * 100
   ) |>
-  dplyr::ungroup() |> 
-  print(n=60)
+  
+  # Remove o agrupamento da tabela final.
+  dplyr::ungroup() |>
+  
+  # Exibe até 60 linhas no console.
+  print(n = 60)
+
+
+# ------------------------------------------------------------
+# Classificação ampliada das probabilidades do par 1
+#
+# Reúne as probabilidades em quatro categorias interpretativas:
+# baixa, média-baixa, média-alta e alta. A classificação facilita
+# a leitura da concentração das probabilidades em partes mais
+# amplas do intervalo entre 0 e 1.
+# ------------------------------------------------------------
 
 comparacao_p1$dados_plot |>
   dplyr::mutate(
+    
+    # Classifica as probabilidades em quatro faixas.
     faixa_prob = dplyr::case_when(
-      prob < 0.25 ~ "Baixa (< 0,25)",
-      prob >= 0.25 & prob < 0.50 ~ "Média-baixa (0,25–0,50)",
-      prob >= 0.50 & prob < 0.75 ~ "Média-alta (0,50–0,75)",
-      prob >= 0.75 ~ "Alta (≥ 0,75)"
+      prob < 0.25                    ~ "Baixa (< 0,25)",
+      prob >= 0.25 & prob < 0.50    ~ "Média-baixa (0,25–0,50)",
+      prob >= 0.50 & prob < 0.75    ~ "Média-alta (0,50–0,75)",
+      prob >= 0.75                   ~ "Alta (≥ 0,75)",
+      TRUE                           ~ NA_character_
     )
   ) |>
-  dplyr::count(modelo, jogo, jogador, estrategia, faixa_prob) |>
-  dplyr::group_by(modelo, jogo, jogador, estrategia) |>
-  dplyr::mutate(prop_faixa = n / sum(n)) |>
-  dplyr::ungroup() #|> 
-  #print(n=60)
+  
+  # Conta as observações em cada categoria.
+  dplyr::count(
+    modelo,
+    jogo,
+    jogador,
+    estrategia,
+    faixa_prob
+  ) |>
+  
+  # Define os grupos usados no cálculo das proporções.
+  dplyr::group_by(
+    modelo,
+    jogo,
+    jogador,
+    estrategia
+  ) |>
+  
+  # Calcula a participação de cada faixa no respectivo grupo.
+  dplyr::mutate(
+    prop_faixa = n / base::sum(n),
+    prop_faixa_pct = prop_faixa * 100
+  ) |>
+  
+  # Remove o agrupamento da tabela final.
+  dplyr::ungroup()
 
 #--------------------------------------------------
 # Teste KS principal entre jogos
@@ -936,17 +1027,17 @@ p17
 
 
 # ------------------------------------------------------------
-# Figuras 3 e 4 — Equilíbrios de Nash
+# Figuras 4 e 5 — Equilíbrios de Nash
 # Salva os gráficos dos equilíbrios de Nash dos jogos BSG e MEG.
 # ------------------------------------------------------------
 
-# Figura 3 (BSG)
+# Figura 4 (BSG)
 ggplot2::ggsave(
   plot = p4, filename = "figuras/figura_4.pdf",
   width = 10.81, height = 7.75, units = "in", device = cairo_pdf
 )
 
-# Figura 4 (MEG)
+# Figura 5 (MEG)
 ggplot2::ggsave(
   plot = p5, filename = "figuras/figura_5.pdf",
   width = 10.81, height = 7.75, units = "in", device = cairo_pdf
@@ -959,7 +1050,7 @@ ggplot2::ggsave(
 # de lambda: 0,1; 0,3; 0,5; 0,8; 1.
 # ------------------------------------------------------------
 
-# lambdas principais: figuras 9 a 13
+# lambdas principais: figuras 8 a 12
 sim_principais <- c(1, 3, 5, 8, 10)
 
 fig_principais <- 8:12
@@ -974,7 +1065,7 @@ purrr::walk2(sim_principais, fig_principais, \(i, fig) {
 })
 
 # ------------------------------------------------------------
-# Figuras 19 a 23 — Demais lambdas
+# Figuras 20 a 24 — Demais lambdas
 # Exporta os gráficos das simulações para os demais valores:
 # 0,2; 0,4; 0,6; 0,7; 0,9.
 # ------------------------------------------------------------
