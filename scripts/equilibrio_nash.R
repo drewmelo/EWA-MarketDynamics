@@ -25,13 +25,13 @@ p4 <- ggplot2::ggplot(
   ggplot2::geom_line(
     data = s_matriz_bsg$br_plot$data |> dplyr::filter(player == "Comprador"),
     ggplot2::aes(x = xe, y = ye),
-    linewidth = 1.2, linetype = "dotted",
+    linewidth = 1, linetype = "dotted",
     show.legend = F
   ) +
   ggplot2::geom_line(
     data = s_matriz_bsg$br_plot$data |> dplyr::filter(player == "Comprador"),
     ggplot2::aes(x = xs, y = ys),
-    linewidth = 1.2, linetype = "dotted",
+    linewidth = 1, linetype = "dotted",
     show.legend = F
   ) +
 
@@ -39,7 +39,7 @@ p4 <- ggplot2::ggplot(
   geom_text(
     data = s_matriz_bsg$br_plot$data |> dplyr::filter(player == "Comprador", xs == 0),
     aes(x = xs, y = ys, label = player, color = player),
-    vjust = 2, hjust = -0.1, size = 8,
+    vjust = 2, hjust = -0.08, size = 8,
     family = fonte_base,
     show.legend = F, inherit.aes = F
   ) +
@@ -56,15 +56,35 @@ p4 <- ggplot2::ggplot(
     data = data.frame(
       xs = 0.639,
       ys = 0.03,
-      label = "<b style='color: #566876;'>p = 0,277 (Aceitar)</b><br><b style='color: #0B86CA;'>q = 1 (Preço Alto)</b>"
+      label = "<b style='color: #566876;'>p = 0,277 (Aceitar)</b>"
     ),
     aes(x = xs, y = ys, label = label),
-    fill = "white", label.color = NA,
-    label.padding = unit(c(0.6, 0.6, 0.6, 0.6), "lines"),
-    hjust = -0.1, vjust = 0,
+    fill = "white",
+    label.color = NA,
+    label.padding = unit(c(0.6, 0.6, 0.1, 0.6), "lines"),
+    hjust = 1.2,
+    vjust = -1.2,
     size = 7,
-    inherit.aes = F,
-    show.legend = F,
+    inherit.aes = FALSE,
+    show.legend = FALSE,
+    family = fonte_base
+  ) +
+
+  ggtext::geom_richtext(
+    data = data.frame(
+      xs = 0.615,  
+      ys = 0.015,  
+      label = "<b style='color: #0B86CA;'>q = 1 (Preço Alto)</b>"
+    ),
+    aes(x = xs, y = ys, label = label),
+    fill = NA,
+    label.color = NA,
+    label.padding = unit(c(0, 0, 0, 0), "lines"),
+    hjust = 1.25,
+    vjust = -0.85,
+    size = 7,
+    inherit.aes = FALSE,
+    show.legend = FALSE,
     family = fonte_base
   ) +
 
@@ -78,7 +98,6 @@ p4 <- ggplot2::ggplot(
     col = NULL
   ) +
   beautyxtrar::theme_xtra(base_family = fonte_base, base_size = 18)
-
 
 # MEG
 p5 <- ggplot2::ggplot(
