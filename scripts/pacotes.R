@@ -60,8 +60,8 @@ if (!"beautyxtrar" %in% rownames(installed.packages())) {
 invisible(lapply(extra_pkgs, quiet_lib))
 
 # ===== FONTES (timesnewroman via showtext/sysfonts) =====
-# Coloque seus .ttf na pasta do app (ex.: "assets/fontes/...").
-# Em Shiny, o caminho é relativo ao diretório do app.
+# Coloque seus .ttf na pasta, caso queira (ex.: "assets/fontes/...")
+# Outra opção é a fonte Tex Gyre Pagella, porém descartei-a 
 add_font_safe <- function(family, regular, bold = NULL, italic = NULL, bolditalic = NULL) {
   ok <- file.exists(regular)
   if (!ok) {
