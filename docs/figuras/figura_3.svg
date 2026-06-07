@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 450 595" style="enable-background:new 0 0 450 595;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;clip-path:url(#SVGID_2_);fill:#FFFFFF;}
+	.st1{opacity:0.9882;clip-path:url(#SVGID_2_);fill:none;stroke:#000000;stroke-width:2.0584;stroke-miterlimit:10;}
+	.st2{clip-path:url(#SVGID_2_);}
+	.st3{font-family:'TimesNewRomanPS-BoldMT';}
+	.st4{font-size:22.3429px;}
+	.st5{font-family:'TimesNewRomanPSMT';}
+	.st6{font-size:20.1086px;}
+	.st7{opacity:0.9961;clip-path:url(#SVGID_2_);}
+	.st8{opacity:0.9961;clip-path:url(#SVGID_2_);fill:none;stroke:#000000;stroke-width:2.2167;stroke-miterlimit:10;}
+</style>
+<g>
+	<defs>
+		<rect id="SVGID_1_" width="841" height="595"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+	</clipPath>
+	<rect class="st0" width="450" height="595"/>
+	<path class="st1" d="M167.31,64.9c-17.49,0-31.67-14.18-31.67-31.67s14.18-31.67,31.67-31.67h115.41h0
+		c17.49,0,31.67,14.18,31.67,31.67c0,17.49-14.18,31.67-31.67,31.67l0,0H167.31L167.31,64.9z"/>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 152.3828 28.3965)" class="st3 st4">TEORIA</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 246.1172 28.3965)" class="st3 st4">DOS</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 187.1445 53.1387)" class="st3 st4">JOGOS</text>
+	</g>
+	<rect x="146.81" y="113.28" class="st1" width="156.4" height="74.51"/>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 196.8027 146.1816)" class="st5 st6">JOGO</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 169.1582 168.4492)" class="st5 st6">MATRICIAL</text>
+	</g>
+	<polygon class="st7" points="225.01,113.28 230.59,99.34 219.44,99.34 	"/>
+	<line class="st8" x1="225.01" y1="64.9" x2="225.01" y2="99.34"/>
+	<rect x="135.64" y="239.9" class="st1" width="178.74" height="74.51"/>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 153.252 272.8066)" class="st5 st6">INICIAR</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 234.2383 272.8066)" class="st5 st6">[EWA,</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 190.9434 295.0742)" class="st5 st6">RL,</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 226.6914 295.0742)" class="st5 st6">BL]</text>
+	</g>
+	<polygon class="st7" points="225.01,239.9 230.59,225.97 219.44,225.97 	"/>
+	<line class="st8" x1="225.01" y1="187.78" x2="225.01" y2="225.97"/>
+	<rect x="135.64" y="375.8" class="st1" width="178.74" height="74.51"/>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 180.5977 408.7109)" class="st3 st6">REGRAS</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 155.7266 430.9785)" class="st3 st6">HEURÍSTICAS</text>
+	</g>
+	<polygon class="st7" points="225.01,375.8 230.59,361.87 219.44,361.87 	"/>
+	<line class="st8" x1="225.01" y1="314.41" x2="225.01" y2="361.87"/>
+	<polygon class="st7" points="146.81,150.53 132.88,144.96 132.88,156.1 	"/>
+	<polyline class="st8" points="135.64,413.06 117.05,413.06 117.05,150.53 132.88,150.53 	"/>
+	<rect x="269.7" y="519.19" class="st1" width="178.74" height="74.51"/>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 275.5605 552.0918)" class="st5 st6">PROBABILIDADE</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 296.7891 574.3594)" class="st5 st6">DE</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 328.623 574.3594)" class="st5 st6">ESCOLHA</text>
+	</g>
+	<rect x="1.58" y="519.19" class="st1" width="178.74" height="74.51"/>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 37.8945 552.0918)" class="st5 st6">VALOR</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 112.1816 552.0918)" class="st5 st6">DE</text>
+	</g>
+	<g class="st2">
+		<text transform="matrix(1 0 0 1 42.3574 574.3594)" class="st5 st6">ATRAÇÃO</text>
+	</g>
+	<polygon class="st7" points="90.95,519.19 96.53,505.25 85.38,505.25 	"/>
+	<polyline class="st8" points="225.01,450.31 225.01,477.78 90.95,477.78 90.95,505.25 	"/>
+	<polygon class="st7" points="359.07,519.19 364.64,505.25 353.5,505.25 	"/>
+	<polyline class="st8" points="225.01,450.31 225.01,477.78 359.07,477.78 359.07,505.25 	"/>
+</g>
+</svg>

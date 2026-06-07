@@ -11,26 +11,26 @@ book:
   description: "uma aplicação de teoria dos jogos com Expereince-Weighted Attraction"
   date: "2025-09-13"
   language: pt
-  reader-mode: true         # ← ativa o botão de “modo leitura”
+  reader-mode: true         # ativa o botão de “modo leitura”
   sidebar:
-    tools:                  # ← ícones abaixo do título (barra esquerda)
+    tools:                  # ícones abaixo do título (barra esquerda)
       - icon: github
         text: "GitHub"
-        href: https://github.com/SEU-USUARIO/EWA-MarketDynamics
+        href: https://github.com/drewmelo/EWA-MarketDynamics
   chapters:
     - index.qmd
     - epigrafe.qmd
     - part: "Capítulos"
       chapters:
-        - 01-introducao.qmd
-        - 02-referencial-teorico.qmd
-        - 03-metodologia.qmd
-        - 04-resultados.qmd
-        - 05-conclusao.qmd
-        - 99-referencias.qmd
+        - 01_introducao.qmd
+        - 02_referencial_teorico.qmd
+        - 03_metodologia.qmd
+        - 04_aplicacao_modelo_simulacao.qmd
+        - 05_resultados.qmd
+        - 06_conclusao.qmd
+        - 99_referencias.qmd
   appendices:
-    - apendice-a.qmd
-    - apendice-b.qmd
+    - apendice.qmd
 
 format:
   html:

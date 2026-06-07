@@ -1,0 +1,130 @@
+﻿---
+title: "Resultados"
+---
+
+Esta seção reúne os resultados das simulações dos jogos BSG e MEG a partir de três eixos de análise: descritivo, exploratório e inferencial. A análise descritiva organiza as trajetórias de escolha, as taxas de estabilidade e as medidas-resumo das atrações e probabilidades geradas pelos modelos EWA, RL e BL. A exploração dos dados aparece nas comparações visuais das distribuições, nos histogramas, nas distribuições acumuladas empíricas, nos padrões de dispersão entre jogos, papéis estratégicos e valores de $\lambda$, além da distância média ao alvo teórico, utilizada para avaliar a aderência das simulações às probabilidades de referência. A parte inferencial entra de forma complementar, com o teste de Kolmogorov-Smirnov e os resíduos padronizados do teste $\chi^2$.
+
+A exposição está organizada em quatro blocos. A subseção 5.1 examina as trajetórias de escolha e a estabilidade do aprendizado. A subseção 5.2 trata das medidas-resumo das atrações e das probabilidades de escolha. A subseção 5.3 discute a estrutura distributiva das probabilidades e a distância KS entre modelos ao longo das variações de $\lambda$. A subseção 5.4 avalia a aderência das simulações ao equilíbrio teórico. A divisão organiza dimensões que se relacionam entre si, mas não medem o mesmo aspecto do aprendizado, como a estabilidade do processo, a dispersão das escolhas, a diferença distributiva entre modelos e a proximidade substantiva em relação ao equilíbrio.
+
+## Trajetórias de escolha e estabilidade do aprendizado {#sec-trajetorias-estabilidade}
+
+Para a construção das Figuras @fig-ch5-1 a @fig-ch5-5, foram calculadas, em cada período, as proporções médias de escolha de cada estratégia para cada jogador nos jogos BSG e MEG, a partir da frequência relativa observada nas simulações. Em termos práticos, considerou-se, para cada combinação de modelo, jogador e período, quantas vezes determinada estratégia foi efetivamente escolhida em relação ao total de decisões naquele recorte. As curvas, portanto, representam a evolução dessas frequências ao longo do tempo. A análise concentrou-se nos valores $\lambda = 0{,}1$, $\lambda = 0{,}3$, $\lambda = 0{,}5$, $\lambda = 0{,}8$ e $\lambda = 1$, selecionados por cobrirem diferentes níveis de sensibilidade às atrações, desde um ajuste mais gradual e disperso até respostas mais intensas e concentradas em determinadas estratégias. A seleção desses casos permite observar a mudança na dinâmica de aprendizado sem sobrecarregar a exposição principal com todas as variações simuladas. As demais configurações do parâmetro, correspondentes a $\lambda = 0{,}2$, $\lambda = 0{,}4$, $\lambda = 0{,}6$, $\lambda = 0{,}7$ e $\lambda = 0{,}9$, encontram-se reunidas no Apêndice, nas Figuras @fig-ap-20 a @fig-ap-24.
+
+Para $\lambda = 0{,}1$, a estabilidade inicial dos modelos ocorre com proporções ainda moderadas. As estratégias dominantes já começam a se formar, mas sem consolidação forte, como mostra a Figura @fig-ch5-1. No BSG, o EWA estabiliza cedo para o Comprador, no período 11, com média estável de 0,634 para Rejeitar, enquanto, para o Vendedor, a estabilidade aparece no período 21, com média de 0,648 para Preço Alto. O BL apresenta trajetória mais lenta para o Comprador, com estabilidade apenas no período 37 e média de 0,582 para Rejeitar, mas estabiliza mais cedo no caso do Vendedor, no período 12, com média de 0,605 para Preço Alto. O RL, por sua vez, estabiliza entre os períodos 11 e 14 e, nesse primeiro cenário, suas médias ficam próximas às do EWA e do BL, alcançando 0,635 para Rejeitar no Comprador e 0,642 para Preço Alto no Vendedor. No MEG, as três abordagens apontam predominância de Entrar para ambas as empresas, embora em níveis ainda baixos, com médias no regime estável entre 0,537 e 0,567. O BL apresenta a entrada mais tardia em estabilidade para a Empresa B, somente no período 45, enquanto o EWA estabiliza nos períodos 30 e 25 para as empresas A e B, respectivamente, e o RL entra em estabilidade mais cedo, entre os períodos 16 e 18.
+
+```{r}
+#| label: fig-ch5-1
+#| fig-cap: 'Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para $\lambda = 0{,}1$'
+#| fig-align: center
+#| out-width: "90%"
+#| fig-cap-location: top
+
+knitr::include_graphics("figuras/figura_8.svg")
+```
+
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+
+Nesse valor inicial de $\lambda$, a estabilidade deve ser interpretada com cautela. Ela marca a entrada em um regime de menor variação, não uma convergência plena. As médias estáveis mostram que as estratégias esperadas pelos jogos já se destacam, Rejeitar e Preço Alto no BSG, Entrar no MEG, ainda que com intensidade limitada quando comparadas aos cenários de maior sensibilidade.
+
+Com $\lambda = 0{,}3$, a Figura @fig-ch5-2 mostra uma formação mais marcada das estratégias dominantes, com maior intensidade no BSG. Nesse jogo, o BL leva o Comprador à estabilidade em Rejeitar no período 13, com proporção média de 0,768, enquanto, para o Vendedor, a estabilidade ocorre no período 12, com média de 0,672 para Preço Alto. O EWA concentra ainda mais o comportamento do Comprador, estabilizado em Rejeitar no período 14, com média de 0,815. No caso do Vendedor, a estabilidade em Preço Alto aparece a partir do período 24, com média de 0,691. O RL também alcança estabilidade cedo, no período 10 para ambos os jogadores, embora siga outro padrão, já que as proporções próximas de 0,53 apontam mais para baixa oscilação das escolhas do que para uma consolidação estratégica em torno de uma alternativa dominante.
+
+No MEG, BL e EWA reforçam a predominância de Entrar. O BL estabiliza a Empresa A no período 12 e a Empresa B no período 21, com médias de 0,604 e 0,601, ao passo que, no EWA, a estabilidade ocorre nos períodos 27 e 21, com médias um pouco superiores, de 0,621 e 0,628. O RL permanece próximo da indiferença, mesmo com estabilidade em períodos relativamente curtos, com média estável de 0,513 para Não Entrar na Empresa A e de 0,532 para Entrar na Empresa B. Em comparação com $\lambda = 0{,}1$, o aumento de $\lambda$ torna mais visível a separação entre os modelos. EWA e BL passam a expressar com maior nitidez a estrutura estratégica dos jogos, ao atribuir maior influência às estratégias teoricamente esperadas, enquanto o RL continua a estabilizar cedo, porém em torno de proporções pouco informativas para a interpretação estratégica.
+
+```{r}
+#| label: fig-ch5-2
+#| fig-cap: 'Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para $\lambda = 0{,}3$'
+#| fig-align: center
+#| out-width: "90%"
+#| fig-cap-location: top
+
+knitr::include_graphics("figuras/figura_9.svg")
+```
+
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+
+Na Figura @fig-ch5-3, o aumento de $\lambda$ para 0,5 acentua a diferenciação entre os modelos. No BSG, BL e EWA estabilizam o Comprador em Rejeitar no período 15, com proporções médias muito próximas, de 0,872 e 0,874, de modo que a estratégia passa a concentrar a maior parte das escolhas no regime estável, em vez de apenas aparecer como alternativa predominante. Para o Vendedor, os dois modelos também mantêm Preço Alto como estratégia dominante, embora com menor intensidade. O BL estabiliza no período 13, com média de 0,655, ao passo que o EWA atinge estabilidade no período 18, com média de 0,676. O RL segue outro padrão, com estabilidade cedo, entre os períodos 10 e 11, e médias em torno de 0,56 para Rejeitar e Preço Alto. A baixa variação das proporções, nesse caso, convive com uma concentração estratégica fraca.
+
+No MEG, BL e EWA sustentam a predominância de Entrar para ambas as empresas, com médias estáveis próximas de 0,64. O BL estabiliza a Empresa A no período 16 e a Empresa B no período 10, com médias de 0,640 e 0,638, enquanto o EWA alcança estabilidade mais tarde, nos períodos 23 e 28, com médias de 0,646 e 0,641. O RL permanece praticamente em uma divisão indiferente, ainda que Entrar apareça como estratégia dominante, já que, para as duas empresas, a média estável é de apenas 0,508. Com $\lambda = 0{,}5$, EWA e BL apresentam um regime estável mais aderente à estrutura esperada dos jogos. O RL preserva sua marca nesses cenários e estabiliza cedo em torno de proporções pouco informativas para a consolidação estratégica substantiva.
+
+```{r}
+#| label: fig-ch5-3
+#| fig-cap: 'Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para $\lambda = 0{,}5$'
+#| fig-align: center
+#| out-width: "90%"
+#| fig-cap-location: top
+
+knitr::include_graphics("figuras/figura_10.svg")
+```
+
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+
+Com $\lambda = 0{,}8$, a Figura @fig-ch5-4 mostra, no BSG, maior consolidação da estratégia Rejeitar para o Comprador nos modelos BL e EWA, ainda que em intensidades distintas. No BL, o regime estável começa no período 13, com proporção média de 0,942, enquanto o EWA atinge estabilidade no mesmo período, com média menor, de 0,903. Para o Vendedor, os dois modelos preservam Preço Alto como estratégia dominante, com estabilidade no período 13 e média de 0,621 no BL, e no período 22, com média de 0,674 no EWA. O RL repete o padrão observado nos valores anteriores de $\lambda$. O modelo alcança estabilidade já no período 10 para os dois jogadores e mantém proporções próximas de 0,53, de modo que a baixa variação das escolhas não se transpõe em direção estratégica bem definida.
+
+No MEG, BL e EWA continuam atribuindo maior influência à estratégia Entrar, ainda que com menor intensidade do que no BSG. O BL estabiliza a Empresa A no período 12 e a Empresa B no período 20, com médias de 0,654 e 0,666, enquanto, no EWA, as duas empresas entram em regime estável no período 12, com médias de 0,618 e 0,622. A entrada aparece de forma relativamente consistente, embora menos concentrada do que no BL. O RL permanece próximo da indiferença, com a Empresa A estabilizada em Não Entrar no período 13, com média de 0,505, e a Empresa B estabilizada em Entrar no período 12, com média de 0,511. Neste cenário, BL e EWA preservam padrões compatíveis com a estrutura dos jogos, enquanto, no RL, a estabilidade continua restrita à baixa oscilação das proporções, sem consolidação substantiva das estratégias.
+
+```{r}
+#| label: fig-ch5-4
+#| fig-cap: 'Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para $\lambda = 0{,}8$'
+#| fig-align: center
+#| out-width: "90%"
+#| fig-cap-location: top
+
+knitr::include_graphics("figuras/figura_11.svg")
+```
+
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+
+O padrão observado nos cenários anteriores aparece de forma mais acentuada, principalmente no BSG, conforme a Figura @fig-ch5-5, com $\lambda = 1{,}0$. Nesse jogo, BL e EWA mantêm a escolha de Rejeitar para o Comprador, como já ocorria em $\lambda = 0{,}3$, $\lambda = 0{,}5$ e $\lambda = 0{,}8$, com mudança apenas na intensidade da concentração durante o regime estável. No BL, a estabilidade ocorre no período 14, com proporção média de 0,966, enquanto, no EWA, aparece mais cedo, no período 11, com média de 0,911. Para o Vendedor, Preço Alto também permanece como estratégia dominante nesses dois modelos, ainda que em nível mais moderado, com estabilidade no período 11 e média de 0,595 no BL, e no período 18, com média de 0,675 no EWA.
+
+O aumento da sensibilidade às atrações reforça, no BSG, principalmente a decisão do Comprador. A estratégia Rejeitar ganha maior influência em BL e EWA, enquanto a escolha do Vendedor permanece menos concentrada. O RL mantém a estabilidade precoce, no período 10 para ambos os jogadores, embora passe a selecionar Aceitar e Preço Baixo como estratégias dominantes, ambas com média de apenas 0,502. A dominância, nesse caso, é quase residual, já que as proporções seguem muito próximas de uma divisão indiferente entre as alternativas. No MEG, BL e EWA preservam o padrão observado nos valores intermediários e altos de $\lambda$, com predominância de Entrar para as duas empresas. O BL estabiliza a Empresa A no período 21 e a Empresa B no período 13, com médias de 0,641 e 0,664, enquanto, no EWA, a estabilidade ocorre nos períodos 14 e 12, com médias de 0,575 e 0,619.
+
+```{r}
+#| label: fig-ch5-5
+#| fig-cap: 'Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para $\lambda = 1$'
+#| fig-align: center
+#| out-width: "90%"
+#| fig-cap-location: top
+
+knitr::include_graphics("figuras/figura_12.svg")
+```
+
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+
+Em comparação com $\lambda = 0{,}5$ e $\lambda = 0{,}8$, o MEG preserva uma concentração mais limitada que o BSG. O jogo permanece menos polarizado e mais próximo de uma lógica mista, na qual a predominância de uma estratégia não elimina a presença da alternativa concorrente. No RL, a estratégia classificada como dominante alterna entre Entrar e Não Entrar, novamente com médias reduzidas, de 0,547 para a Empresa A e 0,540 para a Empresa B. Ao longo dos diferentes valores de $\lambda$, o RL apresenta estabilidade formal, com pouca oscilação das proporções, sem formar uma orientação estratégica consistente.
+
+A Tabela @tbl-taxa-estabilidade apresenta a taxa de estabilidade, entendida como o grau de persistência da baixa variação dentro do regime estável identificado. A medida informa por quanto tempo as trajetórias permanecem regulares, todavia não equivale, por si só, à convergência estratégica. Uma trajetória pode oscilar pouco e ainda assim permanecer distante de uma estratégia com significado teórico para o jogo.
+
+O RL clarifica essa diferença. O modelo apresenta taxas próximas ou iguais a 100% em praticamente todos os valores de $\lambda$, tanto no BSG quanto no MEG. Suas proporções variam pouco ao longo do tempo, embora essa regularidade nem sempre corresponda a uma escolha estratégica mais definida. Em vários casos discutidos anteriormente, a estabilidade ocorre em torno de valores próximos de 50%, mais próximos de uma quase indiferença entre alternativas do que de uma consolidação em torno de uma estratégia dominante.
+
+EWA e BL apresentam taxas menores, porém mais informativas do ponto de vista comportamental. No BSG, o EWA mantém estabilidade elevada para o Comprador, passando de 83,5% em $\lambda = 0{,}1$ para valores acima de 90% nos níveis mais altos de $\lambda$. Para o Vendedor, a estabilidade fica em nível mais moderado, entre aproximadamente 83% e 88%. O aumento de $\lambda$ reforça a regularidade da decisão do Comprador, mas não elimina a maior complexidade da escolha do Vendedor, cuja estratégia depende da antecipação da resposta do outro agente.
+
+O BL segue uma dinâmica próxima, principalmente para o Comprador no BSG. A taxa de estabilidade chega a 99,2% em $\lambda = 1$, acompanhando a forte persistência da estratégia dominante. Para o Vendedor, a taxa permanece mais baixa e relativamente estável, o que diferencia uma decisão mais direta, como Rejeitar, de uma escolha mais dependente da reação esperada do outro jogador, como Preço Alto. No MEG, EWA e BL apresentam estabilidade intermediária, em geral entre 81% e 91%. Esse comportamento combina com a estrutura do jogo de entrada em mercado, no qual a decisão das firmas preserva maior componente misto e menor polarização entre as alternativas.
+
+::: {#tbl-taxa-estabilidade}
+
+```{r}
+#| fig-cap: 'Taxa de estabilidade em porcentagem nos jogos BSG e MEG por modelo'
+#| fig-align: center
+#| out-width: "90%"
+#| fig-cap-location: top
+
+knitr::include_graphics("figuras/tabela_3.svg")
+```
+
+Taxa de estabilidade em porcentagem nos jogos BSG e MEG por modelo
+
+:::
+
+<p class="quarto-figure-attribution">
+Nota: A estabilidade refere-se à persistência das proporções ao longo do tempo dentro de um intervalo de variação reduzido. Tal medida não implica convergência para estratégias de equilíbrio, podendo refletir padrões estacionários sem direcionamento estratégico, como observado no modelo RL. Fonte: Elaborado pelo autor (2026).
+</p>

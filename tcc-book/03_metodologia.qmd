@@ -1,0 +1,150 @@
+﻿---
+title: Metodologia
+---
+
+A pesquisa segue uma abordagem quantitativa, apoiada na simulação computacional de jogos matriciais e na aplicação de algoritmos de aprendizagem associados à Teoria dos Jogos. Em relação aos objetivos, o estudo assume caráter descritivo e exploratório, pois examina as trajetórias produzidas pelos modelos EWA, RL e BL nos jogos BSG e MEG para comparar seus padrões de ajuste estratégico ao longo das simulações. Os dados utilizados são gerados pelo próprio procedimento computacional. Torna-se possível, a partir disso, controlar os parâmetros do modelo e observar como diferentes regras de aprendizagem operam em cenários estratégicos previamente definidos.
+
+O modelo de simulação foi desenvolvido em linguagem R, com apoio do ambiente RStudio. A implementação dos algoritmos de aprendizagem utilizou o pacote *Rgamer*, que reúne técnicas de análise quantitativa e métodos computacionais de simulação aplicados à Teoria dos Jogos [@yanai2023game]. Disponibilizado em 2020 na plataforma *GitHub*, o pacote inicialmente contemplava funções voltadas a jogos em forma normal e extensiva. Em 2022, @yanai2023game incorporaram recursos de modelagem baseada em agentes, com isso ampliou seu uso em simulações computacionais desenvolvidas na linguagem R.
+ 
+O uso do *Rgamer* permite reproduzir os jogos matriciais e explorar cenários de simulação a partir da alteração controlada dos parâmetros do modelo. A estrutura computacional mantém fixa a configuração dos jogos, o que torna possível comparar como EWA, RL e BL atualizam escolhas, atrações e probabilidades ao longo das interações. A discussão metodológica parte da formulação do EWA, apresentada na subseção 3.1, e avança para seus casos especiais nas subseções 3.2 e 3.3, correspondentes ao aprendizado por reforço e ao aprendizado baseado em crenças. Em seguida, a subseção 3.4 define o critério utilizado para avaliar a estabilidade das proporções estratégicas. A subseção 3.5 fecha o percurso metodológico com o procedimento de comparação distributiva das probabilidades por meio do teste de Kolmogorov-Smirnov.
+
+## Experience-Weighted Attraction {#sec-metodologia-1}
+
+Como contribuição ao campo da economia comportamental e experimental, Colin Farrell Camerer e Teck Hua Ho desenvolveram, em 1997, o modelo de aprendizagem *Experience-Weighted Attraction*. Este algoritmo baseia-se em quatro parâmetros principais que influenciam a atualização das atrações associadas às estratégias ao longo do tempo, sendo estes: a taxa de desconto das atrações acumuladas, que controla a preservação das memórias passadas ($\phi$); o ajuste da importância dos *payoffs* de estratégias não escolhidas ($\delta$); o fator que regula a depreciação da experiência acumulada ($\rho$); e a sensibilidade à diferença entre as atrações ao escolher estratégias ($\lambda$). A Equação @eq-ewa-atualizacao explica como a atração ($\mathrm{A}_{i}^{j}$) é atualizada ao longo do tempo.
+
+$$
+A_i^j(t) = \phi \times N(t - 1) \times A_i^j(t - 1) + [\delta + (1 - \delta) \times I(s_i^j, s_i(t))] \times \pi_i(s_i^j, s_{-i}(t))
+$$ {#eq-ewa-atualizacao}
+
+em que
+
+	
+- $i$ representa o jogador;
+- $j$ define-se pela estratégia do jogador $i$;
+- $t$ é o período atual;
+- $\pi$ é o pagamento do jogador $i$ para a estratégia $j$ no período $t$;
+- $N$ representa o peso da experiência acumulada no tempo $t$;
+- $I$ é um indicador que pode ser quantificado por 1 se a estratégia $j$ foi escolhida pelo jogador $i$ no período $t$, e 0 caso contrário.
+
+A Equação @eq-ewa-atualizacao detalha o processo de atualização da atração $A_i^j(t)$ ao longo do tempo para um jogador $i$ e uma estratégia $j$. A atração no período $t$ é calculada como uma combinação ponderada da atração no período anterior ($t - 1$) e do pagamento $\pi_i(s_i^j, s_{-i}(t))$ que o jogador $i$ receberia ao selecionar a estratégia $j$. O impacto da atração passada é controlado por $\phi \times N(t - 1)$, onde $N(t - 1)$ representa o peso acumulado das experiências até o período anterior. Além disso, o termo $[\delta + (1 - \delta) \times I(s_i^j, s_i(t))]$ ajusta a influência do pagamento atual para cada ação $s_i^j$, com $\delta$ refletindo a importância das alternativas não escolhidas no processo de aprendizado estratégico e $I(s_i^j, s_i(t))$ sendo uma função indicadora que vale 1 se a estratégia foi escolhida e 0 caso contrário, no período $t$. Essa estrutura capta a atração atual para uma estratégia, representado pela combinação da atração passada e do reforço atual, sendo este último baseado nos pagamentos e na escolha da estratégia. Assim, as decisões futuras dos jogadores são influenciadas tanto por experiências passadas quanto por resultados recentes
+
+O modelo EWA incorpora um mecanismo de normalização na atualização das atrações, usado para manter seus valores em escalas manejáveis ao longo do tempo. O ajuste ocorre pela divisão da atração atual, $A_i^j(t)$, pelo termo $\rho \times N(t - 1) + 1$, conforme apresentado na Equação @eq-ewa-normalizacao. Com isso, a influência das novas informações é ponderada pelo volume de experiência acumulada até o período anterior. Sem esse ajuste, os valores de $A_i^j(t)$ poderiam crescer indefinidamente e perder relação com a proporção efetiva das experiências recentes no histórico acumulado.
+
+A experiência acumulada, $N(t)$, a cada período $t$, é formada por uma parte da experiência acumulada no período anterior, $\rho \times N(t - 1)$, somada a uma nova unidade de experiência, que é representada pelo termo $+1$. Essa formulação, demonstrada na Equação @eq-experiencia-acumulada, garante que o modelo se adapte de forma contínua com base nas novas informações recebidas, ao mesmo tempo que valoriza o conhecimento prévio acumulado.
+$$
+A_i^j(t) = \frac{\phi \times N(t - 1) \times A_i^j(t - 1) + [\delta + (1 - \delta) \times I(s_i^j, s_i(t))] \times \pi_i(s_i^j, s_{-i}(t))}{\rho \times N(t - 1) + 1}
+$$ {#eq-ewa-normalizacao}
+
+	
+$$
+N(t) = \rho \times N(t - 1) + 1, \quad t \ge 1
+$$ {#eq-experiencia-acumulada}
+
+Ao substituir a Equação @eq-experiencia-acumulada na @eq-ewa-normalizacao, obtém-se a Equação @eq-ewa-completa, que representa o modelo EWA em sua forma completa. Como resultado, a atualização das atrações considera tanto a experiência acumulada quanto os novos resultados, ponderados pelo peso total das experiências passadas e pela nova experiência adquirida.
+
+$$
+A_i^j(t) = \frac{\phi \times N(t - 1) \times A_i^j(t - 1) + [\delta + (1 - \delta) \times I(s_i^j, s_i(t))] \times \pi_i(s_i^j, s_{-i}(t))}{N(t)}
+$$ {#eq-ewa-completa}
+
+O valor do parâmetro $\phi$, quando próximo de 1, indica que as atrações passadas exercem uma grande influência na determinação das atrações atuais. Porém, quando $\phi$ está próximo de 0, sugere-se que essas experiências anteriores são menos relevantes para as decisões correntes. 
+
+O parâmetro de reforço, $\delta$, próximo de 1, significa que a atualização da atração atribui um maior peso aos *payoffs* de todas as estratégias possíveis, inclusive aquelas que não foram escolhidas. Por outro lado, quando $\delta$ se aproxima de 0, a atualização da atração foca exclusivamente na estratégia que foi efetivamente escolhida no período atual, $t$, onde os *payoffs* das estratégias não escolhidas exercem pouco ou nenhum impacto na atualização da atração. 
+
+A taxa de esquecimento, representada por $\rho$, quando igual a 1, indica uma alta retenção das experiências anteriores, fazendo com que o peso acumulado $N(t)$ cresça mais lentamente, o que confere maior relevância às experiências passadas na atualização das atrações. Valores mais baixos em $\rho$ indicam um maior grau de esquecimento, o que significa que as experiências anteriores têm menos influência e o modelo concentra mais as novas informações.
+
+Neste estudo, a função *logit* é empregada na equação de escolha por probabilidade por duas razões principais: (i) permite uma comparação eficaz entre os modelos EWA, de reforço e baseado em crenças, além de facilitar o ajuste empírico aos dados coletados; (ii) é amplamente utilizada em pesquisas sobre tomada de decisão sob risco e incerteza, como evidenciado nos estudos de @debasis2019logit, e é comum em análises que envolvem aprendizado baseado em teoria dos jogos.
+
+@camerer1999experience enfatiza que 3 métodos principais têm sido empregados em seus estudos anteriores para modelar a escolha com base na função de probabilidade: *logit*; potência; e *probit*. No mecanismo da função *logit*, Colin Farrell Camerer e Teck Hua Ho explicam que adicionar uma constante uniforme a todas as atrações $A_i^j(t)$ não muda a probabilidade de escolha das estratégias, devido à transformação exponencial utilizada, que assegura um resultado sempre positivo, mesmo quando os valores de $A_i^j(t)$ são negativos. A função de resposta de probabilidade *logit* transforma a atração relacionada a cada estratégia em uma probabilidade de escolha, ou seja, em valores contínuos entre 0 e 1 [@camerer1998probability].
+
+No início da simulação, especificamente no tempo $t = 1$, cada agente tem uma inclinação na escolha de uma estratégia,  principalmente quando estão aprendendo e adaptando seu comportamento.  Neste estágio inicial, a aleatoriedade é introduzida, uma vez que todos os agentes têm a mesma probabilidade inicial de escolher qualquer estratégia disponível. A Equação @eq-probabilidade-logit detalha como o algoritmo determina a escolha de estratégia $P_i(t)$, baseando-se em valores probabilísticos.
+
+$$
+P_i^j(t + 1) = \frac{e^{\lambda A_i^j(t)}}{\sum_{k=1}^{m_i}e^{\lambda A_i^k(t)}}
+$$ {#eq-probabilidade-logit}
+
+em que 
+
+- $e^{\lambda A_i^j(t)}$ representa a transformação à atração $A_i^j$ em uma escala positiva;
+- $\sum_{k=1}^{m_i}e^{\lambda A_i^k(t)}$ é o somatório que garante que todas as estratégias somem 1.
+
+A Equação @eq-probabilidade-logit ilustra a probabilidade $P_i^j(t + 1)$, que representa a chance do jogador $i$ escolher a estratégia $j$ no período $t + 1$. A conversão da atração $A_i^j(t)$ para uma escala positiva é feita usando a função exponencial $e^{\lambda A_i^j(t)}$, onde $\lambda$ é o parâmetro que mede a sensibilidade do jogador às atrações. Um valor de $\lambda$ igual a 1 indica cenários em que os jogadores são extremamente racionais ao escolher a estratégia ótima, enquanto um valor menor de $\lambda$ sugere cenários em que as escolhas são mais aleatórias e menos influenciadas pelas atrações das estratégias, refletindo uma racionalidade reduzida. O denominador, que é a soma das exponenciais das atrações para todas as estratégias possíveis do jogador $k$ para $i$, garante que a soma das probabilidades de todas as estratégias seja igual a 1. Dessa forma, enfatiza-se que a probabilidade de escolha de uma estratégia é proporcional à sua atração relativa em relação às outras.
+ 
+## Reinforcement Learning {#sec-metodologia-2}
+
+Em uma das várias versões do modelo de Aprendizado por Reforço, o trabalho de @roth1995introduction é dominante, no qual ele demonstra que as probabilidades das estratégias são atualizadas dependendo dos níveis de reforço ou tendência alcançados nos jogos ao longo do tempo, em relação aos pagamentos reais. A Equação @eq-reforco mostra como os reforços $R_i^j$ são atualizados a cada período t.
+
+$$
+R_i^j(t) = \phi \times R_i^j(t-1) + I(s_i^j, s_i(t)) \times \pi_i(s_i^j, s_{-i}(t))
+$$ {#eq-reforco}
+
+Neste caso de jogo, se a estratégia $j$ foi selecionada, seu reforço é aumentado pelo valor do pagamento recebido, caso contrário, o reforço é diminuído pelo fator $\phi$. Este modelo de reforço, portanto, pode ser considerado um caso especial da regra EWA, onde parâmetros específicos são fixados em zero, como $\delta = 0$ e $\rho = 0$. Portanto, a condição pode ser expressa como $\rho = \delta = 0$. As estratégias que não são explicitamente escolhidas ainda recebem um reforço teórico, baseado no que teria ocorrido caso tivessem sido selecionadas, um conceito central na EWA e que atualmente é explorado na aprendizagem fictícia (*fictitious play*) [@kagel2020handbook].
+
+## Belief-based Learning {#sec-metodologia-3}
+
+O modelo baseado em crenças é utilizado para descrever como os jogadores fazem escolhas estratégicas com base no histórico observado das ações dos outros jogadores, e assim, atualizar continuamente essas crenças à medida que novas informações se tornam disponíveis. O objetivo é maximizar as expectativas e os retornos esperados das estratégias escolhidas. Embora existam várias formulações para o conceito de crenças, @camerer1999experience integra os princípios do modelo de *fictitious play*, originalmente proposto por @brown1951fictious, com o equilíbrio de Cournot em competições oligopolistas, como um caso especial do modelo EWA. Conforme apresentado na Equação @eq-crencas, a atualização dessas crenças, denotada por $B_i^k(t)$, acontece de maneira ponderada.
+
+$$
+B_i^k(t) = \frac{\rho \times N(t - 1) \times B_i^k(t - 1) + I(s_i^k, s_{-i}(t))}{\rho \times N(t - 1) + 1}.
+$$ {#eq-crencas}
+
+em que 
+
+- $B_i^k(t)$ representa a crença do jogador $i$ na estratégia $k$ no período $t$;
+- $B_i^k(t - 1)$ é a crença do jogador $i$ na estratégia $k$ no período $t - 1$;
+- $I(s_i^k, s_{-i}(t))$ representa a função indicadora que vale 1 se a estratégia $k$ foi a escolhida pelos oponentes no período $t$, e 0 caso contrário.
+
+Na Equação @eq-crencas, a crença associada à estratégia $k$ é ajustada a partir das experiências passadas e da observação corrente. O numerador combina a crença anterior, $B_i^k(t - 1)$, com o fator de experiência acumulada e o indicador da ação observada no período. O denominador, por sua vez, normaliza essa combinação, de modo que a soma das crenças permaneça igual a 1. No modelo de Cournot ($\rho = 0$), apenas a observação mais recente é considerada relevante, sem incorporação do histórico anterior. No jogo fictício ($\rho = 1$), por outro lado, todas as observações passadas recebem o mesmo tratamento, e o aprendizado ocorre pelo ajuste contínuo das crenças a partir das ações anteriores dos demais jogadores [@camerer1999experience]. 
+
+A Equação @eq-pagamento-esperado calcula o pagamento esperado para o jogador $i$ utilizando a soma dos produtos dos pagamentos potenciais $\pi_i$ para cada combinação de estratégia $s_i^j$, levando em consideração as escolhas dos oponentes em $s_{-i}^k$, bem como as crenças $B_{-i}^k$ sobre as estratégias dos outros jogadores no período $t$. Substituindo a Equação @eq-pagamento-esperado na @eq-crencas, obtém-se a Equação @eq-crencas-atualizacao, onde os pagamentos esperados no período $t$ são uma função dos pagamentos esperados do período $t - 1$, ponderados pelo fator de depreciação $\rho$ e pelo novo pagamento obtido no período $t$.
+
+	
+$$
+E_i^j(t) = \sum_{k=1}^{m_{-i}} \pi_i(s_i^j, s_{-i}^k) \times B_{-i}^k(t)
+$$ {#eq-pagamento-esperado}
+
+	
+	
+$$
+E_i^j(t) = \frac{\rho \times N(t - 1) \times E_i^j(t - 1) + \pi_i(s_i^j, s_{-i}(t))}{\rho \times N(t - 1) + 1}
+$$ {#eq-crencas-atualizacao}
+
+A partir da Equação @eq-crencas-atualizacao, torna-se claro que o modelo EWA pode ser visto como um caso especial dos modelos de crença ponderada, particularmente quando as atrações iniciais, $A_i^j(0)$, são definidas como os pagamentos esperados, $E_i^j(0)$, baseados em crenças iniciais.  Para essa equivalência ocorrer, é necessário atribuir valores específicos a $\delta$, $\rho$ e $\phi$. Quando $\delta = 1$ e $\phi = \rho$, a atualização das atrações no EWA resulta exatamente nos mesmos valores que os pagamentos esperados em um modelo de crenças [@camerer1998probability].
+
+## Estabilidade das proporções estratégicas
+
+A estabilidade, no critério adotado, aproxima-se dos critérios de parada por erro absoluto utilizados em métodos iterativos. Nesses procedimentos, uma medida associada ao erro, ao resíduo ou à distância entre estados sucessivos é comparada a uma tolerância $\epsilon$. @recktenwald2012stopping discutem o critério $|r_k|/|b| < \varepsilon$, no qual a iteração é interrompida quando o resíduo relativo atinge um nível suficientemente baixo para encerrar o cálculo.
+
+Neste trabalho, o mesmo princípio é adaptado à análise das proporções estratégicas. Para cada combinação de jogo, modelo, jogador e valor de $\lambda$, define-se $p_t$ como a maior proporção de escolha observada no período $t$, isto é, $p_t = \max_s p_s(t)$, em que $p_s(t)$ representa a proporção associada à estratégia $s$ naquele período. Em vez de acompanhar o resíduo de um sistema numérico, calcula-se a variação absoluta dessa proporção dominante entre períodos consecutivos, $\left|p_t - p_{t-1}\right|$. O período é classificado como estável quando essa diferença fica abaixo de $\varepsilon$. A estabilidade é tratada como baixa oscilação local da trajetória, suficiente para indicar persistência do padrão observado dentro da escala da simulação.
+
+A escolha de $\varepsilon$ exige uma decisão metodológica. Ela depende da escala da variável analisada, do objetivo da simulação e do grau de variação que ainda se deseja considerar substantivo. Ao tratarem de critérios de parada baseados em erro retrospectivo, @arioli1992stopping observam que a tolerância não deve ser reduzida muito além do nível de incerteza dos próprios dados do problema. Forçar uma precisão superior à qualidade da informação disponível tende a produzir apenas uma aparência de refinamento, sem ganho real para a interpretação dos resultados. Na mesma direção, @recktenwald2012stopping ressalta que a tolerância em métodos iterativos deve ser pequena, mas maior que a precisão de máquina, e sua definição depende tanto do problema analisado quanto do custo das iterações.
+
+Para evitar que a estabilidade seja definida a partir de uma única variação pontual, aplica-se uma janela móvel sobre a sequência de períodos classificados como estáveis. Formalmente, a partir da Equação @eq-janela-estabilidade, considera-se que a estabilidade em janela foi atingida no período $t$ quando:
+
+$$
+\frac{1}{w}\sum_{j=t-w+1}^{t} I\left(\left|p_j - p_{j-1}\right| < \varepsilon\right) \geq m
+$$ {#eq-janela-estabilidade}
+
+Na expressão, $w$ corresponde ao tamanho da janela móvel, $m$ define a proporção mínima de períodos estáveis exigida nessa janela, $I(\cdot)$ indica a função indicadora e $\varepsilon$ estabelece o limiar de baixa variação. O índice $j$ percorre os períodos incluídos na janela móvel, de $t-w+1$ até $t$. A proporção dominante no período $j$ é dada por $p_j = \max_s p_s(j)$, enquanto $p_{j-1}$ corresponde à mesma medida no período imediatamente anterior.
+
+Neste trabalho, $w = 10$ e $m = 0{,}8$ foram adotados como critérios operacionais para identificar estabilidade local nas trajetórias simuladas. Como cada simulação possui 500 períodos, a janela de 10 períodos permite acompanhar oscilações em intervalos curtos. O parâmetro $m = 0{,}8$ exige que pelo menos 80% da janela satisfaça a condição de estabilidade. Em termos práticos, ao menos 8 dos 10 períodos devem apresentar variação inferior a $\varepsilon$. Com esse critério, a janela móvel atua como regra de entrada no regime estável e reduz o risco de tratar uma queda isolada da variação como sinal de estabilidade persistente, tendo em conta que a classificação exige repetição da baixa variação em uma sequência curta de períodos. Após essa identificação, as estatísticas-resumo descrevem o comportamento observado no trecho classificado como estável.
+
+A condição de janela exige persistência mínima, mas a interpretação da estabilidade depende das medidas calculadas ao longo do trecho estável. A taxa de estabilidade informa com que frequência o critério é atendido, a variação média da proporção dominante mede quanto essa proporção ainda oscila, e a proporção média da estratégia dominante mostra em torno de qual escolha a trajetória se organiza. O procedimento separa duas etapas da análise, primeiro ao identificar o momento em que a estabilidade aparece, depois ao examinar se a estabilidade encontrada é apenas formal ou se corresponde a um trecho mais persistente e bem definido na simulação.
+
+A escolha desse procedimento decorre de sua simplicidade operacional e da interpretação relativamente direta dos resultados. A estabilidade é identificada quando a trajetória apresenta baixa variação de modo recorrente e, em seguida, é descrita por medidas simples, como a taxa de estabilidade e a variação média. A etapa também aproxima o critério adotado da literatura sobre análise de saídas de simulação, campo em que séries temporais simuladas são examinadas para distinguir a fase transitória da entrada em um regime estacionário. A estimação do estado estacionário pode recorrer a diferentes estratégias, entre elas médias correntes, médias por blocos, janelas móveis e testes voltados à detecção do fim da fase de aquecimento. A escolha do método, no entanto, depende da trajetória analisada. Como observa-se, não há um estimador universalmente superior para todos os tipos de série simulada @leye2014composing.
+
+No presente trabalho, essa discussão é deslocada para a estabilidade das proporções estratégicas. Como $p_t$ é uma proporção definida no intervalo $[0,1]$, adotou-se $\varepsilon = 0{,}03$, o que corresponde a três pontos percentuais de variação entre períodos consecutivos. Para avaliar a dependência dos resultados em relação a esse limiar, realizou-se uma análise de sensibilidade com $\varepsilon$ variando de 0,01 a 0,05, em incrementos de 0,01, apresentada no Apêndice. Os demais parâmetros do critério foram mantidos constantes, incluindo o tamanho da janela móvel e a proporção mínima de períodos estáveis exigida dentro da janela. A análise de sensibilidade mostra uma resposta coerente ao aumento de $\varepsilon$. Com limiares menores, como $\varepsilon = 0{,}01$, a regra se torna mais restritiva, reconhece estabilidade em menos combinações e, em vários casos, apenas em períodos mais tardios. Com valores maiores, como $\varepsilon = 0{,}04$ e $\varepsilon = 0{,}05$, o critério passa a ser mais permissivo, e desse modo, a estabilidade aparece antes e as taxas se aproximam de 1. Nesse intervalo, $\varepsilon = 0{,}03$ ocupa uma posição intermediária. O limiar permite identificar estabilidade em todas as combinações analisadas, sem apagar as diferenças entre modelos, jogos e jogadores. Por esse motivo, foi mantido como valor de referência.
+
+## Comparação distributiva pelo teste KS
+
+O teste de Kolmogorov-Smirnov foi utilizado para comparar as distribuições das probabilidades de escolha entre jogos, modelos e papéis estratégicos. Segundo @favero2017manual, o teste K-S compara distribuições acumuladas, e sua estatística corresponde à maior diferença absoluta entre elas. Embora os autores apresentem o teste no contexto de aderência a uma distribuição teórica, este trabalho emprega a versão para duas amostras, voltada à comparação entre duas distribuições empíricas de probabilidades. Formalmente, a estatística é definida pela Equação @eq-kolmogorov-smirnov.
+
+$$
+D_{n,m} = \sup_{x} \left| F_{1,n}(x) - F_{2,m}(x) \right|
+$$ {#eq-kolmogorov-smirnov}
+
+ 
+Em que $F_{1,n}(x)$ e $F_{2,m}(x)$ representam as distribuições acumuladas empíricas das probabilidades de escolha nos dois grupos comparados. Neste trabalho, $x$ corresponde aos valores assumidos pelas probabilidades de escolha, enquanto $D$ mede a maior distância vertical entre as duas curvas acumuladas. Quanto maior o valor de $D$, maior a distância distributiva entre modelos, jogos ou papéis estratégicos; valores menores indicam distribuições mais próximas. As simulações geram amostras extensas, o que torna o uso do teste compatível com a recomendação de aplicá-lo em amostras grandes, já que sua potência diminui em amostras pequenas [@favero2017manual]. O teste foi aplicado em duas frentes. Na primeira, compararam-se as distribuições de probabilidades entre os jogos BSG e MEG dentro de cada modelo de aprendizagem. Na segunda, realizaram-se comparações entre modelos dentro de um mesmo jogo, considerando os pares EWA vs RL, EWA vs BL e RL vs BL. Além das comparações agregadas, o teste foi calculado separadamente para cada valor de $\lambda$, o que permite acompanhar se a distância distributiva entre modelos muda à medida que aumenta a sensibilidade das escolhas às atrações acumuladas.
+
+Como as simulações geram muitas observações, a interpretação concentrou-se na magnitude da estatística $D$, e não apenas no p-valor. A escolha se apoia no argumento de @brimacombe2025p, segundo o qual, em amostras muito grandes, as estatísticas amostrais tendem a se aproximar de valores populacionais quase exatos, por efeito da Lei dos Grandes Números. Com amostras muito grandes, o p-valor perde parte de sua utilidade analítica, visto que diferenças pequenas podem aparecer como estatisticamente significativas, mesmo quando pouco alteram a interpretação do problema. Por essa razão, a comparação entre EWA, RL e BL não se limita à significância estatística, em vez disso, a análise considera a magnitude das diferenças entre distribuições, as taxas de estabilidade das probabilidades de escolha e a coerência comportamental dos resultados diante da estrutura estratégica do BSG e do MEG.
+
+A análise combina a estatística $D$, tomada como medida sintética de distância distributiva, com a representação gráfica das curvas de distribuição acumulada empírica. O teste K-S resume a maior distância entre duas curvas. Os gráficos, por sua vez, permitem observar o formato das distribuições e identificar as faixas de probabilidade em que as diferenças se concentram. Esse uso combinado impede que a interpretação fique limitada ao p-valor, e também permite separar diferenças espalhadas ao longo de toda a curva daquelas localizadas em intervalos específicos de probabilidade. A comparação entre os grupos passa, então, a considerar onde as distribuições se afastam e qual a intensidade desse afastamento.

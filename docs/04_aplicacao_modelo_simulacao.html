@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="uma aplicação de teoria dos jogos com Expereince-Weighted Attraction">
+
+<title>4&nbsp; Aplicação do Modelo de Simulação – Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05_resultados.html" rel="next">
+<link href="./03_metodologia.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-bfe1ad09de83bcfa4982f683ed17db98.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nenhum resultado",
+    "search-matching-documents-text": "documentos correspondentes",
+    "search-copy-link-title": "Copiar link para a busca",
+    "search-hide-matches-text": "Esconder correspondências adicionais",
+    "search-more-match-text": "mais correspondência neste documento",
+    "search-more-matches-text": "mais correspondências neste documento",
+    "search-clear-button-title": "Limpar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Procurar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_introducao.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./04_aplicacao_modelo_simulacao.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aplicação do Modelo de Simulação</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Procurar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Dinâmicas de Aprendizado em Cenários de Incertezas de Mercado</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/drewmelo/EWA-MarketDynamics" title="GitHub" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo de leitor">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Procurar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sobre a obra</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./epigrafe.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Epígrafe</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Capítulos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_introducao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introdução</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_referencial_teorico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Referencial Teórico</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_metodologia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Metodologia</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_aplicacao_modelo_simulacao.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aplicação do Modelo de Simulação</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_resultados.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Resultados</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_conclusao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99_referencias.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Referências</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar seção">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./apendice.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Resultados Complementares</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Índice</h2>
+   
+  <ul>
+  <li><a href="#sec-configuracao-jogos" id="toc-sec-configuracao-jogos" class="nav-link active" data-scroll-target="#sec-configuracao-jogos"><span class="header-section-number">4.1</span> Configuração dos jogos matriciais</a></li>
+  <li><a href="#sec-implementacao-computacional" id="toc-sec-implementacao-computacional" class="nav-link" data-scroll-target="#sec-implementacao-computacional"><span class="header-section-number">4.2</span> Implementação computacional</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_introducao.html">Capítulos</a></li><li class="breadcrumb-item"><a href="./04_aplicacao_modelo_simulacao.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aplicação do Modelo de Simulação</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Aplicação do Modelo de Simulação</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>A aplicação dos modelos de aprendizagem foi realizada a partir de dois jogos matriciais: o <em>Buyer-Seller Game</em> e o <em>Market Entry Game</em>. A escolha desses jogos se justifica pela capacidade de representar situações econômicas de decisão simultânea sob incerteza estratégica, ainda que cada um organize essa incerteza de modo distinto. No BSG, a interação entre vendedor e comprador permite analisar decisões de preço e aceitação da oferta em um ambiente de incerteza simétrica estocástica, no qual a valoração do bem varia por choques exógenos. O MEG, por sua vez, desloca a análise para a decisão de entrada em mercado, em que o retorno de cada empresa depende diretamente da escolha realizada pela concorrente.</p>
+<p>Os dois jogos, portanto, oferecem estruturas complementares para a simulação. O BSG concentra a atenção na negociação bilateral sob flutuações de mercado. O MEG enfatiza a interdependência entre firmas diante do risco de entrada simultânea. A comparação entre esses cenários permite observar como EWA, RL e BL ajustam escolhas, atrações e probabilidades quando submetidos a diferentes formas de incerteza e coordenação estratégica.</p>
+<p>A subseção <a href="#sec-configuracao-jogos" class="quarto-xref"><span>Seção 4.1</span></a> descreve a estrutura das matrizes de estratégias e <em>payoffs</em> dos jogos BSG e MEG, explorando também os equilíbrios alcançados em estratégias puras e mistas. A subseção <a href="#sec-implementacao-computacional" class="quarto-xref"><span>Seção 4.2</span></a> apresenta a execução dos algoritmos EWA, RL e BL na linguagem de programação R, com foco na variação do parâmetro <span class="math inline">\(\lambda\)</span>.</p>
+<section id="sec-configuracao-jogos" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-configuracao-jogos"><span class="header-section-number">4.1</span> Configuração dos jogos matriciais</h2>
+<p>O BSG representa a dinâmica de negociação entre compradores e vendedores, e em como os agentes ajustam suas estratégias conforme as interações no mercado. Nesse jogo, o vendedor define o preço de venda e o comprador decide se aceita ou rejeita a oferta. O vendedor pode escolher entre um preço alto, <span class="math inline">\(p_1 = 45\)</span>, ou um preço baixo, <span class="math inline">\(p_2 = 35\)</span>, e o comprador pode adotar a estratégia <span class="math inline">\(s_2\)</span>, que corresponde à decisão de aceitar ou recusar a proposta. Considerando um custo fixo de produção de <span class="math inline">\(C = 25\)</span>, o <em>payoff</em> do vendedor, representado por <span class="math inline">\(\pi_1\)</span>, é apresentado na Equação <a href="#eq-payoff-vendedor-bsg" class="quarto-xref">Equação&nbsp;<span>4.1</span></a>.</p>
+<p><span id="eq-payoff-vendedor-bsg"><span class="math display">\[
+\pi_1(p_i, s_2) =
+    \begin{cases}
+        p_i - C \text{,} &amp; \text{se } s_2 = a \\
+        0 \text{,} &amp; \text{se } s_2 = r
+    \end{cases}
+\tag{4.1}\]</span></span></p>
+<p>em que</p>
+<ul>
+<li><span class="math inline">\(p_i\)</span> é o preço escolhido pelo vendedor, podendo ser <span class="math inline">\(p_1 = 45\)</span> ou <span class="math inline">\(p_2 = 35\)</span>;</li>
+<li><span class="math inline">\(s_2\)</span> representa a estratégia escolhida pelo comprador.</li>
+</ul>
+<p>A função de <em>payoff</em> do comprador, representada por <span class="math inline">\(\pi_2\)</span> na Equação <a href="#eq-payoff-comprador-bsg" class="quarto-xref">Equação&nbsp;<span>4.2</span></a>, depende de <span class="math inline">\(V\)</span>, isto é, da valoração atribuída ao bem. No modelo, esse valor é sorteado a partir de uma distribuição uniforme contínua no intervalo <span class="math inline">\([C + \epsilon, 45]\)</span>, de modo que <span class="math inline">\(V \sim U(C + \epsilon, 45)\)</span>, com o termo de ruído exógeno <span class="math inline">\(\epsilon\)</span> variando entre 1 e 10. A formulação do BSG segue uma lógica próxima à de <span class="citation" data-cites="kasbekar2010pricing">Kasbekar e Sarkar (2010)</span>, que analisam a formação de preços sob incerteza simétrica estocástica. Nos dois casos, a incerteza é exógena e compartilhada entre os agentes, uma vez que decorre de um valor de mercado distribuído em um intervalo conhecido.</p>
+<p>No presente modelo, <span class="math inline">\(V\)</span> é realizado e observado a cada rodada. O termo <span class="math inline">\(\epsilon\)</span> introduz flutuações na valoração do bem, associadas a variações de demanda, preços, inflação, choques de renda ou outros eventos externos ao ambiente de decisão dos jogadores. Como essas variações são observáveis para ambos os agentes, o ruído altera o valor do bem sem produzir assimetria de informação. A incerteza opera, nesse cenário, como perturbação externa comum ao comprador e ao vendedor. Tal simplificação aproxima o BSG de um ambiente com incerteza observável e preserva a coerência com <span class="citation" data-cites="kasbekar2010pricing">Kasbekar e Sarkar (2010)</span>, ao mesmo tempo que torna a estrutura operacional para a simulação adaptativa em uma matriz <span class="math inline">\(2 \times 2\)</span>.</p>
+<p><span id="eq-payoff-comprador-bsg"><span class="math display">\[
+\pi_2(p_i, s_2) =
+    \begin{cases}
+        V - p_i \text{,} &amp; \text{se } s_2 = a \\
+        0 \text{,} &amp; \text{se } s_2 = r
+    \end{cases}
+\tag{4.2}\]</span></span></p>
+<p>A aplicação do método de Monte Carlo permite estimar os <em>payoffs</em> esperados sob a estrutura estocástica adotada no BSG. Como <span class="math inline">\(V\)</span> varia por choques exógenos, a amostragem numérica torna possível incorporar essa variação diretamente no cálculo dos ganhos do comprador e do vendedor. A matriz de <em>payoffs</em> foi obtida a partir de 100.000 repetições, com sorteios aleatórios de <span class="math inline">\(V\)</span> no intervalo <span class="math inline">\([C + \epsilon, 45]\)</span>. Em cada repetição, os ganhos associados às combinações estratégicas foram calculados e, ao final, agregados por médias esperadas. O processo segue o respaldo teórico de <span class="citation" data-cites="schjaer2004modeling">Schjaer-Jacobsen (2004)</span>, ao demonstrar que as simulações Monte Carlo produzem resultados praticamente idênticos aos cálculos estocásticos teóricos quanto ao valor esperado e à variância. No presente modelo, a amostragem numérica cumpre justamente essa função ao transformar a incerteza econômica representada por <span class="math inline">\(V\)</span> em uma matriz operacional de <em>payoffs</em>, preservando a variação dos ganhos esperados gerada pelos choques de mercado.</p>
+<p>A Tabela <a href="#tbl-matriz-bsg" class="quarto-xref">Tabela&nbsp;<span>4.1</span></a> apresenta o processo de decisão dos jogadores sob esse cenário de negociação com incerteza simétrica estocástica. Quando o comprador aceita o preço, o <em>payoff</em> do vendedor é calculado como a diferença entre o preço e o custo de produção, <span class="math inline">\(p_i - C\)</span>, enquanto o <em>payoff</em> do comprador é a diferença entre a valoração <span class="math inline">\(V\)</span> e o preço pago, <span class="math inline">\(V - p_i\)</span>. Se o comprador rejeita a oferta, ambos os <em>payoffs</em> são nulos, pois a transação não ocorre.</p>
+<p>É notável que, embora o jogo envolva aleatoriedade, sobretudo na percepção do comprador sobre o custo de produção, o equilíbrio em estratégias puras geralmente se alcança quando o vendedor opta pelo Preço Alto e o comprador decide Rejeitar. Para validar essa análise, realizou-se um <em>loop</em> de 100 iterações desse jogo, onde aproximadamente 75% dos resultados confirmaram o equilíbrio de Preço Alto e Rejeitar, e 25% revelaram um segundo equilíbrio possível, caracterizado por Preço Baixo e Rejeitar. Os detalhes dessas iterações, incluindo a contagem acumulada das ocorrências, são apresentados na Figura <span class="quarto-unresolved-ref">?fig-ch5-18</span> no Apêndice.</p>
+<div id="tbl-matriz-bsg" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-matriz-bsg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;4.1: Matriz de ganhos do jogo BSG
+</figcaption>
+<div aria-describedby="tbl-matriz-bsg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="tabela-matriz">
+<thead>
+<tr class="linha-grossa-superior">
+<th colspan="2">
+</th>
+<th colspan="2" class="jogador-p2">
+Comprador
+</th>
+</tr>
+<tr>
+<th>
+</th>
+<th>
+Estratégia
+</th>
+<th>
+Aceitar
+</th>
+<th>
+Rejeitar
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th rowspan="2" class="jogador-p1">
+Vendedor
+</th>
+<td class="estrategia">
+Preço Alto (p_1 = 45)
+</td>
+<td>
+p_1 - C, V - p_1
+</td>
+<td>
+0, 0
+</td>
+</tr>
+<tr class="linha-grossa-inferior">
+<td class="estrategia">
+Preço Baixo (p_2 = 35)
+</td>
+<td>
+p_2 - C, V - p_2
+</td>
+<td>
+0, 0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>No equilíbrio de Nash em estratégias puras, o vendedor pratica Preço Alto e o comprador rejeita a oferta, o que gera <em>payoffs</em> nulos para ambos. O <em>Buyer-Seller Game</em> também pode ser formulado em estratégias mistas, caso em que as escolhas passam a ser probabilísticas e dependem das condições de indiferença entre as ações disponíveis. Na parametrização adotada, porém, o equilíbrio misto degenera. O comprador rejeita com probabilidade 1, enquanto o vendedor permanece indiferente entre praticar Preço Alto ou Preço Baixo. A probabilidade de aproximadamente 27,7% corresponde apenas ao ponto teórico de indiferença do comprador, sem alterar a solução efetiva do jogo.</p>
+<p>A Figura <a href="#fig-ch4-1" class="quarto-xref">Figura&nbsp;<span>4.1</span></a> apresenta as probabilidades associadas às estratégias mistas dos jogadores no BSG. No eixo X, é representada a probabilidade de o vendedor praticar Preço Alto, enquanto o eixo Y mostra a probabilidade de o comprador aceitar a oferta. O ponto próximo de 27,7% indica a condição teórica de indiferença do comprador em relação à aceitação da proposta. Contudo, na parametrização adotada, essa condição não gera uma randomização efetiva entre aceitar e rejeitar, pois a solução do jogo conduz à rejeição com probabilidade 1. A estrutura dos <em>payoffs</em> auxilia no entendimento desse resultado, dado que o Preço Alto reduz a atratividade da compra e torna a rejeição a resposta mais consistente para o comprador. Com isso, o jogo se estabiliza em um equilíbrio puro marcado por coordenação imperfeita, no qual a tentativa do vendedor de ampliar o retorno por meio do preço elevado acaba associada à recusa da transação.</p>
+<p>Nesse caso, o Vendedor adota uma estratégia pura, ao passo que o Comprador utiliza uma estratégia mista, o que caracteriza um equilíbrio misto assimétrico no jogo. Segundo <span class="citation" data-cites="john2005learning">Duffy e Hopkins (2005)</span>, equilíbrios mistos assimétricos ocorrem quando alguns jogadores seguem estratégias puras e outros distribuem suas escolhas entre diferentes alternativas, ou quando todos misturam suas estratégias, mas com probabilidades distintas. Em equilíbrios mistos simétricos, por outro lado, todos os jogadores distribuem suas escolhas entre as mesmas estratégias e com as mesmas probabilidades, de modo que o padrão estratégico entre eles se torna equivalente.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch4-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.1: Equilíbrio das probabilidades associadas às estratégias mistas dos jogadores no jogo BSG
+</figcaption>
+<div aria-describedby="fig-ch4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_4.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>O <em>Market Entry Game</em> é amplamente utilizado na Teoria dos Jogos para analisar o comportamento estratégico em mercados oligopolistas. Assim como o BSG, trata-se de um jogo de informação perfeita, no qual as empresas conhecem todas as estratégias e <em>payoffs</em> disponíveis. A diferença central está na natureza competitiva, enquanto o BSG representa decisões bilaterais de troca sujeitas a choques exógenos e flutuações aleatórias de mercado, o MEG captura a interação estratégica entre firmas que decidem entrar ou não em um mercado, de forma a equilibrar as oportunidades de lucro com os riscos decorrentes da competição direta, como mostrado na Tabela <a href="#tbl-matriz-meg" class="quarto-xref">Tabela&nbsp;<span>4.2</span></a>.</p>
+<p>Na análise da matriz, se ambas as empresas optam por não entrar no mercado, seus <em>payoffs</em> são zero (0, 0). Se apenas uma empresa entrar no mercado, ela captura todo o mercado, resultando em ganhos de (5, 0) para a Empresa A ou (0, 5) para a Empresa B. No entanto, se ambas as empresas entrarem no mercado, a competição intensa leva a perdas para ambas, com <em>payoffs</em> de (-1, -1).</p>
+<p>Os equilíbrios de Nash em estratégias puras para este jogo ocorrem em dois cenários opostos. No primeiro, a Empresa A decide entrar no mercado, enquanto a Empresa B opta por não entrar. No segundo, é a Empresa B que entra no mercado, enquanto a Empresa A decide não participar. Se uma empresa que inicialmente decidiu não entrar no mercado resolvesse mudar de ideia e competir, enfrentaria concorrência direta, o que resultaria em um <em>payoff</em> negativo. Destarte, tanto a configuração (Entrar, Não Entrar) quanto (Não Entrar, Entrar) representam equilíbrios de Nash, uma vez que, nessas situações, as empresas maximizam seus resultados e não têm incentivo para alterar suas estratégias, dado o comportamento da outra.</p>
+<div id="tbl-matriz-meg" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-matriz-meg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;4.2: Matriz de ganhos do jogo MEG
+</figcaption>
+<div aria-describedby="tbl-matriz-meg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="tabela-matriz-container">
+<table class="tabela-matriz">
+<thead>
+<tr class="linha-grossa-superior">
+<th colspan="2">
+</th>
+<th colspan="2" class="jogador-p2">
+Empresa B
+</th>
+</tr>
+<tr>
+<th>
+</th>
+<th>
+Estratégia
+</th>
+<th>
+Não Entrar
+</th>
+<th>
+Entrar
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th rowspan="2" class="jogador-p1">
+Empresa A
+</th>
+<td class="estrategia">
+Não Entrar
+</td>
+<td>
+0, 0
+</td>
+<td>
+0, 5
+</td>
+</tr>
+<tr class="linha-grossa-inferior">
+<td class="estrategia">
+Entrar
+</td>
+<td>
+5, 0
+</td>
+<td>
+-1, -1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>A Figura <a href="#fig-ch4-2" class="quarto-xref">Figura&nbsp;<span>4.2</span></a> mostra as probabilidades de as empresas não entrarem no mercado. No eixo X, é mostrada a probabilidade de a Empresa A não entrar, enquanto o eixo Y exibe a probabilidade de a Empresa B não entrar. O ponto onde as linhas de melhores respostas se cruzam indica o equilíbrio de Nash em estratégias mistas, ou seja, quando a probabilidade de ambas as empresas não entrarem no mercado é de aproximadamente 16,67% (<span class="math inline">\(p =\)</span> 0,1667). Em contrapartida, tanto a Empresa A quanto a Empresa B escolhem entrar no mercado com uma probabilidade de 83,33% (<span class="math inline">\(1 - p =  0,8333\)</span>). Esse equilíbrio, ao contrário do primeiro jogo, configura-se como simétrico, pois ambas as empresas estão randomizando suas estratégias com probabilidades iguais, ajustando-se às incertezas relacionadas às decisões da concorrente.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch4-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.2: Equilíbrio das probabilidades associadas às estratégias mistas dos jogadores no jogo MEG
+</figcaption>
+<div aria-describedby="fig-ch4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_5.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>A Figura <a href="#fig-ch4-3" class="quarto-xref">Figura&nbsp;<span>4.3</span></a> ilustra o processo de criação das matrizes, subdivididas nas Figuras (a) e (b), que representam os modelos BSG e MEG, respectivamente. Nos parâmetros da função <em>normal form</em> do pacote <em>Rgamer</em>, especificam-se os jogadores em <em>players</em>, as estratégias dos jogadores 1 e 2 em <em>s1</em> e <em>s2</em>, e os respectivos ganhos em <em>payoffs1</em> e <em>payoffs2</em>.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch4-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.3: Rotina de programação das matrizes BSG e MEG
+</figcaption>
+<div aria-describedby="fig-ch4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_6.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>Na Figura <a href="#fig-ch4-3" class="quarto-xref">Figura&nbsp;<span>4.3</span></a>, os <em>payoffs</em> de ambos os jogadores são definidos por funções que calculam os retornos para cada combinação de estratégias, com base em parâmetros definidos em <em>pars</em>, como o preço e a aceitação ou rejeição da oferta, conforme mencionado nas Equações <a href="#eq-payoff-vendedor-bsg" class="quarto-xref">Equação&nbsp;<span>4.1</span></a> e <a href="#eq-payoff-comprador-bsg" class="quarto-xref">Equação&nbsp;<span>4.2</span></a>. A discretização, por meio do parâmetro <em>discretize</em>, assegura que as funções de <em>payoff</em> sejam avaliadas precisamente para as combinações de estratégias especificadas.</p>
+</section>
+<section id="sec-implementacao-computacional" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-implementacao-computacional"><span class="header-section-number">4.2</span> Implementação computacional</h2>
+<p>A implementação dos algoritmos de aprendizado EWA, RL e BL foi realizada utilizando a função <em>sim learning</em>, com os parâmetros configurados conforme ilustrado na Figura <a href="#fig-ch4-4" class="quarto-xref">Figura&nbsp;<span>4.4</span></a>. Os intervalos utilizados para <span class="math inline">\(\phi\)</span> e <span class="math inline">\(\delta\)</span> foram baseados no estudo de <span class="citation" data-cites="JOSEPHSON20081569">Josephson (2008)</span>, que empregou o modelo EWA em jogos de matriz <span class="math inline">\(2 \times 2\)</span> e adotou o método de máxima verossimilhança para estimar os parâmetros, ajustando os valores de <span class="math inline">\(\phi\)</span> e <span class="math inline">\(\delta\)</span> para minimizar a discrepância entre as previsões do modelo e os comportamentos observados. Os intervalos estimados foram de 0,5 a 0,75 para <span class="math inline">\(\phi\)</span>, e de 0,5 a 1 para <span class="math inline">\(\delta\)</span>. A abordagem permitiu identificar esses intervalos como os que melhor representavam o aprendizado em jogos <span class="math inline">\(2 \times 2\)</span>.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch4-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4.4: Configuração dos algoritmos de aprendizagem
+</figcaption>
+<div aria-describedby="fig-ch4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_7.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>Os parâmetros do modelo EWA foram definidos com base nos intervalos reportados na literatura e ajustados por médias. O parâmetro <span class="math inline">\(\phi\)</span>, associado à influência das atrações acumuladas no aprendizado, foi fixado em aproximadamente 0,62, valor correspondente à média do intervalo entre 0,5 e 0,75. O parâmetro <span class="math inline">\(\delta\)</span>, responsável pela incorporação dos <em>payoffs</em> de estratégias não escolhidas, foi definido em 0,75, média do intervalo entre 0,5 e 1. Para <span class="math inline">\(\rho\)</span>, que regula a depreciação da experiência acumulada ao longo do tempo, adotou-se a restrição <span class="math inline">\(\rho \le \phi\)</span>, conforme descrito por <span class="citation" data-cites="camerer1999experience">Camerer e Hua Ho (1999)</span>. A partir dessa restrição, <span class="math inline">\(\rho\)</span> foi fixado em 0,31, valor correspondente à média entre o limite inferior, igual a 0, e o valor atribuído a <span class="math inline">\(\phi\)</span>. A parametrização adotada representa uma escolha intermediária dentro dos valores observados na literatura.</p>
+<p>No modelo de aprendizado por reforço, ao considerar que <span class="math inline">\(\delta = \rho = 0\)</span>, os jogadores tomam decisões com base apenas no pagamento mais recente que receberam, sem levar em conta alternativas que poderiam ter escolhido. De acordo com a documentação do pacote <em>Rgamer</em>, a parametrização <span class="math inline">\(\phi = 1\)</span> no contexto de aprendizado por reforço implica que as atrações são determinadas pelos reforços anteriores, mas sem a acumulação de experiência ao longo do tempo, o que representa uma variante que preserva o histórico de atrações passadas sem incorporar novas experiências de maneira acumulativa.</p>
+<p>Ao modificar o parâmetro <span class="math inline">\(\delta\)</span> para 1, os jogadores passam a atribuir o mesmo peso aos <em>payoffs</em> das estratégias escolhidas e não escolhidas no processo de atualização. A aprendizagem deixa, assim, de depender apenas do reforço obtido pela ação efetivamente realizada e passa a incorporar também os ganhos hipotéticos das alternativas disponíveis. Com <span class="math inline">\(\rho = 1\)</span>, o histórico acumulado é preservado integralmente, aproximando o processo do <em>fictitious play</em>, no qual as estratégias são ajustadas a partir das frequências empíricas observadas nas jogadas anteriores. Essa configuração se apoia em <span class="citation" data-cites="camerer1999experience">Camerer e Hua Ho (1999)</span>, que apontam melhor ajuste do aprendizado baseado em crenças no EWA quando <span class="math inline">\(\rho = 1\)</span>. Os autores também observam que, nesse caso especial, <span class="math inline">\(\phi\)</span> tende a assumir o mesmo valor de <span class="math inline">\(\rho\)</span>. Por isso, <span class="math inline">\(\phi\)</span> foi definido como 1, preservando a coerência entre os parâmetros de memória e atualização das atrações. A parametrização resultante descreve um aprendizado baseado no histórico completo das interações, no qual experiências passadas, frequências observadas e <em>payoffs</em> hipotéticos continuam a influenciar as escolhas ao longo do tempo.</p>
+<p>Neste estudo, <span class="math inline">\(\lambda\)</span> varia de 0,1 a 1, em incrementos de 0,1, para avaliar como diferentes níveis de sensibilidade às atrações afetam a aprendizagem estratégica. A variação é aplicada ao modelo EWA completo e aos seus casos especiais, permitindo comparar o comportamento de EWA, RL e BL sob a mesma escala paramétrica. A escolha desse intervalo acompanha, de acordo com a literatura, a interpretação usual do parâmetro: valores mais baixos tornam as escolhas mais dispersas e próximas de um comportamento aleatório, enquanto valores mais altos aumentam a concentração nas estratégias com maiores atrações. A função <em>sim learning</em>, utilizada nas simulações, também exige valores positivos para <span class="math inline">\(\lambda\)</span>, o que delimita a faixa adotada. Com essa configuração, torna-se possível observar como a intensidade de resposta às atrações modifica o aprendizado em jogos matriciais <span class="math inline">\(2 \times 2\)</span>.</p>
+<p>O procedimento parte da criação de um vetor com valores de <span class="math inline">\(\lambda\)</span> entre 0,1 e 1, em incrementos de 0,1. Para cada valor, o <em>script</em> executa uma simulação sobre a matriz do jogo, mantendo constantes os demais parâmetros definidos anteriormente. A função <em>sim learning</em> calcula os resultados de acordo com o número de amostras, os períodos simulados e o modelo de aprendizagem selecionado. Os resultados de cada execução são armazenados em uma lista, o qual permite recuperar, comparar e organizar posteriormente as trajetórias geradas para cada nível de sensibilidade às atrações.</p>
+<p>A Lei dos Grandes Números estabelece que, com o aumento das repetições de um experimento, a média observada tende a se aproximar do valor esperado. Em simulações computacionais, esse princípio ajuda a reduzir a influência de oscilações pontuais e torna os resultados menos dependentes de realizações específicas do processo aleatório.</p>
+<p>Com base nessa lógica, foram definidos 500 <em>samples</em> e 500 <em>periods</em> para cada simulação. A escolha busca produzir trajetórias suficientemente estáveis para representar o comportamento teórico dos modelos, sem elevar desnecessariamente o custo computacional. Valores muito baixos poderiam deixar os resultados excessivamente sensíveis à aleatoriedade das rodadas. Valores muito altos, por outro lado, aumentariam o volume de dados gerados e o tempo de processamento, sem ganho proporcional para os objetivos da análise. A parametrização adotada procura, por conseguinte, equilibrar representatividade estatística e viabilidade operacional.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiada");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiada");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03_metodologia.html" class="pagination-link" aria-label="Metodologia">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Metodologia</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05_resultados.html" class="pagination-link" aria-label="Resultados">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Resultados</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

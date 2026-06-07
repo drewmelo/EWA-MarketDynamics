@@ -7,7 +7,11 @@
   font-style: italic;
   opacity: .95;
 }
-.epigrafe .autor { font-style: normal; }
+
+.epigrafe .autor {
+  font-style: normal;
+}
+
 
 /* === Sidebar: título e ícones empilhados === */
 #quarto-sidebar .sidebar-header,
@@ -17,8 +21,12 @@
   align-items: flex-start;
   gap: .25rem;
 }
+
 #quarto-sidebar .sidebar-title,
-#quarto-sidebar-glass .sidebar-title { margin-bottom: .15rem; }
+#quarto-sidebar-glass .sidebar-title {
+  margin-bottom: .15rem;
+}
+
 #quarto-sidebar .sidebar-tools,
 #quarto-sidebar .sidebar-tools-main,
 #quarto-sidebar-glass .sidebar-tools,
@@ -27,6 +35,7 @@
   margin-top: .15rem;
   width: 100%;
 }
+
 #quarto-sidebar .sidebar-tools a,
 #quarto-sidebar .sidebar-tools-main a,
 #quarto-sidebar-glass .sidebar-tools a,
@@ -37,138 +46,345 @@
   font-size: 0.95rem;
 }
 
-/* ===================== Paleta e Layout ===================== */
-:root{
-  /* Fundo / texto */
+
+/* ===================== Paleta e layout ===================== */
+:root {
+  /* Fundo e texto */
   --page-bg: #f6f3ea;
   --content-bg: #fffdf8;
   --text-fg: #1e1c16;
   --muted: #6e6a5f;
 
   /* Links neutros */
-  --link:       #6b6254;
+  --link: #6b6254;
   --link-hover: #4f483e;
 
-  /* Índices / acentos */
-  --toc-text:   #5e5649;
+  /* Índices e acentos */
+  --toc-text: #5e5649;
   --toc-active: #3f3a33;
   --toc-border: #b8ad9a;
 
   /* Hovers suaves */
-  --hover-bg:         rgba(184,173,154,.20);  /* TOC direita / links */
-  --hover-bg-sidebar: rgba(184,173,154,.18);  /* sidebar esquerda */
-  --hover-bg-pager:   rgba(184,173,154,.18);  /* prev/next no rodapé */
+  --hover-bg: rgba(184, 173, 154, .20);
+  --hover-bg-sidebar: rgba(184, 173, 154, .18);
+  --hover-bg-pager: rgba(184, 173, 154, .18);
 
-  /* Largura do miolo */
+  /* Largura do conteúdo */
   --content-width: 86ch;
 
-  /* Alinha Bootstrap com a paleta */
+  /* Bootstrap */
+  --bs-primary: #6b6254;
+  --bs-primary-rgb: 107, 98, 84;
   --bs-link-color: var(--link);
   --bs-link-hover-color: var(--link-hover);
+  --bs-link-color-rgb: 107, 98, 84;
+  --bs-link-hover-color-rgb: 79, 72, 62;
 }
 
-/* Fundo da página e miolo */
-body{
+
+/* Fundo da página e conteúdo */
+body {
   background: var(--page-bg);
   color: var(--text-fg);
 }
+
 #quarto-content .page-column,
-main#quarto-document-content{
+main#quarto-document-content {
   background: var(--content-bg);
-  box-shadow: 0 0 0 1px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.06);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, .04),
+    0 8px 28px rgba(0, 0, 0, .06);
   border-radius: 10px;
   padding: 1.25rem 1.4rem;
   max-width: var(--content-width) !important;
   margin-inline: auto;
 }
-#quarto-sidebar{ background: transparent; }
 
-/* Componentes comuns */
-blockquote{ background: rgba(0,0,0,.02); border-left-color: rgba(0,0,0,.15); }
-pre, code, .code-cell{ background: #f2eee4; border-radius: 8px; }
+#quarto-sidebar {
+  background: transparent;
+}
 
-/* Figcaption / fonte das figuras */
+
+/* ===================== Componentes comuns ===================== */
+blockquote {
+  background: rgba(0, 0, 0, .02);
+  border-left-color: rgba(0, 0, 0, .15);
+}
+
+pre,
+code,
+.code-cell {
+  background: #f2eee4;
+  border-radius: 8px;
+}
+
+
+/* ===================== Legendas e fontes ===================== */
 .quarto-figure figcaption,
-.quarto-figure .quarto-figure-attribution{
+.quarto-figure .quarto-figure-attribution,
+.quarto-table-attribution,
+.fonte-tabela {
   color: var(--muted);
 }
 
-/* Links globais */
-a, .link-primary { color: var(--link); }
-a:hover, a:focus { color: var(--link-hover); }
-a:visited        { color: var(--link); }
+
+/* ===================== Tabelas matriciais ===================== */
+
+/*
+  Contêiner da tabela.
+
+  Além de controlar a largura, permite rolagem horizontal
+  quando a tabela não couber em telas pequenas.
+*/
+.tabela-matriz-container {
+  width: 100%;
+  margin: 1rem auto;
+  overflow-x: auto;
+}
+
+
+/*
+  Estilo principal das matrizes do BSG e do MEG.
+*/
+.tabela-matriz {
+  width: auto;
+  min-width: 75%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-fg);
+}
+
+
+/* Células e cabeçalhos */
+.tabela-matriz th,
+.tabela-matriz td {
+  padding: 0.55rem 0.8rem;
+  vertical-align: middle;
+  border: none;
+  background: transparent;
+}
+
+
+/* Cabeçalhos sem negrito automático */
+.tabela-matriz th {
+  font-weight: normal;
+}
+
+
+/*
+  Linha localizada abaixo dos títulos dos jogadores
+  e acima dos resultados.
+*/
+.tabela-matriz thead tr:nth-child(2) {
+  border-top: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+}
+
+
+/* Linha superior grossa */
+.tabela-matriz .linha-grossa-superior {
+  border-top: 3px solid currentColor;
+}
+
+
+/* Linha inferior grossa */
+.tabela-matriz tbody .linha-grossa-inferior {
+  border-bottom: 3px solid currentColor;
+}
+
+
+/*
+  Linha vertical antes da coluna de estratégias.
+
+  Corresponde à separação produzida por lc|cc
+  na tabela LaTeX.
+*/
+.tabela-matriz .estrategia {
+  border-left: 1px solid currentColor;
+}
+
+
+/*
+  Primeiro jogador.
+
+  BSG: Vendedor.
+  MEG: Empresa A.
+*/
+.tabela-matriz .jogador-p1 {
+  font-weight: normal;
+  padding-right: 1rem;
+  white-space: nowrap;
+}
+
+
+/*
+  Segundo jogador.
+
+  BSG: Comprador.
+  MEG: Empresa B.
+*/
+.tabela-matriz .jogador-p2 {
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+
+/*
+  Fonte das tabelas.
+
+  O mesmo tamanho e a mesma cor são utilizados
+  nas matrizes do BSG e do MEG.
+*/
+.fonte-tabela,
+.quarto-table-attribution {
+  width: 75%;
+  margin: 0.35rem auto 1rem auto;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+  text-align: center;
+  font-style: normal;
+}
+
+
+/* ===================== Links globais ===================== */
+a,
+.link-primary {
+  color: var(--link);
+}
+
+a:hover,
+a:focus {
+  color: var(--link-hover);
+}
+
+a:visited {
+  color: var(--link);
+}
+
 
 /* ===================== Breadcrumb ===================== */
-.quarto-page-breadcrumbs .breadcrumb-item a{ color: var(--link); }
-.quarto-page-breadcrumbs .breadcrumb-item a:hover{ color: var(--link-hover); }
+.quarto-page-breadcrumbs .breadcrumb-item a {
+  color: var(--link);
+}
 
-/* ===================== Sidebar ESQUERDA (sumário do livro) ===================== */
-/* Itens */
-#quarto-sidebar .sidebar-item a{
+.quarto-page-breadcrumbs .breadcrumb-item a:hover {
+  color: var(--link-hover);
+}
+
+
+/* ===================== Sidebar esquerda ===================== */
+#quarto-sidebar .sidebar-item a {
   color: var(--toc-text);
   text-decoration: none;
 }
-#quarto-sidebar .sidebar-item a:hover{
+
+#quarto-sidebar .sidebar-item a:hover {
   color: var(--link-hover);
   background: var(--hover-bg-sidebar);
   border-radius: 6px;
 }
 
-/* Aumentar fonte */
-#quarto-sidebar .sidebar-menu-container .sidebar-item { font-size: 1.05rem; }
-#quarto-sidebar .sidebar-menu-container .sidebar-item .sidebar-item { font-size: 0.98rem; }
 
-/* Ativo (capítulo atual) em negrito e cor destacada */
+/* Tamanho da fonte */
+#quarto-sidebar .sidebar-menu-container .sidebar-item {
+  font-size: 1.05rem;
+}
+
+#quarto-sidebar .sidebar-menu-container .sidebar-item .sidebar-item {
+  font-size: 0.98rem;
+}
+
+
+/* Capítulo atual */
 #quarto-sidebar .sidebar-menu-container li.sidebar-item > a.sidebar-link.active,
 #quarto-sidebar .sidebar-menu-container li.sidebar-item > a.sidebar-item-text.active,
 #quarto-sidebar .sidebar-menu-container a.sidebar-link[aria-current="page"],
-#quarto-sidebar .sidebar-menu-container a.sidebar-item-text[aria-current="page"]{
+#quarto-sidebar .sidebar-menu-container a.sidebar-item-text[aria-current="page"] {
   font-weight: 800 !important;
   color: var(--toc-active) !important;
 }
+
 #quarto-sidebar .sidebar-menu-container a.sidebar-link.active .menu-text,
 #quarto-sidebar .sidebar-menu-container a[aria-current="page"] .menu-text,
 #quarto-sidebar .sidebar-menu-container a.sidebar-link.active .chapter-number,
 #quarto-sidebar .sidebar-menu-container a.sidebar-link.active .chapter-title,
 #quarto-sidebar .sidebar-menu-container a[aria-current="page"] .chapter-number,
-#quarto-sidebar .sidebar-menu-container a[aria-current="page"] .chapter-title{
+#quarto-sidebar .sidebar-menu-container a[aria-current="page"] .chapter-title {
   font-weight: 800 !important;
   color: var(--toc-active) !important;
 }
 
-/* ===================== TOC DIREITA (índice da página) ===================== */
-#quarto-margin-sidebar { 
-  /* garante que o tema não re-azule os links */
+
+/* ===================== TOC direita ===================== */
+#quarto-margin-sidebar {
   --bs-link-color: var(--toc-text);
   --bs-link-hover-color: var(--link-hover);
 }
 
-#quarto-margin-sidebar .toc .nav-link{
+#quarto-margin-sidebar .toc .nav-link {
   color: var(--toc-text) !important;
   border-left: 2px solid transparent;
   padding-left: .6rem;
   font-size: 1.05rem;
   text-decoration: none;
 }
-#quarto-margin-sidebar .toc .nav .nav .nav-link{ font-size: 0.98rem; }
+
+#quarto-margin-sidebar .toc .nav .nav .nav-link {
+  font-size: 0.98rem;
+}
+
 #quarto-margin-sidebar .toc .nav-link:hover,
-#quarto-margin-sidebar .toc .nav-link:focus{
+#quarto-margin-sidebar .toc .nav-link:focus {
   color: var(--link-hover) !important;
   background: var(--hover-bg);
   border-left-color: var(--toc-border) !important;
 }
+
 #quarto-margin-sidebar .toc .nav-link.active,
-#quarto-margin-sidebar .toc .active > .nav-link{
+#quarto-margin-sidebar .toc .active > .nav-link {
   color: var(--toc-active) !important;
   border-left-color: var(--toc-border) !important;
   font-weight: 800 !important;
 }
-#quarto-margin-sidebar .toc .nav-link:visited{ color: var(--toc-text) !important; }
 
-/* ===================== Rodapé: Anterior / Próximo ===================== */
+#quarto-margin-sidebar .toc .nav-link:visited {
+  color: var(--toc-text) !important;
+}
+
+
+/* Reforço para o TOC gerado pelo Quarto */
+#quarto-margin-sidebar nav#TOC .nav-link {
+  color: var(--toc-text) !important;
+  border-left: 2px solid transparent !important;
+  text-decoration: none;
+}
+
+#quarto-margin-sidebar nav#TOC .nav-link:hover,
+#quarto-margin-sidebar nav#TOC .nav-link:focus {
+  color: var(--link-hover) !important;
+  background: var(--hover-bg) !important;
+  border-left-color: var(--toc-border) !important;
+}
+
+#quarto-margin-sidebar nav#TOC .nav-link.active,
+#quarto-margin-sidebar nav#TOC .active > .nav-link {
+  color: var(--toc-active) !important;
+  border-left-color: var(--toc-border) !important;
+  font-weight: 800 !important;
+}
+
+#quarto-margin-sidebar nav#TOC .nav-link:visited {
+  color: var(--toc-text) !important;
+}
+
+
+/* ===================== Rodapé: anterior e próximo ===================== */
 #quarto-content nav.page-navigation a.nav-link,
 #quarto-content .page-navigation a.nav-link,
-#quarto-content .nav-page a.nav-link{
+#quarto-content .nav-page a.nav-link {
   color: var(--toc-text);
   border: 1px solid var(--toc-border);
   background: transparent;
@@ -176,52 +392,23 @@ a:visited        { color: var(--link); }
   padding: .5rem .8rem;
   text-decoration: none;
 }
+
 #quarto-content nav.page-navigation a.nav-link:hover,
 #quarto-content .page-navigation a.nav-link:hover,
-#quarto-content .nav-page a.nav-link:hover{
+#quarto-content .nav-page a.nav-link:hover {
   color: var(--link-hover);
   background: var(--hover-bg-pager);
   border-color: var(--toc-border);
 }
+
 #quarto-content nav.page-navigation a.nav-link .nav-page-text,
-#quarto-content nav.page-navigation a.nav-link .nav-page-label{
+#quarto-content nav.page-navigation a.nav-link .nav-page-label {
   color: inherit;
 }
 
-/* ===== Força a paleta neutra também nas variáveis do Bootstrap ===== */
-:root{
-  --bs-primary:            #6b6254;         /* cor primária (tira o azul)   */
-  --bs-primary-rgb:        107,98,84;
-  --bs-link-color:         var(--link);
-  --bs-link-hover-color:   var(--link-hover);
-  --bs-link-color-rgb:     107,98,84;
-  --bs-link-hover-color-rgb: 79,72,62;
-}
 
-/* ===== TOC da direita (índice): cor e barra no hover/ativo ===== */
-#quarto-margin-sidebar nav#TOC .nav-link{
-  color: var(--toc-text) !important;
-  border-left: 2px solid transparent !important;
-  text-decoration: none;
-}
-#quarto-margin-sidebar nav#TOC .nav-link:hover,
-#quarto-margin-sidebar nav#TOC .nav-link:focus{
-  color: var(--link-hover) !important;
-  background: var(--hover-bg) !important;
-  border-left-color: var(--toc-border) !important;
-}
-#quarto-margin-sidebar nav#TOC .nav-link.active,
-#quarto-margin-sidebar nav#TOC .active > .nav-link{
-  color: var(--toc-active) !important;
-  border-left-color: var(--toc-border) !important;
-  font-weight: 800 !important;
-}
-#quarto-margin-sidebar nav#TOC .nav-link:visited{
-  color: var(--toc-text) !important;
-}
-
-/* ===== Rodapé: Anterior / Próximo como link (sem “botão”) ===== */
-#quarto-content nav.page-navigation a.pagination-link{
+/* Rodapé como link simples */
+#quarto-content nav.page-navigation a.pagination-link {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
@@ -230,200 +417,215 @@ a:visited        { color: var(--link); }
   border: none !important;
   box-shadow: none !important;
   border-radius: 0 !important;
-  padding: .2rem 0 !important;  /* só um respiro; use 0 se preferir */
+  padding: .2rem 0 !important;
   text-decoration: none !important;
 }
 
 #quarto-content nav.page-navigation a.pagination-link:hover,
-#quarto-content nav.page-navigation a.pagination-link:focus{
-  color: var(--toc-active) !important;   /* só muda a cor */
+#quarto-content nav.page-navigation a.pagination-link:focus {
+  color: var(--toc-active) !important;
   font-weight: 600 !important;
-  background: transparent !important;    /* nada de fundo */
-  text-decoration: none !important;      /* ou 'underline' se quiser sublinhar */
+  background: transparent !important;
+  text-decoration: none !important;
   outline: none !important;
 }
 
-/* ícones e textos herdam a cor do link */
-#quarto-content nav.page-navigation a.pagination-link .bi{
+
+/* Ícones e textos herdam a cor do link */
+#quarto-content nav.page-navigation a.pagination-link .bi {
   color: inherit !important;
   fill: currentColor !important;
 }
+
 #quarto-content nav.page-navigation a.pagination-link .nav-page-text,
 #quarto-content nav.page-navigation a.pagination-link .chapter-number,
-#quarto-content nav.page-navigation a.pagination-link .chapter-title{
+#quarto-content nav.page-navigation a.pagination-link .chapter-title {
   color: inherit !important;
 }
 
-/* ===================== Responsivo: largura do miolo ===================== */
-@media (min-width: 1600px){
-  :root{ --content-width: 92ch; }
+
+/* ===================== Responsividade geral ===================== */
+@media (min-width: 1600px) {
+  :root {
+    --content-width: 92ch;
+  }
 }
-@media (max-width: 992px){
+
+
+@media (max-width: 992px) {
   #quarto-content .page-column,
-  main#quarto-document-content{
+  main#quarto-document-content {
     max-width: min(100%, 96ch) !important;
   }
 }
 
-/* ============ MOBILE: ocupar a tela e remover “moldura” ============ */
-@media (max-width: 768px){
 
-  /* Miolo sem fundo/cartão (usa o fundo da página), sem sombra e sem cantos */
+/* ===================== Tablets e telas médias ===================== */
+@media (max-width: 1200px) {
+  body.sidebar-visible #quarto-sidebar-glass {
+    background: var(--content-bg) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  #quarto-sidebar {
+    background: var(--content-bg) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+  }
+
   #quarto-content .page-column,
-  main#quarto-document-content{
+  main#quarto-document-content {
+    max-width: 100% !important;
+    padding: 1rem 1.25rem !important;
+  }
+
+  :root {
+    --margin-sidebar-width: 14rem;
+  }
+
+  #quarto-margin-sidebar {
+    display: block !important;
+    max-width: var(--margin-sidebar-width);
+  }
+
+  #quarto-margin-sidebar .toc {
+    font-size: 0.98rem;
+  }
+}
+
+
+/* ===================== Mobile ===================== */
+@media (max-width: 768px) {
+  #quarto-content .page-column,
+  main#quarto-document-content {
     background: transparent !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    /* mantém só um respiro lateral; ajuste se quiser mais/menos */
     padding: 0.8rem 0.9rem !important;
     max-width: 100% !important;
     margin-inline: 0 !important;
   }
 
-  /* Remove quaisquer bordas/linhas no bloco de título da capa */
   #title-block-header,
   .quarto-title,
-  .quarto-title .quarto-title-meta{
+  .quarto-title .quarto-title-meta {
     background: transparent !important;
     box-shadow: none !important;
     border: 0 !important;
   }
-  #title-block-header hr { display: none !important; }
 
-  /* Tipografia mais confortável no estreito */
-  h1{ font-size: clamp(1.35rem, 5vw + .6rem, 1.95rem); line-height: 1.25; }
-  h2{ font-size: clamp(1.15rem, 4.2vw + .5rem, 1.55rem); line-height: 1.3; }
-  h3{ font-size: clamp(1.05rem, 3.5vw + .45rem, 1.25rem); }
-  main#quarto-document-content p{
-    text-align: justify;    /* mude para 'left' se preferir */
+  #title-block-header hr {
+    display: none !important;
+  }
+
+  h1 {
+    font-size: clamp(1.35rem, 5vw + .6rem, 1.95rem);
+    line-height: 1.25;
+  }
+
+  h2 {
+    font-size: clamp(1.15rem, 4.2vw + .5rem, 1.55rem);
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: clamp(1.05rem, 3.5vw + .45rem, 1.25rem);
+  }
+
+  main#quarto-document-content p {
+    text-align: justify;
     text-indent: 0;
     line-height: 1.85;
   }
 
-  /* TOC da direita some no mobile */
-  #quarto-margin-sidebar{ display: none !important; }
+  #quarto-margin-sidebar {
+    display: none !important;
+  }
 
-  /* Sidebar móvel claro (sem sobreposição escura) — já tínhamos, mantenho */
-  #quarto-sidebar-glass{
+  #quarto-sidebar-glass {
     background: var(--content-bg) !important;
     opacity: 1 !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-  #quarto-sidebar{
+
+  #quarto-sidebar {
     background: var(--content-bg) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  }
-  body.sidebar-visible{ overflow: hidden; }
-}
-
-/* Opcional: em celulares bem estreitos, ainda mais “cheio” */
-@media (max-width: 420px){
-  #quarto-content .page-column,
-  main#quarto-document-content{
-    padding: 0.7rem 0.75rem !important;
-  }
-}
-
-/* ======= OFF-CANVAS CLARO EM TABLETS / LANDSCAPE ======= */
-/* Trate como mobile quando a largura for <= 1200px */
-@media (max-width: 1200px){
-  /* Overlay do menu (tira o escurecido/blur) */
-  body.sidebar-visible #quarto-sidebar-glass{
-    background: var(--content-bg) !important;
-    opacity: 1 !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  /* O próprio painel do menu também claro */
-  #quarto-sidebar{
-    background: var(--content-bg) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
   }
 
-  /* Ganhar espaço: some com a TOC da direita */
-  #quarto-margin-sidebar{ display: none !important; }
-
-  /* Miolo ocupa a largura com respiro confortável */
-  #quarto-content .page-column,
-  main#quarto-document-content{
-    max-width: 100% !important;
-    padding: 1rem 1.25rem !important;
-  }
-}
-
-/* Celular em modo paisagem (altura baixa) */
-@media (orientation: landscape) and (max-height: 500px){
-  body.sidebar-visible #quarto-sidebar-glass{
-    background: var(--content-bg) !important;
-    opacity: 1 !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-  #quarto-margin-sidebar{ display: none !important; }
-
-  #quarto-content .page-column,
-  main#quarto-document-content{
-    padding: 0.6rem 0.8rem !important;
+  body.sidebar-visible {
+    overflow: hidden;
   }
 
-  /* Títulos um pouco menores para caber melhor */
-  h1{ font-size: clamp(1.2rem, 4.2vw + .4rem, 1.6rem); line-height: 1.25; }
-  h2{ font-size: clamp(1.05rem, 3.5vw + .35rem, 1.35rem); line-height: 1.28; }
-}
 
-/* === Mostrar o TOC da direita em telas <= 1200px e em landscape === */
-/* (fica mais estreito para não “apertar” o texto) */
-@media (max-width: 1200px) {
-  :root{
-    --margin-sidebar-width: 14rem; /* largura da coluna do TOC (padrão ~18rem) */
+  /* Tabelas matriciais no celular */
+  .tabela-matriz-container {
+    width: 100%;
+    margin: 0.75rem auto 1rem auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  #quarto-margin-sidebar{
-    display: block !important;     /* reexibe o TOC */
-    max-width: var(--margin-sidebar-width);
-  }
-  #quarto-margin-sidebar .toc { font-size: 0.98rem; } /* texto um tiquinho menor */
-}
 
-/* celular deitado / telas baixas: mantém TOC visível e estreito */
-@media (orientation: landscape) and (max-height: 500px) {
-  :root{ --margin-sidebar-width: 13rem; }
-  #quarto-margin-sidebar{
-    display: block !important;
-    max-width: var(--margin-sidebar-width);
+  .tabela-matriz {
+    width: 100%;
+    min-width: 620px;
+    margin: 0 auto;
+    font-size: 0.88rem;
   }
-  #quarto-margin-sidebar .toc { font-size: 0.96rem; }
-}
 
-/* ===== Figuras maiores no mobile ===== */
-@media (max-width: 768px) {
-  /* Quarto costuma gerar <img class="img-fluid figure-img"> dentro de <figure> */
+  .tabela-matriz th,
+  .tabela-matriz td {
+    padding: 0.45rem 0.55rem;
+  }
+
+  .fonte-tabela,
+  .quarto-table-attribution {
+    width: 100%;
+    margin: 0.35rem 0 1rem 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-align: center;
+  }
+
+
+  /* Figuras maiores */
   .quarto-figure img,
   figure > img,
   p > img.img-fluid,
   .figure-img,
   .quarto-figure svg {
-    width: 96% !important;      /* preenche a coluna */
-    max-width: 96% !important;  /* ignora width="60%" do markdown */
+    width: 96% !important;
+    max-width: 96% !important;
     height: auto !important;
     display: block;
-    margin-inline: auto;        /* centraliza */
+    margin-inline: auto;
   }
 
-  /* espaçamento e legenda mais legível */
-  .quarto-figure { 
+  .quarto-figure {
     margin: 0.75rem auto 1rem !important;
   }
+
   .quarto-figure figcaption,
   .quarto-figure .quarto-figure-attribution {
-    text-align: center;
-    font-size: 0.95rem;
+    width: 75%;
+    margin: 0.35rem auto 1rem auto;
+    font-size: 0.85rem;
     line-height: 1.35;
+    text-align: center;
+    font-style: normal;
   }
 }
 
-/* telas bem estreitas */
+
+/* ===================== Celulares estreitos ===================== */
 @media (max-width: 420px) {
+  #quarto-content .page-column,
+  main#quarto-document-content {
+    padding: 0.7rem 0.75rem !important;
+  }
+
   .quarto-figure img,
   figure > img,
   p > img.img-fluid,
@@ -433,13 +635,47 @@ a:visited        { color: var(--link); }
   }
 }
 
-/* celular em paisagem: um pouco mais “aberto” também */
+
+/* ===================== Celular em paisagem ===================== */
 @media (orientation: landscape) and (max-height: 500px) {
+  body.sidebar-visible #quarto-sidebar-glass {
+    background: var(--content-bg) !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  #quarto-content .page-column,
+  main#quarto-document-content {
+    padding: 0.6rem 0.8rem !important;
+  }
+
+  h1 {
+    font-size: clamp(1.2rem, 4.2vw + .4rem, 1.6rem);
+    line-height: 1.25;
+  }
+
+  h2 {
+    font-size: clamp(1.05rem, 3.5vw + .35rem, 1.35rem);
+    line-height: 1.28;
+  }
+
+  :root {
+    --margin-sidebar-width: 13rem;
+  }
+
+  #quarto-margin-sidebar {
+    display: block !important;
+    max-width: var(--margin-sidebar-width);
+  }
+
+  #quarto-margin-sidebar .toc {
+    font-size: 0.96rem;
+  }
+
   .quarto-figure img,
   .quarto-figure svg {
     width: 92% !important;
     max-width: 92% !important;
   }
 }
-
-
