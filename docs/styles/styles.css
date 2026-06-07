@@ -119,6 +119,78 @@ code,
 }
 
 
+/* ===================== Equações responsivas ===================== */
+
+/*
+  Contêiner das equações em bloco geradas pelo MathJax.
+
+  Mantém a equação dentro da largura do conteúdo e permite
+  rolagem horizontal somente quando a expressão não couber.
+*/
+.math.display,
+.MathJax_Display,
+mjx-container[display="true"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.15rem auto !important;
+  padding: 0.25rem 0 0.4rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+
+/*
+  Redução moderada das equações em bloco no computador.
+*/
+mjx-container[display="true"] {
+  font-size: 92% !important;
+}
+
+
+/*
+  O elemento matemático interno mantém sua largura natural.
+
+  Quando a expressão for maior que o conteúdo, a rolagem
+  será aplicada ao contêiner externo.
+*/
+mjx-container[display="true"] > mjx-math {
+  display: inline-block;
+  max-width: none;
+  min-width: max-content;
+}
+
+
+/*
+  Equações inseridas dentro dos parágrafos permanecem
+  no tamanho normal.
+*/
+mjx-container:not([display="true"]) {
+  font-size: 100% !important;
+}
+
+
+/*
+  Melhora a posição da barra de rolagem e evita que ela
+  fique colada à expressão.
+*/
+mjx-container[display="true"]::-webkit-scrollbar {
+  height: 6px;
+}
+
+mjx-container[display="true"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+mjx-container[display="true"]::-webkit-scrollbar-thumb {
+  background: rgba(110, 106, 95, .35);
+  border-radius: 999px;
+}
+
+
 /* ===================== Legendas e fontes ===================== */
 .quarto-figure figcaption,
 .quarto-figure .quarto-figure-attribution,
@@ -452,10 +524,27 @@ a:visited {
 }
 
 
+/* ===================== Tablets ===================== */
 @media (max-width: 992px) {
   #quarto-content .page-column,
   main#quarto-document-content {
     max-width: min(100%, 96ch) !important;
+  }
+
+  /*
+    Reduz as equações e alinha as expressões longas
+    à esquerda para facilitar a rolagem.
+  */
+  mjx-container[display="true"] {
+    font-size: 86% !important;
+    text-align: left !important;
+  }
+
+  .math.display,
+  .MathJax_Display,
+  mjx-container[display="true"] {
+    margin: 1rem auto !important;
+    padding-bottom: 0.4rem;
   }
 }
 
@@ -560,6 +649,24 @@ a:visited {
   }
 
 
+  /* Equações em bloco no celular */
+  mjx-container[display="true"] {
+    font-size: 76% !important;
+    text-align: left !important;
+  }
+
+  .math.display,
+  .MathJax_Display,
+  mjx-container[display="true"] {
+    width: 100%;
+    max-width: 100%;
+    margin: 0.9rem 0 !important;
+    padding: 0.25rem 0 0.45rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+
   /* Tabelas matriciais no celular */
   .tabela-matriz-container {
     width: 100%;
@@ -626,6 +733,16 @@ a:visited {
     padding: 0.7rem 0.75rem !important;
   }
 
+  /*
+    Redução adicional apenas para equações em bloco.
+
+    A matemática inserida no meio dos parágrafos
+    não é afetada.
+  */
+  mjx-container[display="true"] {
+    font-size: 68% !important;
+  }
+
   .quarto-figure img,
   figure > img,
   p > img.img-fluid,
@@ -671,6 +788,14 @@ a:visited {
 
   #quarto-margin-sidebar .toc {
     font-size: 0.96rem;
+  }
+
+  /*
+    No modo paisagem há mais espaço horizontal,
+    então a redução pode ser um pouco menor.
+  */
+  mjx-container[display="true"] {
+    font-size: 78% !important;
   }
 
   .quarto-figure img,

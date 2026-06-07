@@ -167,7 +167,7 @@
     "href": "04_aplicacao_modelo_simulacao.html#sec-configuracao-jogos",
     "title": "4  Aplicação do Modelo de Simulação",
     "section": "",
-    "text": "\\(p_i\\) é o preço escolhido pelo vendedor, podendo ser \\(p_1 = 45\\) ou \\(p_2 = 35\\);\n\\(s_2\\) representa a estratégia escolhida pelo comprador.\n\n\n\n\n\n\n\n\n\n\nTabela 4.1: Matriz de ganhos do jogo BSG\n\n\n\n\n\n\n\n\nComprador\n\n\n\n\n\n\nEstratégia\n\n\nAceitar\n\n\nRejeitar\n\n\n\n\n\n\nVendedor\n\n\nPreço Alto (p_1 = 45)\n\n\np_1 - C, V - p_1\n\n\n0, 0\n\n\n\n\nPreço Baixo (p_2 = 35)\n\n\np_2 - C, V - p_2\n\n\n0, 0\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 4.2: Matriz de ganhos do jogo MEG\n\n\n\n\n\n\n\n\n\nEmpresa B\n\n\n\n\n\n\nEstratégia\n\n\nNão Entrar\n\n\nEntrar\n\n\n\n\n\n\nEmpresa A\n\n\nNão Entrar\n\n\n0, 0\n\n\n0, 5\n\n\n\n\nEntrar\n\n\n5, 0\n\n\n-1, -1",
+    "text": "\\(p_i\\) é o preço escolhido pelo vendedor, podendo ser \\(p_1 = 45\\) ou \\(p_2 = 35\\);\n\\(s_2\\) representa a estratégia escolhida pelo comprador.\n\n\n\n\n\n\n\n\n\n\nTabela 4.1: Matriz de ganhos do jogo BSG\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabela 4.2: Matriz de ganhos do jogo MEG",
     "crumbs": [
       "Capítulos",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Aplicação do Modelo de Simulação</span>"
@@ -200,7 +200,7 @@
     "href": "05_resultados.html#sec-trajetorias-estabilidade",
     "title": "5  Resultados",
     "section": "",
-    "text": "Tabela 5.1: Taxa de estabilidade em porcentagem nos jogos BSG e MEG por modelo\n\n\n\n\n\n\n\nTaxa de estabilidade em porcentagem nos jogos BSG e MEG por modelo",
+    "text": "Tabela 5.1: Taxa de estabilidade em porcentagem nos jogos BSG e MEG por modelo",
     "crumbs": [
       "Capítulos",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Resultados</span>"
