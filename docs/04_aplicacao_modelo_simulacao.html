@@ -203,7 +203,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06_conclusao.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Considerações Finais</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -324,7 +324,7 @@ Fonte: Elaborado pelo autor (2026).
 <p>Nesse caso, o Vendedor adota uma estratégia pura, ao passo que o Comprador utiliza uma estratégia mista, o que caracteriza um equilíbrio misto assimétrico no jogo. Segundo <span class="citation" data-cites="john2005learning">Duffy e Hopkins (2005)</span>, equilíbrios mistos assimétricos ocorrem quando alguns jogadores seguem estratégias puras e outros distribuem suas escolhas entre diferentes alternativas, ou quando todos misturam suas estratégias, mas com probabilidades distintas. Em equilíbrios mistos simétricos, por outro lado, todos os jogadores distribuem suas escolhas entre as mesmas estratégias e com as mesmas probabilidades, de modo que o padrão estratégico entre eles se torna equivalente.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<div id="fig-ch4-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.1: Equilíbrio das probabilidades associadas às estratégias mistas dos jogadores no jogo BSG
@@ -366,7 +366,7 @@ Fonte: Elaborado pelo autor (2026).
 <p>A Figura <a href="#fig-ch4-2" class="quarto-xref">Figura&nbsp;<span>4.2</span></a> mostra as probabilidades de as empresas não entrarem no mercado. No eixo X, é mostrada a probabilidade de a Empresa A não entrar, enquanto o eixo Y exibe a probabilidade de a Empresa B não entrar. O ponto onde as linhas de melhores respostas se cruzam indica o equilíbrio de Nash em estratégias mistas, ou seja, quando a probabilidade de ambas as empresas não entrarem no mercado é de aproximadamente 16,67% (<span class="math inline">\(p =\)</span> 0,1667). Em contrapartida, tanto a Empresa A quanto a Empresa B escolhem entrar no mercado com uma probabilidade de 83,33% (<span class="math inline">\(1 - p =  0,8333\)</span>). Esse equilíbrio, ao contrário do primeiro jogo, configura-se como simétrico, pois ambas as empresas estão randomizando suas estratégias com probabilidades iguais, ajustando-se às incertezas relacionadas às decisões da concorrente.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<div id="fig-ch4-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.2: Equilíbrio das probabilidades associadas às estratégias mistas dos jogadores no jogo MEG
@@ -384,7 +384,7 @@ Fonte: Elaborado pelo autor (2026).
 <p>A Figura <a href="#fig-ch4-3" class="quarto-xref">Figura&nbsp;<span>4.3</span></a> ilustra o processo de criação das matrizes, subdivididas nas Figuras (a) e (b), que representam os modelos BSG e MEG, respectivamente. Nos parâmetros da função <em>normal form</em> do pacote <em>Rgamer</em>, especificam-se os jogadores em <em>players</em>, as estratégias dos jogadores 1 e 2 em <em>s1</em> e <em>s2</em>, e os respectivos ganhos em <em>payoffs1</em> e <em>payoffs2</em>.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<div id="fig-ch4-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.3: Rotina de programação das matrizes BSG e MEG
@@ -406,7 +406,7 @@ Fonte: Elaborado pelo autor (2026).
 <p>A implementação dos algoritmos de aprendizado EWA, RL e BL foi realizada utilizando a função <em>sim learning</em>, com os parâmetros configurados conforme ilustrado na Figura <a href="#fig-ch4-4" class="quarto-xref">Figura&nbsp;<span>4.4</span></a>. Os intervalos utilizados para <span class="math inline">\(\phi\)</span> e <span class="math inline">\(\delta\)</span> foram baseados no estudo de <span class="citation" data-cites="JOSEPHSON20081569">Josephson (2008)</span>, que empregou o modelo EWA em jogos de matriz <span class="math inline">\(2 \times 2\)</span> e adotou o método de máxima verossimilhança para estimar os parâmetros, ajustando os valores de <span class="math inline">\(\phi\)</span> e <span class="math inline">\(\delta\)</span> para minimizar a discrepância entre as previsões do modelo e os comportamentos observados. Os intervalos estimados foram de 0,5 a 0,75 para <span class="math inline">\(\phi\)</span>, e de 0,5 a 1 para <span class="math inline">\(\delta\)</span>. A abordagem permitiu identificar esses intervalos como os que melhor representavam o aprendizado em jogos <span class="math inline">\(2 \times 2\)</span>.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<div id="fig-ch4-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.4: Configuração dos algoritmos de aprendizagem

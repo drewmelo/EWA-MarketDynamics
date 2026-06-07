@@ -203,7 +203,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06_conclusao.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusão</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Considerações Finais</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -242,6 +242,9 @@ window.Quarto = {
    
   <ul>
   <li><a href="#sec-trajetorias-estabilidade" id="toc-sec-trajetorias-estabilidade" class="nav-link active" data-scroll-target="#sec-trajetorias-estabilidade"><span class="header-section-number">5.1</span> Trajetórias de escolha e estabilidade do aprendizado</a></li>
+  <li><a href="#sec-dispersao-atracoes" id="toc-sec-dispersao-atracoes" class="nav-link" data-scroll-target="#sec-dispersao-atracoes"><span class="header-section-number">5.2</span> Dispersão das atrações e probabilidades de escolha</a></li>
+  <li><a href="#sec-estrutura-distributiva" id="toc-sec-estrutura-distributiva" class="nav-link" data-scroll-target="#sec-estrutura-distributiva"><span class="header-section-number">5.3</span> Estrutura distributiva das probabilidades</a></li>
+  <li><a href="#sec-aderencia-equilibrio" id="toc-sec-aderencia-equilibrio" class="nav-link" data-scroll-target="#sec-aderencia-equilibrio"><span class="header-section-number">5.4</span> Aderência ao equilíbrio teórico</a></li>
   </ul>
 </nav>
     </div>
@@ -393,6 +396,285 @@ Tabela&nbsp;5.1: Taxa de estabilidade em porcentagem nos jogos BSG e MEG por mod
 <p class="quarto-figure-attribution">
 Nota: A estabilidade refere-se à persistência das proporções ao longo do tempo dentro de um intervalo de variação reduzido. Tal medida não implica convergência para estratégias de equilíbrio, podendo refletir padrões estacionários sem direcionamento estratégico, como observado no modelo RL. Fonte: Elaborado pelo autor (2026).
 </p>
+</section>
+<section id="sec-dispersao-atracoes" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="sec-dispersao-atracoes"><span class="header-section-number">5.2</span> Dispersão das atrações e probabilidades de escolha</h2>
+<p>A Tabela <a href="#tbl-ch5-4" class="quarto-xref">Tabela&nbsp;<span>5.2</span></a> mostra que, no modelo EWA, as atrações no BSG partem de valores mais elevados e dispersos, com média próxima de 4 e alto intervalo interquartil. À medida que <span class="math inline">\(\lambda\)</span> aumenta, esses valores convergem para níveis mais baixos e homogêneos. Com maior sensibilidade às diferenças entre atrações, os agentes passam a concentrar suas escolhas nas estratégias relativamente mais atrativas. A exploração diminui, os padrões de decisão se consolidam e, por isso, o desvio padrão e o intervalo interquartil caem até zero. Esse comportamento é compatível com a estrutura do BSG, que favorece a formação de um padrão decisório mais estável. No MEG, ocorre o movimento oposto. As médias aumentam e o intervalo interquartil se expande, sinalizando maior dispersão das atrações. Diferentemente do BSG, o MEG não conduz a um único padrão dominante. A competição estratégica admite múltiplas respostas, pois a decisão de entrar ou não entrar depende das expectativas sobre a escolha da outra empresa. Nesse ambiente, o aumento de <span class="math inline">\(\lambda\)</span> não produz convergência teórica. Ele amplifica diferenças iniciais entre os agentes. Parte deles reforça de maneira consistente a decisão de entrar no mercado, enquanto outra parte passa a evitar essa estratégia. O resultado são trajetórias mais heterogêneas, coerentes com a natureza estratégica do jogo.</p>
+<div id="tbl-ch5-4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.2: Medidas-resumo das atrações no modelo EWA para variações de <span class="math inline">\(\lambda\)</span> entre 0,1 e 1
+</figcaption>
+<div aria-describedby="tbl-ch5-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>No modelo de aprendizado por reforço, conforme a Tabela <a href="#tbl-ch5-5" class="quarto-xref">Tabela&nbsp;<span>5.3</span></a>, aparece um padrão distinto daquele observado nos demais modelos. As atrações permanecem em níveis elevados e com alta dispersão ao longo de todo o intervalo de <span class="math inline">\(\lambda\)</span>. No BSG, as médias seguem altas e instáveis, enquanto o desvio padrão e o intervalo interquartil também assumem valores elevados. Esse comportamento aponta para forte heterogeneidade entre os agentes e para a ausência de uma direção comum das decisões. As medianas, bem inferiores às médias, revelam uma distribuição assimétrica. Poucos agentes acumulam valores muito altos de atração, provavelmente porque determinadas estratégias bem-sucedidas passam a ser reforçadas de forma contínua. No MEG, as médias são um pouco mais estáveis, mas a dispersão continua elevada, com crescimento gradual do intervalo interquartil. O aumento de <span class="math inline">\(\lambda\)</span>, portanto, não produz alinhamento das decisões. O resultado, no entanto, é coerente com a própria lógica do RL, em que o aprendizado depende apenas dos <em>payoffs</em> realizados, sem incorporação de crenças nem avaliação contrafactual. Cada agente reforça sua trajetória a partir da experiência individual acumulada, o que amplia diferenças internas e dificulta a formação de um padrão comum.</p>
+<div id="tbl-ch5-5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.3: Medidas-resumo das atrações no modelo RL para variações de <span class="math inline">\(\lambda\)</span> entre 0,1 e 1
+</figcaption>
+<div aria-describedby="tbl-ch5-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_5.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>No modelo baseado em crenças, conforme a Tabela <a href="#tbl-ch5-6" class="quarto-xref">Tabela&nbsp;<span>5.4</span></a>, o BSG apresenta outro movimento. As atrações médias caem de 3 para 0 à medida que <span class="math inline">\(\lambda\)</span> cresce. O desvio padrão também diminui, de 5 para 1, e o intervalo interquartil recua de 8 para 1. A redução conjunta dessas medidas aponta para uma convergência mais forte das decisões. Com maior sensibilidade às diferenças de atração, os agentes ajustam suas escolhas a partir de crenças mais alinhadas sobre o comportamento do oponente, reduzindo a dispersão do aprendizado. As medianas nulas ao longo de todo o intervalo acrescentam uma nuance importante. A maior parte dos agentes se aproxima de níveis baixos de atração, enquanto poucos sustentam valores elevados. O padrão resultante é mais conservador, guiado pela estabilização das expectativas formadas nas interações passadas. No MEG, a dinâmica é menos convergente. As médias oscilam entre 1 e 1,2, enquanto o intervalo interquartil aumenta de 2 para 3. Em um ambiente de competição estratégica, o ajuste das crenças não leva necessariamente à uniformidade. A decisão ótima depende da expectativa sobre a ação do outro jogador, e pequenas diferenças nas crenças individuais podem ganhar expressividade quando <span class="math inline">\(\lambda\)</span> aumenta. As medianas positivas, embora decrescentes, apontam para uma convergência apenas parcial, acompanhada de heterogeneidade crescente na forma como os agentes avaliam o retorno esperado.</p>
+<div id="tbl-ch5-6" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.4: Medidas-resumo das atrações no modelo BL para variações de <span class="math inline">\(\lambda\)</span> entre 0,1 e 1
+</figcaption>
+<div aria-describedby="tbl-ch5-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_6.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>As probabilidades médias permitem observar como as diferenças encontradas nas atrações aparecem nas escolhas efetivas dos agentes. No BSG, EWA e BL reproduzem o padrão adaptativo já apontado pelas medidas de atração. À medida que <span class="math inline">\(\lambda\)</span> aumenta, os agentes passam a responder com maior intensidade às estratégias relativamente mais vantajosas. O Vendedor, representado por P1, tende a sustentar o preço mais rentável. O Comprador, representado por P2, reage à incerteza da transação reforçando a rejeição.</p>
+<p>Na Tabela <a href="#tbl-ch5-7" class="quarto-xref">Tabela&nbsp;<span>5.5</span></a>, esse comportamento aparece de forma discriminável no EWA. A probabilidade média de Preço Alto aumenta de 0,708, em <span class="math inline">\(\lambda = 0{,}1\)</span>, para 0,864, em <span class="math inline">\(\lambda = 1\)</span>. No mesmo intervalo, Rejeitar cresce de 0,549 para 0,940. O BL segue direção próxima. Preço Alto passa de 0,625 para 0,797, enquanto Rejeitar avança de 0,493 para 0,870. O aprendizado baseado em crenças também aproxima os agentes da lógica estratégica do BSG, embora com menor intensidade que o EWA. O RL apresenta outro perfil, dado que suas probabilidades permanecem próximas de 1 em quase todo o intervalo, com valores entre 0,997 e 0,998 para o Vendedor e entre 0,960 e 0,996 para o Comprador. Os valores do RL apontam para um reforço muito intenso, mas pouco discriminativo entre as alternativas. Por isso, as probabilidades médias reforçam uma diferença importante entre os modelos, de que EWA e BL captam melhor a relação entre preço elevado, risco de aceitação e recusa da transação. O RL tende a reproduzir um padrão mais mecânico de reforço, menos sensível à estrutura estratégica do jogo.</p>
+<div id="tbl-ch5-7" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.5: Probabilidades médias das estratégias no BSG segundo modelo de aprendizagem e <span class="math inline">\(\lambda\)</span>
+</figcaption>
+<div aria-describedby="tbl-ch5-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_7.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>No MEG, as escolhas aparecem menos concentradas, como mostra a Tabela <a href="#tbl-ch5-8" class="quarto-xref">Tabela&nbsp;<span>5.6</span></a>. A decisão de entrar ou permanecer fora do mercado envolve a avaliação da própria posição estratégica diante da possível ação da concorrente. Como o ganho da entrada depende da escolha da outra empresa, a interdependência do jogo reduz a polarização das trajetórias e preserva a presença de estratégias alternativas ao longo das simulações. Na Tabela <a href="#tbl-ch5-8" class="quarto-xref">Tabela&nbsp;<span>5.6</span></a>, em que P1 representa a Empresa A e P2 a Empresa B, o EWA registra aumento da probabilidade média de Entrar para ambas. Na Empresa A, a probabilidade passa de 0,570, em <span class="math inline">\(\lambda = 0{,}1\)</span>, para 0,844, em <span class="math inline">\(\lambda = 1\)</span>. Na Empresa B, cresce de 0,570 para 0,867.</p>
+<p>A maior frequência de Entrar não retira Não Entrar da disputa estratégica. No EWA, essa alternativa também aumenta, passando de 0,444 para 0,787 na Empresa A e de 0,444 para 0,785 na Empresa B. O avanço de <span class="math inline">\(\lambda\)</span> separa melhor as trajetórias, embora permaneça a tensão entre ocupar o mercado e evitar a competição direta. No BL, Entrar cresce de modo mais moderado, de 0,543 para 0,762 na Empresa A e de 0,544 para 0,779 na Empresa B. Não Entrar continua abaixo de Entrar, mas também se eleva no final do intervalo. O RL mantém probabilidades altas para as duas estratégias, em geral acima de 0,92 e próximas de 0,99 quando <span class="math inline">\(\lambda = 1\)</span>.</p>
+<div id="tbl-ch5-8" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.6: Probabilidades médias das estratégias no MEG segundo modelo de aprendizagem e <span class="math inline">\(\lambda\)</span>
+</figcaption>
+<div aria-describedby="tbl-ch5-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>Reaparece, em vista disso, o reforço intenso e pouco seletivo já observado no BSG. EWA e BL captam melhor a instabilidade característica do MEG, assim como haviam registrado com mais precisão o ajuste adaptativo no BSG. A diferença está na forma assumida por esse ajuste. No BSG, as escolhas se concentram com maior nitidez, pois o Vendedor reforça Preço Alto e o Comprador reforça Rejeitar. No MEG, a resposta é menos definida, já que Entrar aumenta com <span class="math inline">\(\lambda\)</span>, mas Não Entrar continua presente na estrutura de decisão porque permanece ligado ao risco de competição simultânea entre as empresas.</p>
+</section>
+<section id="sec-estrutura-distributiva" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="sec-estrutura-distributiva"><span class="header-section-number">5.3</span> Estrutura distributiva das probabilidades</h2>
+<p>As Figuras <a href="#fig-ch5-6" class="quarto-xref">Figura&nbsp;<span>5.6</span></a> e <a href="#fig-ch5-7" class="quarto-xref">Figura&nbsp;<span>5.7</span></a> apresentam histogramas facetados pelos valores de <span class="math inline">\(\lambda\)</span>. O eixo horizontal registra as probabilidades de escolha, enquanto o eixo vertical informa a densidade das observações. As barras mostram a distribuição dessas probabilidades entre os agentes em cada modelo. As linhas pontilhadas marcam as medianas e ajudam a acompanhar o deslocamento típico das escolhas conforme <span class="math inline">\(\lambda\)</span> aumenta. Com isso, os histogramas acrescentam uma camada à análise das médias, pois permitem observar a dispersão das probabilidades em cada jogo.</p>
+<p>No BSG, representado pela Figura <a href="#fig-ch5-6" class="quarto-xref">Figura&nbsp;<span>5.6</span></a>, o EWA apresenta, em <span class="math inline">\(\lambda = 0{,}1\)</span>, uma distribuição relativamente regular, concentrada entre 0,50 e 0,70. A maior presença de probabilidades intermediárias aponta para heterogeneidade moderada e exploração mais ampla das estratégias disponíveis. Com o aumento de <span class="math inline">\(\lambda\)</span>, a distribuição se amplia e parte das observações se desloca para valores mais altos, próximos de 0,80 e 1,00. As escolhas dos agentes passam a se diferenciar com mais intensidade. O BL preserva uma distribuição mais ordenada, embora assimétrica, com concentração em probabilidades intermediárias e altas. O RL segue outra configuração, já que suas observações permanecem enviesadas para o limite superior, próximas de 1 em quase todos os incrementos de <span class="math inline">\(\lambda\)</span>. O reforço opera de maneira intensa, porém pouco seletiva entre alternativas. No BSG, a partir disso, o aumento de <span class="math inline">\(\lambda\)</span> não altera apenas médias e medianas, também reorganiza-se a forma da distribuição, reduzindo a presença de probabilidades intermediárias e tornando as escolhas mais sensíveis às atrações acumuladas.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch5-6" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch5-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5.6: Distribuição das probabilidades de escolha por modelo no BSG
+</figcaption>
+<div aria-describedby="fig-ch5-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_13.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>A Figura <a href="#fig-ch5-7" class="quarto-xref">Figura&nbsp;<span>5.7</span></a> mostra que o MEG produz distribuições mais espalhadas do que o BSG. No EWA, as probabilidades partem de uma estrutura mais organizada em valores intermediários, mas se dispersam conforme <span class="math inline">\(\lambda\)</span> aumenta, com presença crescente em faixas médias e altas. O BL segue dinâmica semelhante, porém com assimetria mais marcada, sinalizando que as crenças acumuladas ampliam a diferenciação entre as trajetórias dos agentes. O RL novamente permanece “espremido” próximo de 1 em quase todos os incrementos, além de repetir o padrão de reforço intenso e pouco discriminativo. A diferença central em relação ao BSG está no fato de que, no MEG, a concentração não elimina a dispersão. Mesmo quando as medianas avançam para valores mais altos, ainda existe densidade relevante entre 0,40 e 0,80, sobretudo no EWA e no BL. O jogo de entrada em mercado preserva, portanto, trajetórias mais heterogêneas. A escolha entre Entrar e Não Entrar continua condicionada pela expectativa sobre o comportamento da concorrente, o que dificulta a formação de um padrão único de decisão.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch5-7" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch5-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5.7: Distribuição das probabilidades de escolha por modelo no MEG
+</figcaption>
+<div aria-describedby="fig-ch5-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_14.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>A Figura <a href="#fig-ch5-8" class="quarto-xref">Figura&nbsp;<span>5.8</span></a> apresenta as distribuições acumuladas empíricas das probabilidades de escolha das estratégias associadas ao equilíbrio teórico dos dois jogos. A figura está organizada em dois pares de comparação. Nos painéis (a1), (a2) e (a3), compara-se a probabilidade de o Comprador escolher “Rejeitar” no BSG com a probabilidade de a Empresa A escolher “Entrar” no MEG, considerando os modelos EWA, RL e BL. Nos painéis (b1), (b2) e (b3), a comparação envolve a probabilidade de o Vendedor escolher “Preço Alto” no BSG e a probabilidade de a Empresa B escolher “Entrar” no MEG. Como cada jogador possui apenas duas estratégias, observar uma delas também informa o comportamento da alternativa, já que o aumento da probabilidade de uma escolha implica a redução da outra.</p>
+<p>No eixo horizontal, estão as probabilidades individuais de adoção da estratégia selecionada, variando de 0, quando a estratégia não é escolhida, a 1, quando é sempre escolhida. O eixo vertical mostra a fração acumulada de observações até cada ponto, isto é, a proporção de casos com probabilidade de escolha menor ou igual ao valor indicado. Curvas próximas revelam distribuições semelhantes entre os jogos. Afastamentos maiores mostram que o modelo organiza as probabilidades de modo diferente nos papéis estratégicos comparados.</p>
+<p>A amostra de 200 mil observações por grupo foi adotada por razões computacionais e gráficas. A base completa contém milhões de observações, o que tornaria a construção das curvas mais custosa e visualmente redundante. A amostragem aleatória por grupo preserva a estrutura das comparações entre modelos e jogos, enquanto o tamanho amostral elevado reduz a instabilidade associada ao sorteio.</p>
+<p>Nos painéis (a1), (a2) e (a3), a comparação entre BSG e MEG mostra que os modelos de aprendizagem alteram não apenas o nível das probabilidades, mas também o formato das distribuições. No EWA, painel (a1), o BSG aparece mais polarizado. Entre as observações do Comprador, 32,6% estão entre 0 e 0,1, e outros 32,6% entre 0,9 e 1. No MEG, esses percentuais são menores, de 20,7% e 20,6%. O EWA, portanto, gera mais trajetórias extremas de rejeição no BSG, enquanto a Empresa A no MEG conserva maior presença em faixas intermediárias. No RL, painel (a2), o padrão é mais rígido. Quase metade das observações aparece em cada extremo, tanto no BSG quanto no MEG, com participação residual nas faixas centrais. As curvas quase se sobrepõem e assumem formato em degrau, traço de uma dinâmica de reforço pouco sensível às diferenças entre os jogos. No BL, painel (a3), o contraste é mais visível. O BSG mantém concentração nos extremos, mas também acumula massa nas faixas adjacentes, como 0,1–0,2 e 0,8–0,9, o que ajuda a explicar a curva mais irregular. O MEG, por sua vez, concentra-se mais no centro, prioritariamente entre 0,4 e 0,6.</p>
+<p>Nos painéis (b1), (b2) e (b3), a comparação entre o Vendedor no BSG e a Empresa B no MEG também revela importantes diferenças na forma das distribuições. No EWA, painel (b1), o BSG apresenta maior concentração em probabilidades intermediárias, com 18,7% das observações entre 0,4 e 0,5 e 18,2% entre 0,5 e 0,6. Os extremos concentram cerca de 24,1%. No MEG, a distribuição da Empresa B é mais polarizada, com 20,8% das observações entre 0 e 0,1 e 21,0% entre 0,9 e 1, embora ainda haja presença relevante nas faixas centrais. No RL, painel (b2), repete-se o padrão extremo do modelo. No BSG, 49,7% das observações estão entre 0 e 0,1, e 49,8% entre 0,9 e 1. No MEG, os valores são muito próximos, com 48,8% e 48,7%. A quase ausência de probabilidades intermediárias explica a sobreposição das curvas e o formato em degrau. No BL, painel (b3), o contraste entre os jogos é mais forte. O BSG concentra a maior parte das observações em duas faixas específicas, 0,3–0,4 e 0,6–0,7, ambas com cerca de 36,8%, formando uma distribuição em blocos, pouco concentrada nos extremos. No MEG, a Empresa B se concentra mais nas faixas centrais. As maiores participações aparecem entre 0,4–0,5 e 0,5–0,6, com 19,0% e 18,6%.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch5-8" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch5-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5.8: Distribuições acumuladas empíricas das probabilidades de escolha das estratégias associadas ao equilíbrio teórico nos jogos BSG e MEG
+</figcaption>
+<div aria-describedby="fig-ch5-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_15.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>A comparação dos painéis bem separa o comportamento dos modelos. O RL concentra as probabilidades nos limites, tanto no BSG quanto no MEG, e com isso reduz a distinção entre os dois ambientes estratégicos. EWA e BL preservam diferenças mais visíveis entre os papéis analisados. No BL, o BSG apresenta uma distribuição mais segmentada, enquanto o MEG permanece mais concentrado nas faixas centrais. Esse formato combina com a estrutura do jogo de entrada, em que a decisão de cada empresa depende da expectativa sobre a ação da concorrente e tende a manter maior espaço para respostas intermediárias.</p>
+<p>O teste de Kolmogorov-Smirnov aponta diferenças estatisticamente significativas entre as distribuições em todos os casos. Como as simulações geram um número elevado de observações e há empates nas probabilidades, a análise se concentrou na estatística D, tomada como medida da distância distributiva entre os jogos. Nos painéis do EWA, as curvas do BSG e do MEG aparecem relativamente próximas, em especial no segundo par estratégico. Os valores de D acompanham essa proximidade: D = 0,139 para o par Comprador–Empresa A e D = 0,0969 para o par Vendedor–Empresa B.</p>
+<p>No RL, no entanto, a leitura do teste exige mais cautela. A Figura <a href="#fig-ch5-8" class="quarto-xref">Figura&nbsp;<span>5.8</span></a> mostra forte semelhança visual entre BSG e MEG, já que ambos concentram quase toda a distribuição nos extremos do intervalo. Mesmo assim, os valores de D são elevados, com D = 0,469 no primeiro par e D = 0,451 no segundo. A distância, nesse caso, parece estar menos ligada à tendência central ou ao desenho geral das curvas e mais à distribuição fina das massas acumuladas nos extremos. O teste com a distribuição complementar <span class="math inline">\((1-p)\)</span> produziu resultado semelhante, afastando a hipótese de que a diferença decorra apenas de uma inversão entre estratégias complementares. O teste de Kolmogorov-Smirnov aponta diferenças estatisticamente significativas entre as distribuições em todos os casos.</p>
+<p>A Figura <a href="#fig-ch5-9" class="quarto-xref">Figura&nbsp;<span>5.9</span></a> apresenta a evolução da distância KS (D) entre os modelos de aprendizagem, calculada separadamente por jogo, papel estratégico e valor de <span class="math inline">\(\lambda\)</span>. No painel (a), referente ao BSG, aparecem os resultados para o Comprador e para o Vendedor. Para o Comprador, a distância entre EWA e RL começa elevada, em torno de D = 0,493 quando <span class="math inline">\(\lambda = 0{,}1\)</span>, e cai de forma acentuada à medida que <span class="math inline">\(\lambda\)</span> aumenta, chegando a aproximadamente D = 0,279 em <span class="math inline">\(\lambda = 1\)</span>. A distribuição do EWA, nesse papel, aproxima-se da distribuição do RL quando cresce a sensibilidade às atrações. A comparação entre RL e BL permanece praticamente constante e elevada, próxima de D = 0,496. Já a distância entre EWA e BL ocupa uma faixa intermediária, entre D = 0,32 e D = 0,35. Para o Vendedor, ainda no BSG, as distâncias que envolvem o RL ficam quase no limite superior observado. EWA vs RL e RL vs BL permanecem em torno de D = 0,498 ao longo de todos os valores de <span class="math inline">\(\lambda\)</span>. A distância entre EWA e BL é menor, variando aproximadamente entre D = 0,214 e D = 0,283. Nesse papel estratégico, EWA e BL apresentam distribuições mais próximas entre si, enquanto o RL se mantém afastado dos dois modelos em praticamente toda a faixa de <span class="math inline">\(\lambda\)</span>.</p>
+<p>No painel (b), referente ao MEG, as distâncias apresentam comportamento semelhante para Empresa A e Empresa B. Nas duas empresas, as comparações EWA vs RL e RL vs BL permanecem elevadas, próximas de D = 0,48 a D = 0,49. O RL mantém, com isso, uma distribuição bastante afastada das distribuições geradas por EWA e BL. A variação mais visível aparece na comparação entre EWA e BL. Para a Empresa A, a distância parte de D = 0,270, cai levemente até cerca de D = 0,261 em <span class="math inline">\(\lambda = 0{,}3\)</span> e depois cresce até D = 0,355 em <span class="math inline">\(\lambda = 1\)</span>. Na Empresa B, a trajetória é parecida, saindo de D = 0,268 e chegando a D = 0,368 em <span class="math inline">\(\lambda = 1\)</span>. No MEG, o aumento de <span class="math inline">\(\lambda\)</span> amplia gradualmente a separação distributiva entre EWA e BL, enquanto o RL permanece distante dos demais modelos em quase todo o intervalo analisado.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch5-9" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch5-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5.9: Evolução da distância KS entre os modelos de aprendizagem nos jogos BSG e MEG
+</figcaption>
+<div aria-describedby="fig-ch5-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_16.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>As Figuras <a href="#fig-ch5-8" class="quarto-xref">Figura&nbsp;<span>5.8</span></a> e <a href="#fig-ch5-9" class="quarto-xref">Figura&nbsp;<span>5.9</span></a> cumprem funções complementares. A primeira compara os jogos dentro de cada modelo. A segunda desloca o foco para a comparação entre modelos dentro de cada jogo, acompanhando os diferentes valores de <span class="math inline">\(\lambda\)</span>. Na Figura <a href="#fig-ch5-8" class="quarto-xref">Figura&nbsp;<span>5.8</span></a>, o EWA apresenta as menores distâncias entre BSG e MEG nos dois pares estratégicos, seguido pelo BL. O RL registra os maiores valores de <span class="math inline">\(D\)</span>. A princípio, isso aponta para maior semelhança distributiva do EWA entre ambientes estratégicos distintos, enquanto o RL se mostra mais sensível às características específicas de cada jogo. A Figura <a href="#fig-ch5-9" class="quarto-xref">Figura&nbsp;<span>5.9</span></a> ajuda a qualificar essa leitura. O RL permanece distante dos demais modelos em quase todos os painéis, com <span class="math inline">\(D\)</span> próximo de 0,5, sinal de uma dinâmica mais polarizada e fortemente dependente dos <em>payoffs</em> efetivamente realizados.</p>
+<p>A exceção aparece no BSG para o Comprador. Nesse caso, a distância entre EWA e RL diminui conforme <span class="math inline">\(\lambda\)</span> aumenta. A decisão do Comprador é mais reativa à oferta e à valoração observada do bem. Com maior sensibilidade às atrações, o EWA se aproxima do padrão extremo produzido pelo RL. Para o Vendedor, a lógica é diferente. Como sua decisão exige antecipar a resposta do Comprador, o EWA permanece mais próximo do BL. Tal interpretação encontra respaldo conceitual em trabalhos recentes sobre precificação dinâmica, ainda que esses estudos adotem modelos distintos dos algoritmos EWA, RL e BL. Em estudos de <span class="citation" data-cites="liu2025contextual">Liu <em>et al.</em> (2025)</span>, os autores desenvolvem um modelo de precificação dinâmica contextual com compradores estratégicos, no qual os consumidores podem manipular características observadas para obter preços menores, cabendo ao vendedor aprender uma política de preços a partir de respostas binárias de compra. Já <span class="citation" data-cites="guo2024leveraging">Guo <em>et al.</em> (2024)</span> analisam um modelo de precificação online baseado em avaliações, no qual os compradores formam sua disposição a pagar a partir de reviews de agentes do mesmo tipo, enquanto o vendedor aprende a definir preços sem conhecer a distribuição dos tipos no mercado. Em ambos os casos, a decisão de compra depende de uma comparação entre preço, valoração percebida e informação disponível, enquanto a decisão do vendedor envolve antecipar como os compradores reagirão à política de preços.</p>
+<p>No MEG, a competição direta entre empresas e a presença de equilíbrios puros assimétricos, ao lado do equilíbrio misto simétrico, tornam a comparação entre modelos sensível à maneira como cada regra de aprendizagem trata a experiência estratégica. A literatura experimental sobre jogos de entrada ajuda a situar esse resultado. Em um <em>Market Entry Game</em> com 12 jogadores, <span class="citation" data-cites="erev1998coordination">Erev e Rapoport (1998)</span> mostram que regras simples de aprendizado por reforço podem aproximar o resultado agregado do equilíbrio mesmo quando os participantes dispõem de informação limitada. Os autores observam, porém, que o modelo básico de Roth-Erev perde poder explicativo quando os jogadores recebem informações sobre os <em>payoffs</em> dos demais, já que esse tipo de informação altera o número de entrantes. Esse limite do reforço puro é reforçado por <span class="citation" data-cites="john2005learning">Duffy e Hopkins (2005)</span>, que mostram, em <em>Market Entry Games</em> repetidos, que a aprendizagem tende a gerar <em>sorting</em>, com alguns agentes entrando de forma persistente e outros permanecendo fora. Esse processo ocorre mais rapidamente quando os jogadores observam as escolhas individuais dos demais, o que indica que a coordenação em jogos de entrada depende da avaliação do comportamento dos outros participantes.</p>
+<p>O contraponto entre regularidade agregada e diferenciação individual também aparece em <span class="citation" data-cites="kirman2023relaxing">Kirman e Laisney e Pezanis-Christou (2023)</span>. Em jogos de participação, os autores mostram que a taxa média de entrada pode se aproximar da previsão de equilíbrio mesmo quando os jogadores seguem padrões individuais bastante heterogêneos. A regularidade no agregado, nesse caso, convive com diferenças persistentes nas trajetórias de escolha.</p>
+<p>Esses argumentos ajudam a interpretar os dois jogos analisados, ainda que por caminhos diferentes. No BSG, a diferença passa pelos papéis do Comprador e do Vendedor, que aproximam o EWA de modelos distintos conforme a posição estratégica ocupada. No MEG, a interdependência da entrada aproxima EWA e BL, cuja distância distributiva é menor do que nas comparações envolvendo RL. A decisão de entrar depende da ação concorrente e da avaliação de alternativas não escolhidas, elementos que aparecem com mais intensidade nos modelos baseados em crenças ou em atrações ponderadas pela experiência. O reforço puro capta parte da adaptação gerada pelo <em>payoff</em> realizado, porém permanece mais preso ao ganho próprio observado. A distância entre os modelos varia com <span class="math inline">\(\lambda\)</span> e também com a estrutura do jogo, o papel do agente e o tipo de informação mobilizado na atualização das escolhas.</p>
+</section>
+<section id="sec-aderencia-equilibrio" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="sec-aderencia-equilibrio"><span class="header-section-number">5.4</span> Aderência ao equilíbrio teórico</h2>
+<p>A Tabela <a href="#tbl-ch5-9" class="quarto-xref">Tabela&nbsp;<span>5.7</span></a> apresenta a distribuição percentual agregada das probabilidades associadas às estratégias dos jogadores em cada jogo e modelo de aprendizagem. Em cada linha, as probabilidades das estratégias foram somadas e normalizadas para totalizar 100%. Os valores devem ser interpretados como participação relativa de cada estratégia no conjunto agregado de probabilidades produzido por cada modelo, sem associação direta a uma rodada específica da simulação. A linha “Total” resume a distribuição média sem separar EWA, RL e BL e serve como ponto de comparação para observar os desvios de cada dinâmica de aprendizagem.</p>
+<p>No BSG, a distribuição total se concentra mais em “Rejeitar” (36,8%) e “Preço Alto” (30,6%). Nos modelos EWA e BL, “Rejeitar” alcança 42,1%, acima da média agregada, e “Preço Alto” também aparece com maior presença em relação ao RL. O RL apresenta uma composição mais distribuída, com percentuais próximos entre as quatro estratégias, reduzindo a concentração nas alternativas que predominam nos demais modelos. No MEG, a distribuição entre as empresas é mais simétrica. EWA e BL concentram as escolhas em “Entrar”, com valores próximos de 31% para ambas as empresas. O RL se aproxima novamente de uma divisão quase uniforme entre Entrar e Não Entrar, com cerca de 25% em cada alternativa.</p>
+<p>No MEG, a simetria entre as empresas decorre do dilema estratégico comum às duas. A entrada pode gerar ganho individual quando a concorrente permanece fora do mercado, todavia também pode produzir perda quando ambas entram ao mesmo tempo. A distribuição percentual mostra como cada modelo organiza essa tensão. EWA e BL concentram maior participação nas estratégias associadas ao equilíbrio teórico, enquanto o RL mantém uma composição agregada mais balanceada, apesar da polarização observada nas distribuições completas. A Figura <span class="quarto-unresolved-ref">?fig-ap-19</span>, apresentada no Apêndice, reproduz a distribuição em barras empilhadas e permite comparar jogos, modelos e estratégias em uma mesma visualização.</p>
+<div id="tbl-ch5-9" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.7: Distribuição percentual das estratégias nos jogos BSG e MEG segundo modelo de aprendizagem
+</figcaption>
+<div aria-describedby="tbl-ch5-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_9.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>As frequências esperadas e os resíduos padronizados do teste <span class="math inline">\(\chi^2\)</span> foram utilizados como recursos descritivos para examinar a distribuição empírica das estratégias geradas pelos modelos de aprendizagem. As frequências esperadas correspondem aos valores que seriam observados caso a distribuição das estratégias não variasse conforme o modelo de aprendizagem. Os resíduos mostram quais estratégias aparecem acima ou abaixo desse padrão médio. Resíduos padronizados positivos significam que determinada estratégia aparece mais naquele modelo do que seria esperado sob independência entre modelo e estratégia. Resíduos negativos apontam o contrário. Como a base simulada possui elevado número de observações, os resíduos assumem magnitudes expressivas. Por isso, a interpretação recai principalmente sobre o sinal e sobre o padrão relativo dos desvios, não sobre sua magnitude absoluta. A fundamental compreensão desses desvios depende de um passo adicional, que implica verificar se as estratégias sobrerrepresentadas se aproximam das estratégias associadas aos equilíbrios teóricos do BSG e do MEG, conforme apresentado na Tabela <a href="#tbl-ch5-10" class="quarto-xref">Tabela&nbsp;<span>5.8</span></a>.</p>
+<p>No BSG, os resíduos padronizados separam o RL dos modelos EWA e BL. Em EWA e BL, os resíduos são positivos para “Preço Alto” e “Rejeitar” e negativos para “Aceitar” e “Preço Baixo”, o que mostra maior presença dessas duas primeiras estratégias em relação ao padrão esperado sob independência. O RL ocupa a direção oposta. Seus resíduos são positivos em “Aceitar” e “Preço Baixo” e negativos em “Preço Alto” e “Rejeitar”. Do ponto de vista teórico, EWA e BL concentram devida importância nas estratégias associadas ao padrão de equilíbrio considerado para o BSG, enquanto o RL desloca parte da distribuição para alternativas fora desse eixo.</p>
+<p>No MEG, os resíduos assumem uma configuração mais simétrica entre as empresas. EWA e BL apresentam resíduos positivos para “Entrar” tanto na Empresa A quanto na Empresa B, acompanhados de resíduos negativos para “Não Entrar”. No RL, a distribuição se reorganiza em torno da não entrada, com sub-representação de “Entrar” e sobrerrepresentação de “Não Entrar”. Como a parametrização do MEG atribui maior relevância teórica à entrada no equilíbrio misto, EWA e BL permanecem mais alinhados à direção estratégica prevista pelo jogo. O RL se distancia desse esboço agregado ao concentrar maior valor relativo na não entrada.</p>
+<div id="tbl-ch5-10" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;5.8: Frequências esperadas e resíduos padronizados do teste <span class="math inline">\(\chi^2\)</span> nos jogos BSG e MEG
+</figcaption>
+<div aria-describedby="tbl-ch5-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_10.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>A Figura <a href="#fig-ch5-10" class="quarto-xref">Figura&nbsp;<span>5.10</span></a> apresenta a distância média ao alvo teórico nos jogos BSG e MEG para os modelos EWA, RL e BL ao longo dos valores de <span class="math inline">\(\lambda\)</span>. O eixo horizontal representa a sensibilidade do aprendizado. O eixo vertical mostra a distância média entre a proporção simulada e a probabilidade teórica definida para as estratégias de referência. No BSG, consideram-se “Rejeitar” para o Comprador e “Preço Alto” para o Vendedor. No MEG, a referência é “Entrar” para as duas empresas, com alvo teórico de <span class="math inline">\(5/6\)</span>. A medida corresponde à diferença absoluta entre a proporção observada e o alvo teórico, <span class="math inline">\(|p_t - p^*|\)</span>, resumida por jogo, modelo e valor de <span class="math inline">\(\lambda\)</span>.</p>
+<p>No BSG, EWA e BL reduzem gradualmente a distância em relação ao alvo teórico conforme <span class="math inline">\(\lambda\)</span> aumenta. O RL, por sua vez, permanece mais afastado da referência. A trajetória das distâncias aponta que modelos com crenças, memória e avaliação ampliada da experiência captam melhor o aprendizado associado às estratégias esperadas do jogo. A aproximação ao alvo teórico, porém, não implica comportamento idêntico entre Comprador e Vendedor. O Comprador reage de forma mais direta à relação entre preço, valoração e aceitação da oferta. O Vendedor precisa antecipar a resposta do outro agente antes de definir o preço. Quando a aderência ao alvo teórico é tomada como critério, EWA e BL organizam melhor essas diferenças de papel em torno das estratégias de referência. O RL, restrito ao reforço dos resultados realizados, capta parte da adaptação, contudo se ajusta com menor precisão ao padrão teórico agregado.</p>
+<p>No MEG, a distância ao alvo teórico varia sem seguir uma direção única. O BL apresenta a maior aderência relativa entre os três modelos. O EWA se aproxima da referência nos valores iniciais de <span class="math inline">\(\lambda\)</span>, todavia volta a se afastar quando a sensibilidade às atrações aumenta. A inflexão observada relaciona-se com a estrutura do jogo. A decisão de entrar depende do ganho realizado em cada rodada, da expectativa sobre a ação concorrente e do risco de entrada simultânea. Como o alvo teórico corresponde a uma probabilidade mista, valores elevados de <span class="math inline">\(\lambda\)</span> podem tornar o aprendizado mais reativo às diferenças acumuladas nas trajetórias e menos próximo da randomização esperada. O BL preserva maior proximidade com a referência porque atualiza as escolhas a partir de crenças sobre o comportamento da outra empresa. O EWA também permanece relativamente próximo, pois combina reforço e avaliação de alternativas não escolhidas, embora responda com maior intensidade às atrações acumuladas quando <span class="math inline">\(\lambda\)</span> aumenta. O RL fica mais distante por se apoiar no <em>payoff</em> próprio observado, e consequentemente, com menor alcance para representar a antecipação estratégica exigida pela entrada em mercado.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ch5-10" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch5-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5.10: Distância média ao alvo teórico por modelo de aprendizagem nos jogos BSG e MEG
+</figcaption>
+<div aria-describedby="fig-ch5-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_17.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>Embora este estudo não trate diretamente da formação de expectativas macroeconômicas, os resultados se aproximam da discussão de <span class="citation" data-cites="dizioli2024adaptive">Dizioli e Wang (2024)</span>, que estimam um modelo DSGE (<em>Dynamic Stochastic General Equilibrium</em>) com aprendizagem adaptativa para o Brasil entre 2000 e 2019. O parâmetro de aprendizado estimado para o Brasil foi de 0,78, acima do valor encontrado para os Estados Unidos, de 0,48. Para os autores, esse resultado aponta maior velocidade de aprendizado e maior dependência das expectativas brasileiras em relação aos resultados observados, de modo que choques inflacionários desfavoráveis tendem a deslocar as expectativas com mais intensidade e antecedência. Ainda que os modelos sejam distintos, essa implicação se aproxima dos achados deste trabalho. Regras de aprendizagem mais reativas podem responder rapidamente ao ambiente, mas também produzir menor aderência ao padrão teórico quando a atualização se apoia de forma excessiva nos resultados observados. No BSG, em que há ruído exógeno na valoração do bem, a distância do RL ao alvo teórico varia de forma mais irregular ao longo dos valores de <span class="math inline">\(\lambda\)</span> e se mantém acima das distâncias observadas em EWA e BL. O reforço puro capta parte da adaptação aos <em>payoffs</em> realizados, ainda assim tende a reagir de forma menos estável quando o ambiente combina flutuações externas e decisões interdependentes.</p>
+<p>Um paralelo mais direto aparece em <span class="citation" data-cites="hong2021learning">Hong e Moinas e Pouget (2021)</span>, que analisam bolhas especulativas por meio de uma versão simplificada do EWA e distinguem o aprendizado por reforço, baseado nas ações escolhidas, do aprendizado baseado em crenças, associado à avaliação de ações não escolhidas. Os autores identificam o reforço como mecanismo predominante no experimento, embora ele não conduza necessariamente ao equilíbrio no curto prazo. Quando o jogo exige mais etapas de raciocínio, a experiência pode ampliar a especulação, já que os agentes passam a explorar erros esperados dos demais participantes. A diferença entre experiência realizada e avaliação estratégica ajuda a interpretar os resultados simulados deste trabalho. A experiência realizada gera adaptação, ainda que sua capacidade de aproximar os agentes do equilíbrio dependa da estrutura do jogo e do tipo de informação incorporado pela regra de aprendizagem.</p>
+<p>A experiência recente ou realizada, nas expectativas macroeconômicas e nas interações estratégicas, pode gerar adaptação sem aderência plena ao padrão teórico. Nos resultados deste estudo, EWA e BL ficam mais próximos das estratégias associadas aos equilíbrios analisados porque incorporam memória, avaliação contrafactual e formação de crenças.</p>
 
 
 </section>
@@ -805,8 +1087,8 @@ Nota: A estabilidade refere-se à persistência das proporções ao longo do tem
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./06_conclusao.html" class="pagination-link" aria-label="Conclusão">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Conclusão</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./06_conclusao.html" class="pagination-link" aria-label="Considerações Finais">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Considerações Finais</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
