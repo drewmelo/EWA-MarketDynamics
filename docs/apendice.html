@@ -71,6 +71,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles/styles.css">
 </head>
@@ -231,6 +260,213 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>A reprodutibilidade em 100 iterações mantém a predominância do equilíbrio de Nash [Preço Alto, Rejeitar] no BSG, registrado em 75 ocorrências ao longo da simulação. Nos outros 25 casos, a solução aparece associada simultaneamente aos equilíbrios [Preço Alto, Rejeitar] e [Preço Baixo, Rejeitar], mantendo a rejeição do comprador como traço comum entre os resultados. A alternância entre esses equilíbrios decorre da incerteza simétrica estocástica incorporada ao jogo. Nesse caso, a valoração <span class="math inline">\(V\)</span> do bem varia conforme o termo de ruído exógeno <span class="math inline">\(\epsilon\)</span>, que representa flutuações de demanda, renda, preços, inflação ou outros choques externos ao ambiente de decisão. Mesmo com essa variação, as iterações permanecem concentradas em torno da estratégia de rejeição do comprador, como apresentado na Figura <a href="#fig-ap-18" class="quarto-xref">Figura&nbsp;<span>A.1</span></a>.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ap-18" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ap-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;A.1: Contagem acumulada das ocorrências dos equilíbrios (Preço Alto, Rejeitar) e (Preço Alto, Rejeitar), (Preço Baixo, Rejeitar) ao longo de 100 iterações do BSG
+</figcaption>
+<div aria-describedby="fig-ap-18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_18.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>A distribuição percentual representada na Figura <a href="#fig-ap-19" class="quarto-xref">Figura&nbsp;<span>A.2</span></a> torna mais visível o padrão apresentado na Tabela <a href="05_resultados.html#tbl-ch5-9" class="quarto-xref">Tabela&nbsp;<span>5.7</span></a>. No BSG, EWA e BL concentram maior participação em [Preço Alto], para o vendedor, e [Rejeitar], para o comprador. O RL segue outro desenho, com proporções mais distribuídas entre as quatro estratégias. No MEG, a composição aparece de forma mais simétrica entre as empresas. A estratégia [Entrar] tem maior peso relativo nos modelos EWA e BL, enquanto o RL se aproxima de uma divisão mais equilibrada entre Entrar e Não Entrar.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ap-19" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ap-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;A.2: Distribuição percentual agregada das estratégias nos jogos BSG e MEG segundo modelo de aprendizagem
+</figcaption>
+<div aria-describedby="fig-ap-19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_19.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>As Figuras <a href="#fig-ap-20" class="quarto-xref">Figura&nbsp;<span>A.3</span></a> a <a href="#fig-ap-24" class="quarto-xref">Figura&nbsp;<span>A.7</span></a> apresentam as variações complementares das proporções médias de escolha para valores intermediários de <span class="math inline">\(\lambda\)</span>, especificamente <span class="math inline">\(\lambda = 0{,}2\)</span>, <span class="math inline">\(\lambda = 0{,}4\)</span>, <span class="math inline">\(\lambda = 0{,}6\)</span>, <span class="math inline">\(\lambda = 0{,}7\)</span> e <span class="math inline">\(\lambda = 0{,}9\)</span>. Os gráficos mantêm a mesma organização das figuras discutidas no capítulo de resultados, reunindo as trajetórias dos modelos EWA, RL e BL nos jogos BSG e MEG. No BSG, o padrão observado na análise principal permanece visível. EWA e BL concentram as escolhas com maior força em Rejeitar, para o comprador, e Preço Alto, para o vendedor, enquanto o RL se mantém mais próximo de uma distribuição equilibrada entre as alternativas. No MEG, EWA e BL preservam maior frequência da estratégia Entrar para ambas as empresas. O RL, por sua vez, apresenta maior oscilação e proporções mais próximas entre Entrar e Não Entrar.</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ap-20" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ap-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;A.3: Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para <span class="math inline">\(\lambda = 0{,}2\)</span>
+</figcaption>
+<div aria-describedby="fig-ap-20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_20.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ap-21" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ap-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;A.4: Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para <span class="math inline">\(\lambda = 0{,}4\)</span>
+</figcaption>
+<div aria-describedby="fig-ap-21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_21.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ap-22" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ap-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;A.5: Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para <span class="math inline">\(\lambda = 0{,}6\)</span>
+</figcaption>
+<div aria-describedby="fig-ap-22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_22.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ap-23" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ap-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;A.6: Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para <span class="math inline">\(\lambda = 0{,}7\)</span>
+</figcaption>
+<div aria-describedby="fig-ap-23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_23.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<div class="cell fig-cap-location-top" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-ap-24" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ap-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;A.7: Proporções de escolha das estratégias ao longo do tempo no BSG e no MEG para <span class="math inline">\(\lambda = 0{,}9\)</span>
+</figcaption>
+<div aria-describedby="fig-ap-24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="figuras/figura_24.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<p>As Tabelas <a href="#tbl-ap-11" class="quarto-xref">Tabela&nbsp;<span>A.1</span></a> a <a href="#tbl-ap-14" class="quarto-xref">Tabela&nbsp;<span>A.4</span></a> apresentam a análise de sensibilidade do critério de estabilidade para diferentes valores de <span class="math inline">\(\varepsilon\)</span>, mantendo constantes os demais parâmetros da janela móvel. Com limiares menores, como <span class="math inline">\(\varepsilon = 0{,}01\)</span> e <span class="math inline">\(\varepsilon = 0{,}02\)</span>, a classificação se torna mais exigente, pois a variação permitida entre períodos consecutivos é bastante reduzida. Nesses casos, várias combinações de jogo, modelo, jogador e <span class="math inline">\(\lambda\)</span> não atingem a condição mínima de estabilidade ao longo das simulações e aparecem nas tabelas como “–”. À medida que <span class="math inline">\(\varepsilon\)</span> aumenta, o critério passa a aceitar oscilações maiores entre períodos consecutivos. Em <span class="math inline">\(\varepsilon = 0{,}04\)</span> e <span class="math inline">\(\varepsilon = 0{,}05\)</span>, a estabilidade é reconhecida em praticamente todas as combinações, com taxas muitas vezes próximas ou iguais a 100%. A adoção de <span class="math inline">\(\varepsilon = 0{,}03\)</span> ocupa uma posição intermediária nessa escala. O limiar permite identificar trajetórias estabilizadas sem restringir a classificação a poucos casos isolados e sem considerar estável quase toda variação pequena observada nas simulações.</p>
+<div id="tbl-ap-11" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;A.1: Análise de sensibilidade do critério de estabilidade para <span class="math inline">\(\varepsilon = 0{,}01\)</span>
+</figcaption>
+<div aria-describedby="tbl-ap-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_11.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Nota: O símbolo ``–’’ indica valor ausente. Fonte: Elaborado pelo autor (2026).
+</p>
+<div id="tbl-ap-12" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;A.2: Análise de sensibilidade do critério de estabilidade para <span class="math inline">\(\varepsilon = 0{,}02\)</span>
+</figcaption>
+<div aria-describedby="tbl-ap-12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_12.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<div id="tbl-ap-13" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;A.3: Análise de sensibilidade do critério de estabilidade para <span class="math inline">\(\varepsilon = 0{,}04\)</span>
+</figcaption>
+<div aria-describedby="tbl-ap-13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_13.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
+<div id="tbl-ap-14" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabela&nbsp;A.4: Análise de sensibilidade do critério de estabilidade para <span class="math inline">\(\varepsilon = 0{,}05\)</span>
+</figcaption>
+<div aria-describedby="tbl-ap-14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figuras/tabela_14.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p class="quarto-figure-attribution">
+Fonte: Elaborado pelo autor (2026).
+</p>
 
 
 
