@@ -487,8 +487,32 @@ purrr::map(estabilidades, ~ dplyr::select(
   variacao_media_estavel
 ))
 
+
 # ------------------------------------------------------------
-# Função para construir tabela de estabilidade
+# Função para construir a tabela de estabilidade
+#
+# Organiza as taxas de estabilidade dos jogos BSG e MEG no
+# formato exigido pelas funções de exportação avg_prob_table()
+# e avg_prob_tabletex().
+#
+# As colunas media_prob e prop_n mantêm os nomes utilizados
+# originalmente pelas funções de exportação de tabelas. Embora
+# media_prob tenha sido criada, inicialmente, para armazenar
+# probabilidades médias, avg_prob_table() foi implementada de
+# modo a exigir essa coluna na base de entrada.
+#
+# Para reaproveitar a função sem alterar sua estrutura interna,
+# a taxa_estabilidade é atribuída a media_prob. A coluna prop_n
+# contém a mesma medida multiplicada por 100, sendo utilizada
+# para apresentar a taxa de estabilidade em porcentagem.
+#
+# Portanto:
+#   - media_prob = taxa de estabilidade em proporção;
+#   - prop_n     = taxa de estabilidade em porcentagem.
+#
+# Os nomes dessas colunas representam uma exigência de
+# compatibilidade com as funções de exportação e não o
+# significado substantivo das medidas desta tabela.
 # ------------------------------------------------------------
 
 build_stab_tab <- function(props_listas) {
@@ -502,13 +526,21 @@ build_stab_tab <- function(props_listas) {
           lambda = stringr::str_replace(lambda, "\\.", ","),
           lambda = paste0("λ = ", lambda),
           type = modelo,
+
+          # Nome mantido por compatibilidade com avg_prob_table()
+          # e avg_prob_tabletex(). Nesta tabela, a coluna armazena
+          # a taxa de estabilidade em proporção.
           media_prob = taxa_estabilidade,
+
+          # Taxa de estabilidade convertida para porcentagem,
+          # utilizada na apresentação dos valores da tabela.
           prop_n = taxa_estabilidade * 100,
+
           estrategia_escolhida = jogador
         )
     }) |>
     dplyr::select(
-      jogador = jogo,                  
+      jogador = jogo,
       type,
       lambda,
       estrategia_escolhida,
@@ -516,7 +548,6 @@ build_stab_tab <- function(props_listas) {
       prop_n
     )
 }
-
 
 # ------------------------------------------------------------
 # Tabela principal de estabilidade
