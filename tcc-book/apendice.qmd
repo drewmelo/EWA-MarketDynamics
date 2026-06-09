@@ -5,6 +5,34 @@ title: Resultados Complementares
 A reprodutibilidade em 100 iterações mantém a predominância do equilíbrio de Nash [Preço Alto, Rejeitar] no BSG, registrado em 75 ocorrências ao longo da simulação. Nos outros 25 casos, a solução aparece associada simultaneamente aos equilíbrios [Preço Alto, Rejeitar] e [Preço Baixo, Rejeitar], mantendo a rejeição do comprador como traço comum entre os resultados. A alternância entre esses equilíbrios decorre da incerteza simétrica estocástica incorporada ao jogo. Nesse caso, a valoração $V$ do bem varia conforme o termo de ruído exógeno $\epsilon$, que representa flutuações de demanda, renda, preços, inflação ou outros choques externos ao ambiente de decisão. Mesmo com essa variação, as iterações permanecem concentradas em torno da estratégia de rejeição do comprador, como apresentado na Figura @fig-ap-18.
 
 ```{r}
+#| label: code-reprodutibilidade-equilibrios-bsg
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-summary: "Mostrar código: reprodutibilidade dos equilíbrios no BSG"
+
+ne_m1 <- base::do.call(rbind, lista_dfs)
+
+# Concatenar todos os elementos dentro de cada lista como uma string única
+ne_m1$NE <- base::sapply(ne_m1$NE, function(x) base::paste(x, collapse = ", "))
+
+# Agrupando por categoria de NE e calculando a contagem acumulada
+ne_m1 <- ne_m1 |>
+  dplyr::group_by(NE) |>
+  dplyr::mutate(count_n = base::cumsum(base::rep(1, dplyr::n()))) |>
+  dplyr::ungroup()
+
+# Resume a frequência dos equilíbrios encontrados
+# nas 100 iterações do BSG.
+ne_m1 |>
+  dplyr::count(NE) |>
+  dplyr::mutate(
+    frequencia = n / sum(n)
+  )
+
+```
+
+```{r}
 #| label: fig-ap-18
 #| fig-cap: 'Contagem acumulada das ocorrências dos equilíbrios (Preço Alto, Rejeitar) e (Preço Alto, Rejeitar), (Preço Baixo, Rejeitar) ao longo de 100 iterações do BSG'
 #| fig-align: center
@@ -19,6 +47,29 @@ knitr::include_graphics("figuras/figura_18.svg")
 A distribuição percentual representada na Figura @fig-ap-19 torna mais visível o padrão apresentado na Tabela @tbl-ch5-9. No BSG, EWA e BL concentram maior participação em [Preço Alto], para o vendedor, e [Rejeitar], para o comprador. O RL segue outro desenho, com proporções mais distribuídas entre as quatro estratégias. No MEG, a composição aparece de forma mais simétrica entre as empresas. A estratégia [Entrar] tem maior peso relativo nos modelos EWA e BL, enquanto o RL se aproxima de uma divisão mais equilibrada entre Entrar e Não Entrar.
 
 ```{r}
+#| label: code-distribuicao-percentual-estrategias
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-summary: "Mostrar código: distribuição percentual das estratégias"
+
+# Gera as tabelas e os gráficos de contingência
+# para os jogos BSG e MEG.
+contigencia <- contingency_plots(
+  data_m1 = bsg_df,
+  data_m2 = meg_df,
+  matrix_m1 = matriz_bsg,
+  matrix_m2 = matriz_meg,
+  tag_label_m1 = "(a) BSG",
+  tag_label_m2 = "(b) MEG"
+)
+
+# Exibe a distribuição percentual agregada
+# das estratégias nos dois jogos.
+contigencia$plots$combined_plot
+```
+
+```{r}
 #| label: fig-ap-19
 #| fig-cap: 'Distribuição percentual agregada das estratégias nos jogos BSG e MEG segundo modelo de aprendizagem'
 #| fig-align: center
@@ -31,6 +82,41 @@ knitr::include_graphics("figuras/figura_19.svg")
 <p class="quarto-figure-attribution">Fonte: Elaborado pelo autor (2026).</p>
 
 As Figuras @fig-ap-20 a @fig-ap-24 apresentam as variações complementares das proporções médias de escolha para valores intermediários de $\lambda$, especificamente $\lambda = 0{,}2$, $\lambda = 0{,}4$, $\lambda = 0{,}6$, $\lambda = 0{,}7$ e $\lambda = 0{,}9$. Os gráficos mantêm a mesma organização das figuras discutidas no capítulo de resultados, reunindo as trajetórias dos modelos EWA, RL e BL nos jogos BSG e MEG. No BSG, o padrão observado na análise principal permanece visível. EWA e BL concentram as escolhas com maior força em Rejeitar, para o comprador, e Preço Alto, para o vendedor, enquanto o RL se mantém mais próximo de uma distribuição equilibrada entre as alternativas. No MEG, EWA e BL preservam maior frequência da estratégia Entrar para ambas as empresas. O RL, por sua vez, apresenta maior oscilação e proporções mais próximas entre Entrar e Não Entrar.
+
+```{r}
+#| label: code-trajetorias-lambdas-complementares
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-summary: "Mostrar código: trajetórias para os valores complementares de lambda"
+
+# Seleciona as simulações correspondentes a
+# λ = 0,2; 0,4; 0,6; 0,7 e 0,9.
+sim_outros <- c(2, 4, 6, 7, 9)
+
+# Define a numeração das figuras no Apêndice.
+fig_outros <- 20:24
+
+# Exporta os gráficos das trajetórias complementares.
+purrr::walk2(
+  sim_outros,
+  fig_outros,
+  \(i, fig) {
+    ggplot2::ggsave(
+      plot = plots[[paste0("sim", i)]]$plot,
+      filename = paste0(
+        "figuras/figura_",
+        fig,
+        ".pdf"
+      ),
+      width = 12.13,
+      height = 9.02,
+      units = "in",
+      device = cairo_pdf
+    )
+  }
+)
+```
 
 ```{r}
 #| label: fig-ap-20
@@ -93,6 +179,58 @@ knitr::include_graphics("figuras/figura_24.svg")
 <p class="quarto-figure-attribution">Fonte: Elaborado pelo autor (2026).</p>
 
 As Tabelas @tbl-ap-11 a @tbl-ap-14 apresentam a análise de sensibilidade do critério de estabilidade para diferentes valores de $\varepsilon$, mantendo constantes os demais parâmetros da janela móvel. Com limiares menores, como $\varepsilon = 0{,}01$ e $\varepsilon = 0{,}02$, a classificação se torna mais exigente, pois a variação permitida entre períodos consecutivos é bastante reduzida. Nesses casos, várias combinações de jogo, modelo, jogador e $\lambda$ não atingem a condição mínima de estabilidade ao longo das simulações e aparecem nas tabelas como “--”. À medida que $\varepsilon$ aumenta, o critério passa a aceitar oscilações maiores entre períodos consecutivos. Em $\varepsilon = 0{,}04$ e $\varepsilon = 0{,}05$, a estabilidade é reconhecida em praticamente todas as combinações, com taxas muitas vezes próximas ou iguais a 100%. A adoção de $\varepsilon = 0{,}03$ ocupa uma posição intermediária nessa escala. O limiar permite identificar trajetórias estabilizadas sem restringir a classificação a poucos casos isolados e sem considerar estável quase toda variação pequena observada nas simulações.
+
+```{r}
+#| label: code-sensibilidade-estabilidade
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-summary: "Mostrar código: análise de sensibilidade do critério de estabilidade"
+
+# Define os limiares complementares e a numeração
+# das respectivas tabelas.
+controle_sensibilidade <- tibble::tibble(
+  eps_nome = c(
+    "eps_0.01",
+    "eps_0.02",
+    "eps_0.04",
+    "eps_0.05"
+  ),
+  eps_label = c(
+    "0,01",
+    "0,02",
+    "0,04",
+    "0,05"
+  ),
+  num_tabela = 11:14
+)
+
+# Exporta uma tabela para cada limiar de estabilidade.
+purrr::pwalk(
+  controle_sensibilidade,
+  function(eps_nome, eps_label, num_tabela) {
+
+    avg_prob_table(
+      data = tabelas_sensibilidade[[eps_nome]],
+      file = paste0(
+        "tabelas/tabela_",
+        num_tabela,
+        ".png"
+      ),
+      p1_player = "BSG",
+      p1_pair = c("Comprador", "Vendedor"),
+      p2_player = "MEG",
+      p2_pair = c("Empresa A", "Empresa B"),
+      title = paste0(
+        "Tabela ",
+        num_tabela,
+        ": Taxa de estabilidade nos jogos BSG e MEG com ε = ",
+        eps_label
+      )
+    )
+  }
+)
+```
 
 ::: {#tbl-ap-11}
 

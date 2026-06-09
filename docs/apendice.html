@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -261,6 +296,29 @@ window.Quarto = {
 
 
 <p>A reprodutibilidade em 100 iterações mantém a predominância do equilíbrio de Nash [Preço Alto, Rejeitar] no BSG, registrado em 75 ocorrências ao longo da simulação. Nos outros 25 casos, a solução aparece associada simultaneamente aos equilíbrios [Preço Alto, Rejeitar] e [Preço Baixo, Rejeitar], mantendo a rejeição do comprador como traço comum entre os resultados. A alternância entre esses equilíbrios decorre da incerteza simétrica estocástica incorporada ao jogo. Nesse caso, a valoração <span class="math inline">\(V\)</span> do bem varia conforme o termo de ruído exógeno <span class="math inline">\(\epsilon\)</span>, que representa flutuações de demanda, renda, preços, inflação ou outros choques externos ao ambiente de decisão. Mesmo com essa variação, as iterações permanecem concentradas em torno da estratégia de rejeição do comprador, como apresentado na Figura <a href="#fig-ap-18" class="quarto-xref">Figura&nbsp;<span>A.1</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: reprodutibilidade dos equilíbrios no BSG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ne_m1 <span class="ot">&lt;-</span> base<span class="sc">::</span><span class="fu">do.call</span>(rbind, lista_dfs)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenar todos os elementos dentro de cada lista como uma string única</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>ne_m1<span class="sc">$</span>NE <span class="ot">&lt;-</span> base<span class="sc">::</span><span class="fu">sapply</span>(ne_m1<span class="sc">$</span>NE, <span class="cf">function</span>(x) base<span class="sc">::</span><span class="fu">paste</span>(x, <span class="at">collapse =</span> <span class="st">", "</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Agrupando por categoria de NE e calculando a contagem acumulada</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>ne_m1 <span class="ot">&lt;-</span> ne_m1 <span class="sc">|&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(NE) <span class="sc">|&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">count_n =</span> base<span class="sc">::</span><span class="fu">cumsum</span>(base<span class="sc">::</span><span class="fu">rep</span>(<span class="dv">1</span>, dplyr<span class="sc">::</span><span class="fu">n</span>()))) <span class="sc">|&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">ungroup</span>()</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Resume a frequência dos equilíbrios encontrados</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># nas 100 iterações do BSG.</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ne_m1 <span class="sc">|&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(NE) <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">frequencia =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-ap-18" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
@@ -279,6 +337,25 @@ Figura&nbsp;A.1: Contagem acumulada das ocorrências dos equilíbrios (Preço Al
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>A distribuição percentual representada na Figura <a href="#fig-ap-19" class="quarto-xref">Figura&nbsp;<span>A.2</span></a> torna mais visível o padrão apresentado na Tabela <a href="05_resultados.html#tbl-ch5-9" class="quarto-xref">Tabela&nbsp;<span>5.7</span></a>. No BSG, EWA e BL concentram maior participação em [Preço Alto], para o vendedor, e [Rejeitar], para o comprador. O RL segue outro desenho, com proporções mais distribuídas entre as quatro estratégias. No MEG, a composição aparece de forma mais simétrica entre as empresas. A estratégia [Entrar] tem maior peso relativo nos modelos EWA e BL, enquanto o RL se aproxima de uma divisão mais equilibrada entre Entrar e Não Entrar.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: distribuição percentual das estratégias</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera as tabelas e os gráficos de contingência</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># para os jogos BSG e MEG.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>contigencia <span class="ot">&lt;-</span> <span class="fu">contingency_plots</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_m1 =</span> bsg_df,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_m2 =</span> meg_df,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">matrix_m1 =</span> matriz_bsg,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">matrix_m2 =</span> matriz_meg,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">tag_label_m1 =</span> <span class="st">"(a) BSG"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tag_label_m2 =</span> <span class="st">"(b) MEG"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Exibe a distribuição percentual agregada</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># das estratégias nos dois jogos.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>contigencia<span class="sc">$</span>plots<span class="sc">$</span>combined_plot</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-ap-19" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
@@ -297,6 +374,37 @@ Figura&nbsp;A.2: Distribuição percentual agregada das estratégias nos jogos B
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>As Figuras <a href="#fig-ap-20" class="quarto-xref">Figura&nbsp;<span>A.3</span></a> a <a href="#fig-ap-24" class="quarto-xref">Figura&nbsp;<span>A.7</span></a> apresentam as variações complementares das proporções médias de escolha para valores intermediários de <span class="math inline">\(\lambda\)</span>, especificamente <span class="math inline">\(\lambda = 0{,}2\)</span>, <span class="math inline">\(\lambda = 0{,}4\)</span>, <span class="math inline">\(\lambda = 0{,}6\)</span>, <span class="math inline">\(\lambda = 0{,}7\)</span> e <span class="math inline">\(\lambda = 0{,}9\)</span>. Os gráficos mantêm a mesma organização das figuras discutidas no capítulo de resultados, reunindo as trajetórias dos modelos EWA, RL e BL nos jogos BSG e MEG. No BSG, o padrão observado na análise principal permanece visível. EWA e BL concentram as escolhas com maior força em Rejeitar, para o comprador, e Preço Alto, para o vendedor, enquanto o RL se mantém mais próximo de uma distribuição equilibrada entre as alternativas. No MEG, EWA e BL preservam maior frequência da estratégia Entrar para ambas as empresas. O RL, por sua vez, apresenta maior oscilação e proporções mais próximas entre Entrar e Não Entrar.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: trajetórias para os valores complementares de lambda</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleciona as simulações correspondentes a</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># λ = 0,2; 0,4; 0,6; 0,7 e 0,9.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sim_outros <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">9</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a numeração das figuras no Apêndice.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>fig_outros <span class="ot">&lt;-</span> <span class="dv">20</span><span class="sc">:</span><span class="dv">24</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Exporta os gráficos das trajetórias complementares.</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk2</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  sim_outros,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  fig_outros,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  \(i, fig) {</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    ggplot2<span class="sc">::</span><span class="fu">ggsave</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot =</span> plots[[<span class="fu">paste0</span>(<span class="st">"sim"</span>, i)]]<span class="sc">$</span>plot,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">filename =</span> <span class="fu">paste0</span>(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"figuras/figura_"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        fig,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">".pdf"</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="fl">12.13</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">height =</span> <span class="fl">9.02</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">units =</span> <span class="st">"in"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">device =</span> cairo_pdf</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-ap-20" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
@@ -383,6 +491,54 @@ Figura&nbsp;A.7: Proporções de escolha das estratégias ao longo do tempo no B
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>As Tabelas <a href="#tbl-ap-11" class="quarto-xref">Tabela&nbsp;<span>A.1</span></a> a <a href="#tbl-ap-14" class="quarto-xref">Tabela&nbsp;<span>A.4</span></a> apresentam a análise de sensibilidade do critério de estabilidade para diferentes valores de <span class="math inline">\(\varepsilon\)</span>, mantendo constantes os demais parâmetros da janela móvel. Com limiares menores, como <span class="math inline">\(\varepsilon = 0{,}01\)</span> e <span class="math inline">\(\varepsilon = 0{,}02\)</span>, a classificação se torna mais exigente, pois a variação permitida entre períodos consecutivos é bastante reduzida. Nesses casos, várias combinações de jogo, modelo, jogador e <span class="math inline">\(\lambda\)</span> não atingem a condição mínima de estabilidade ao longo das simulações e aparecem nas tabelas como “–”. À medida que <span class="math inline">\(\varepsilon\)</span> aumenta, o critério passa a aceitar oscilações maiores entre períodos consecutivos. Em <span class="math inline">\(\varepsilon = 0{,}04\)</span> e <span class="math inline">\(\varepsilon = 0{,}05\)</span>, a estabilidade é reconhecida em praticamente todas as combinações, com taxas muitas vezes próximas ou iguais a 100%. A adoção de <span class="math inline">\(\varepsilon = 0{,}03\)</span> ocupa uma posição intermediária nessa escala. O limiar permite identificar trajetórias estabilizadas sem restringir a classificação a poucos casos isolados e sem considerar estável quase toda variação pequena observada nas simulações.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: análise de sensibilidade do critério de estabilidade</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define os limiares complementares e a numeração</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># das respectivas tabelas.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>controle_sensibilidade <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">eps_nome =</span> <span class="fu">c</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"eps_0.01"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"eps_0.02"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"eps_0.04"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"eps_0.05"</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">eps_label =</span> <span class="fu">c</span>(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0,01"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0,02"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0,04"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"0,05"</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_tabela =</span> <span class="dv">11</span><span class="sc">:</span><span class="dv">14</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Exporta uma tabela para cada limiar de estabilidade.</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">pwalk</span>(</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  controle_sensibilidade,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(eps_nome, eps_label, num_tabela) {</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">avg_prob_table</span>(</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> tabelas_sensibilidade[[eps_nome]],</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="fu">paste0</span>(</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"tabelas/tabela_"</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        num_tabela,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">".png"</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">p1_player =</span> <span class="st">"BSG"</span>,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">p1_pair =</span> <span class="fu">c</span>(<span class="st">"Comprador"</span>, <span class="st">"Vendedor"</span>),</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">p2_player =</span> <span class="st">"MEG"</span>,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">p2_pair =</span> <span class="fu">c</span>(<span class="st">"Empresa A"</span>, <span class="st">"Empresa B"</span>),</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="fu">paste0</span>(</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Tabela "</span>,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        num_tabela,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">": Taxa de estabilidade nos jogos BSG e MEG com ε = "</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>        eps_label</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-ap-11" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ap-11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

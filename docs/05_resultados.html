@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -275,6 +310,32 @@ window.Quarto = {
 <section id="sec-trajetorias-estabilidade" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="sec-trajetorias-estabilidade"><span class="header-section-number">5.1</span> Trajetórias de escolha e estabilidade do aprendizado</h2>
 <p>Para a construção das Figuras <a href="#fig-ch5-1" class="quarto-xref">Figura&nbsp;<span>5.1</span></a> a <a href="#fig-ch5-5" class="quarto-xref">Figura&nbsp;<span>5.5</span></a>, foram calculadas, em cada período, as proporções médias de escolha de cada estratégia para cada jogador nos jogos BSG e MEG, a partir da frequência relativa observada nas simulações. Em termos práticos, considerou-se, para cada combinação de modelo, jogador e período, quantas vezes determinada estratégia foi efetivamente escolhida em relação ao total de decisões naquele recorte. As curvas, portanto, representam a evolução dessas frequências ao longo do tempo. A análise concentrou-se nos valores <span class="math inline">\(\lambda = 0{,}1\)</span>, <span class="math inline">\(\lambda = 0{,}3\)</span>, <span class="math inline">\(\lambda = 0{,}5\)</span>, <span class="math inline">\(\lambda = 0{,}8\)</span> e <span class="math inline">\(\lambda = 1\)</span>, selecionados por cobrirem diferentes níveis de sensibilidade às atrações, desde um ajuste mais gradual e disperso até respostas mais intensas e concentradas em determinadas estratégias. A seleção desses casos permite observar a mudança na dinâmica de aprendizado sem sobrecarregar a exposição principal com todas as variações simuladas. As demais configurações do parâmetro, correspondentes a <span class="math inline">\(\lambda = 0{,}2\)</span>, <span class="math inline">\(\lambda = 0{,}4\)</span>, <span class="math inline">\(\lambda = 0{,}6\)</span>, <span class="math inline">\(\lambda = 0{,}7\)</span> e <span class="math inline">\(\lambda = 0{,}9\)</span>, encontram-se reunidas no Apêndice, nas Figuras <a href="apendice.html#fig-ap-20" class="quarto-xref">Figura&nbsp;<span>A.3</span></a> a <a href="apendice.html#fig-ap-24" class="quarto-xref">Figura&nbsp;<span>A.7</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: preparação das trajetórias de escolha</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cria a sequência de simulações a serem plotadas.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sim_ids <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ifelse</span>( </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">max</span>(bsg_df<span class="sc">$</span>sim_id) <span class="sc">==</span> <span class="fu">max</span>(bsg_df<span class="sc">$</span>sim_id),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">max</span>(bsg_df<span class="sc">$</span>sim_id), <span class="cn">NA</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>             ) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera uma lista de gráficos, nomeada como sim1, sim2, ..., sim10.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">setNames</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  base<span class="sc">::</span><span class="fu">lapply</span>(sim_ids, <span class="cf">function</span>(sim) {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sim_plot</span>(<span class="at">df_m1 =</span> bsg_df, <span class="at">df_m2 =</span> meg_df,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">matrix_m1 =</span> matriz_bsg, <span class="at">matrix_m2 =</span> matriz_meg,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">sim_id =</span> sim)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  }),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  base<span class="sc">::</span><span class="fu">paste0</span>(<span class="st">"sim"</span>, sim_ids)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula as proporções de escolha das estratégias no BSG.</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>prop_bsg <span class="ot">&lt;-</span> <span class="fu">get_props</span>(bsg_df)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula as proporções de escolha das estratégias no MEG.</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>prop_meg <span class="ot">&lt;-</span> <span class="fu">get_props</span>(meg_df)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>Para <span class="math inline">\(\lambda = 0{,}1\)</span>, a estabilidade inicial dos modelos ocorre com proporções ainda moderadas. As estratégias dominantes já começam a se formar, mas sem consolidação forte, como mostra a Figura <a href="#fig-ch5-1" class="quarto-xref">Figura&nbsp;<span>5.1</span></a>. No BSG, o EWA estabiliza cedo para o Comprador, no período 11, com média estável de 0,634 para Rejeitar, enquanto, para o Vendedor, a estabilidade aparece no período 21, com média de 0,648 para Preço Alto. O BL apresenta trajetória mais lenta para o Comprador, com estabilidade apenas no período 37 e média de 0,582 para Rejeitar, mas estabiliza mais cedo no caso do Vendedor, no período 12, com média de 0,605 para Preço Alto. O RL, por sua vez, estabiliza entre os períodos 11 e 14 e, nesse primeiro cenário, suas médias ficam próximas às do EWA e do BL, alcançando 0,635 para Rejeitar no Comprador e 0,642 para Preço Alto no Vendedor. No MEG, as três abordagens apontam predominância de Entrar para ambas as empresas, embora em níveis ainda baixos, com médias no regime estável entre 0,537 e 0,567. O BL apresenta a entrada mais tardia em estabilidade para a Empresa B, somente no período 45, enquanto o EWA estabiliza nos períodos 30 e 25 para as empresas A e B, respectivamente, e o RL entra em estabilidade mais cedo, entre os períodos 16 e 18.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
@@ -375,6 +436,12 @@ Fonte: Elaborado pelo autor (2026).
 <p>O RL clarifica essa diferença. O modelo apresenta taxas próximas ou iguais a 100% em praticamente todos os valores de <span class="math inline">\(\lambda\)</span>, tanto no BSG quanto no MEG. Suas proporções variam pouco ao longo do tempo, embora essa regularidade nem sempre corresponda a uma escolha estratégica mais definida. Em vários casos discutidos anteriormente, a estabilidade ocorre em torno de valores próximos de 50%, mais próximos de uma quase indiferença entre alternativas do que de uma consolidação em torno de uma estratégia dominante.</p>
 <p>EWA e BL apresentam taxas menores, porém mais informativas do ponto de vista comportamental. No BSG, o EWA mantém estabilidade elevada para o Comprador, passando de 83,5% em <span class="math inline">\(\lambda = 0{,}1\)</span> para valores acima de 90% nos níveis mais altos de <span class="math inline">\(\lambda\)</span>. Para o Vendedor, a estabilidade fica em nível mais moderado, entre aproximadamente 83% e 88%. O aumento de <span class="math inline">\(\lambda\)</span> reforça a regularidade da decisão do Comprador, mas não elimina a maior complexidade da escolha do Vendedor, cuja estratégia depende da antecipação da resposta do outro agente.</p>
 <p>O BL segue uma dinâmica próxima, principalmente para o Comprador no BSG. A taxa de estabilidade chega a 99,2% em <span class="math inline">\(\lambda = 1\)</span>, acompanhando a forte persistência da estratégia dominante. Para o Vendedor, a taxa permanece mais baixa e relativamente estável, o que diferencia uma decisão mais direta, como Rejeitar, de uma escolha mais dependente da reação esperada do outro jogador, como Preço Alto. No MEG, EWA e BL apresentam estabilidade intermediária, em geral entre 81% e 91%. Esse comportamento combina com a estrutura do jogo de entrada em mercado, no qual a decisão das firmas preserva maior componente misto e menor polarização entre as alternativas.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: resumo da estabilidade para ε = 0,03</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(estabilidades_eps<span class="sc">$</span>eps_0<span class="fl">.03</span>, <span class="sc">~</span> .x<span class="sc">$</span>resumo)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-taxa-estabilidade" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-taxa-estabilidade-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -396,10 +463,35 @@ Tabela&nbsp;5.1: Taxa de estabilidade em porcentagem nos jogos BSG e MEG por mod
 <p class="quarto-figure-attribution">
 Nota: A estabilidade refere-se à persistência das proporções ao longo do tempo dentro de um intervalo de variação reduzido. Tal medida não implica convergência para estratégias de equilíbrio, podendo refletir padrões estacionários sem direcionamento estratégico, como observado no modelo RL. Fonte: Elaborado pelo autor (2026).
 </p>
+<p>A comparação das variações médias após a entrada no regime estável mostra que a estabilidade não se forma pelo mesmo mecanismo em todos os modelos. No BSG, o aumento de <span class="math inline">\(\lambda\)</span> reduz principalmente a variação média do Comprador nos modelos EWA e BL. No EWA, a variação passa de aproximadamente <span class="math inline">\(1{,}93%\)</span> em <span class="math inline">\(\lambda = 0{,}1\)</span> para <span class="math inline">\(1{,}22%\)</span> em <span class="math inline">\(\lambda = 1\)</span>. No BL, a queda é mais intensa, de <span class="math inline">\(1{,}80%\)</span> para <span class="math inline">\(0{,}89%\)</span>. A decisão do Comprador torna-se mais regular conforme cresce a sensibilidade às atrações, o que dialoga com sua posição no jogo, já que sua escolha reage diretamente à proposta recebida.</p>
+<p>Para o Vendedor, o mesmo movimento aparece com menor magnitude. No EWA, a variação permanece em torno de <span class="math inline">\(1{,}8%\)</span> ao longo dos diferentes valores de <span class="math inline">\(\lambda\)</span>. No BL, passa de <span class="math inline">\(1{,}83%\)</span> para <span class="math inline">\(1{,}95%\)</span>, sem tendência de redução. A persistência dessa variação está ligada à própria natureza da decisão do Vendedor, que envolve antecipar a resposta do Comprador, em vez de apenas reagir a uma condição já observada. O RL apresenta outro padrão. No Comprador, a variação cai de <span class="math inline">\(0{,}39%\)</span> para <span class="math inline">\(0{,}06%\)</span>. No Vendedor, passa de <span class="math inline">\(0{,}01%\)</span> para praticamente <span class="math inline">\(0%\)</span>. A estabilidade, nesse caso, parece decorrer mais de inércia comportamental do que de aprendizado estratégico em sentido substantivo.</p>
+<p>No MEG, o padrão é menos polarizado. EWA e BL mantêm variações entre cerca de <span class="math inline">\(1{,}5%\)</span> e <span class="math inline">\(1{,}9%\)</span>, sem queda expressiva à medida que <span class="math inline">\(\lambda\)</span> aumenta. Mesmo o RL oscila um pouco mais do que no BSG, com valores entre <span class="math inline">\(0{,}24%\)</span> e <span class="math inline">\(0{,}85%\)</span>. A baixa variação das proporções continua explicando parte de sua estabilidade, mas a inércia é menos rígida nesse jogo. A entrada em mercado preserva mais espaço para alternância entre estratégias, o que dificulta a formação de trajetórias tão fixas quanto aquelas observadas no BSG.</p>
 </section>
 <section id="sec-dispersao-atracoes" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="sec-dispersao-atracoes"><span class="header-section-number">5.2</span> Dispersão das atrações e probabilidades de escolha</h2>
 <p>A Tabela <a href="#tbl-ch5-4" class="quarto-xref">Tabela&nbsp;<span>5.2</span></a> mostra que, no modelo EWA, as atrações no BSG partem de valores mais elevados e dispersos, com média próxima de 4 e alto intervalo interquartil. À medida que <span class="math inline">\(\lambda\)</span> aumenta, esses valores convergem para níveis mais baixos e homogêneos. Com maior sensibilidade às diferenças entre atrações, os agentes passam a concentrar suas escolhas nas estratégias relativamente mais atrativas. A exploração diminui, os padrões de decisão se consolidam e, por isso, o desvio padrão e o intervalo interquartil caem até zero. Esse comportamento é compatível com a estrutura do BSG, que favorece a formação de um padrão decisório mais estável. No MEG, ocorre o movimento oposto. As médias aumentam e o intervalo interquartil se expande, sinalizando maior dispersão das atrações. Diferentemente do BSG, o MEG não conduz a um único padrão dominante. A competição estratégica admite múltiplas respostas, pois a decisão de entrar ou não entrar depende das expectativas sobre a escolha da outra empresa. Nesse ambiente, o aumento de <span class="math inline">\(\lambda\)</span> não produz convergência teórica. Ele amplifica diferenças iniciais entre os agentes. Parte deles reforça de maneira consistente a decisão de entrar no mercado, enquanto outra parte passa a evitar essa estratégia. O resultado são trajetórias mais heterogêneas, coerentes com a natureza estratégica do jogo.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: medidas-resumo das atrações do EWA</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula as medidas-resumo das atrações no BSG e no MEG.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mr_lista <span class="ot">&lt;-</span> base<span class="sc">::</span><span class="fu">list</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mr_bsg =</span> <span class="fu">summary_statistics</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">df =</span> bsg_df,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sufixo =</span> <span class="st">"m1"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">mr_meg =</span> <span class="fu">summary_statistics</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">df =</span> meg_df,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sufixo =</span> <span class="st">"m2"</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Organiza as medidas-resumo do modelo EWA.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>tab_4 <span class="ot">&lt;-</span> <span class="fu">summary_tables</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">modelo =</span> <span class="st">"EWA"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">lista_resumo =</span> mr_lista</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-ch5-4" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -422,6 +514,17 @@ Tabela&nbsp;5.2: Medidas-resumo das atrações no modelo EWA para variações de
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>No modelo de aprendizado por reforço, conforme a Tabela <a href="#tbl-ch5-5" class="quarto-xref">Tabela&nbsp;<span>5.3</span></a>, aparece um padrão distinto daquele observado nos demais modelos. As atrações permanecem em níveis elevados e com alta dispersão ao longo de todo o intervalo de <span class="math inline">\(\lambda\)</span>. No BSG, as médias seguem altas e instáveis, enquanto o desvio padrão e o intervalo interquartil também assumem valores elevados. Esse comportamento aponta para forte heterogeneidade entre os agentes e para a ausência de uma direção comum das decisões. As medianas, bem inferiores às médias, revelam uma distribuição assimétrica. Poucos agentes acumulam valores muito altos de atração, provavelmente porque determinadas estratégias bem-sucedidas passam a ser reforçadas de forma contínua. No MEG, as médias são um pouco mais estáveis, mas a dispersão continua elevada, com crescimento gradual do intervalo interquartil. O aumento de <span class="math inline">\(\lambda\)</span>, portanto, não produz alinhamento das decisões. O resultado, no entanto, é coerente com a própria lógica do RL, em que o aprendizado depende apenas dos <em>payoffs</em> realizados, sem incorporação de crenças nem avaliação contrafactual. Cada agente reforça sua trajetória a partir da experiência individual acumulada, o que amplia diferenças internas e dificulta a formação de um padrão comum.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: medidas-resumo das atrações do RL</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Organiza as medidas-resumo das atrações do modelo RL</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># para os jogos BSG e MEG.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>tab_5 <span class="ot">&lt;-</span> <span class="fu">summary_tables</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">modelo =</span> <span class="st">"RL"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lista_resumo =</span> mr_lista</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-ch5-5" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -444,6 +547,17 @@ Tabela&nbsp;5.3: Medidas-resumo das atrações no modelo RL para variações de 
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>No modelo baseado em crenças, conforme a Tabela <a href="#tbl-ch5-6" class="quarto-xref">Tabela&nbsp;<span>5.4</span></a>, o BSG apresenta outro movimento. As atrações médias caem de 3 para 0 à medida que <span class="math inline">\(\lambda\)</span> cresce. O desvio padrão também diminui, de 5 para 1, e o intervalo interquartil recua de 8 para 1. A redução conjunta dessas medidas aponta para uma convergência mais forte das decisões. Com maior sensibilidade às diferenças de atração, os agentes ajustam suas escolhas a partir de crenças mais alinhadas sobre o comportamento do oponente, reduzindo a dispersão do aprendizado. As medianas nulas ao longo de todo o intervalo acrescentam uma nuance importante. A maior parte dos agentes se aproxima de níveis baixos de atração, enquanto poucos sustentam valores elevados. O padrão resultante é mais conservador, guiado pela estabilização das expectativas formadas nas interações passadas. No MEG, a dinâmica é menos convergente. As médias oscilam entre 1 e 1,2, enquanto o intervalo interquartil aumenta de 2 para 3. Em um ambiente de competição estratégica, o ajuste das crenças não leva necessariamente à uniformidade. A decisão ótima depende da expectativa sobre a ação do outro jogador, e pequenas diferenças nas crenças individuais podem ganhar expressividade quando <span class="math inline">\(\lambda\)</span> aumenta. As medianas positivas, embora decrescentes, apontam para uma convergência apenas parcial, acompanhada de heterogeneidade crescente na forma como os agentes avaliam o retorno esperado.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: medidas-resumo das atrações do BL</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Organiza as medidas-resumo das atrações do modelo BL</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># para os jogos BSG e MEG.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>tab_6 <span class="ot">&lt;-</span> <span class="fu">summary_tables</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">modelo =</span> <span class="st">"BL"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lista_resumo =</span> mr_lista</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-ch5-6" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -467,6 +581,16 @@ Fonte: Elaborado pelo autor (2026).
 </p>
 <p>As probabilidades médias permitem observar como as diferenças encontradas nas atrações aparecem nas escolhas efetivas dos agentes. No BSG, EWA e BL reproduzem o padrão adaptativo já apontado pelas medidas de atração. À medida que <span class="math inline">\(\lambda\)</span> aumenta, os agentes passam a responder com maior intensidade às estratégias relativamente mais vantajosas. O Vendedor, representado por P1, tende a sustentar o preço mais rentável. O Comprador, representado por P2, reage à incerteza da transação reforçando a rejeição.</p>
 <p>Na Tabela <a href="#tbl-ch5-7" class="quarto-xref">Tabela&nbsp;<span>5.5</span></a>, esse comportamento aparece de forma discriminável no EWA. A probabilidade média de Preço Alto aumenta de 0,708, em <span class="math inline">\(\lambda = 0{,}1\)</span>, para 0,864, em <span class="math inline">\(\lambda = 1\)</span>. No mesmo intervalo, Rejeitar cresce de 0,549 para 0,940. O BL segue direção próxima. Preço Alto passa de 0,625 para 0,797, enquanto Rejeitar avança de 0,493 para 0,870. O aprendizado baseado em crenças também aproxima os agentes da lógica estratégica do BSG, embora com menor intensidade que o EWA. O RL apresenta outro perfil, dado que suas probabilidades permanecem próximas de 1 em quase todo o intervalo, com valores entre 0,997 e 0,998 para o Vendedor e entre 0,960 e 0,996 para o Comprador. Os valores do RL apontam para um reforço muito intenso, mas pouco discriminativo entre as alternativas. Por isso, as probabilidades médias reforçam uma diferença importante entre os modelos, de que EWA e BL captam melhor a relação entre preço elevado, risco de aceitação e recusa da transação. O RL tende a reproduzir um padrão mais mecânico de reforço, menos sensível à estrutura estratégica do jogo.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: probabilidades médias das estratégias no BSG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula as probabilidades médias das estratégias no BSG,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># separadas por modelo, jogador e valor de lambda.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>tab_7 <span class="ot">&lt;-</span> <span class="fu">frequency_probabilities</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">df =</span> bsg_df</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-ch5-7" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -490,6 +614,14 @@ Fonte: Elaborado pelo autor (2026).
 </p>
 <p>No MEG, as escolhas aparecem menos concentradas, como mostra a Tabela <a href="#tbl-ch5-8" class="quarto-xref">Tabela&nbsp;<span>5.6</span></a>. A decisão de entrar ou permanecer fora do mercado envolve a avaliação da própria posição estratégica diante da possível ação da concorrente. Como o ganho da entrada depende da escolha da outra empresa, a interdependência do jogo reduz a polarização das trajetórias e preserva a presença de estratégias alternativas ao longo das simulações. Na Tabela <a href="#tbl-ch5-8" class="quarto-xref">Tabela&nbsp;<span>5.6</span></a>, em que P1 representa a Empresa A e P2 a Empresa B, o EWA registra aumento da probabilidade média de Entrar para ambas. Na Empresa A, a probabilidade passa de 0,570, em <span class="math inline">\(\lambda = 0{,}1\)</span>, para 0,844, em <span class="math inline">\(\lambda = 1\)</span>. Na Empresa B, cresce de 0,570 para 0,867.</p>
 <p>A maior frequência de Entrar não retira Não Entrar da disputa estratégica. No EWA, essa alternativa também aumenta, passando de 0,444 para 0,787 na Empresa A e de 0,444 para 0,785 na Empresa B. O avanço de <span class="math inline">\(\lambda\)</span> separa melhor as trajetórias, embora permaneça a tensão entre ocupar o mercado e evitar a competição direta. No BL, Entrar cresce de modo mais moderado, de 0,543 para 0,762 na Empresa A e de 0,544 para 0,779 na Empresa B. Não Entrar continua abaixo de Entrar, mas também se eleva no final do intervalo. O RL mantém probabilidades altas para as duas estratégias, em geral acima de 0,92 e próximas de 0,99 quando <span class="math inline">\(\lambda = 1\)</span>.</p>
+<details class="code-fold">
+<summary>Mostrar código: probabilidades médias das estratégias no MEG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula as probabilidades médias das estratégias no MEG,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># separadas por modelo, jogador e valor de lambda.</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tab_8 <span class="ot">&lt;-</span> <span class="fu">frequency_probabilities</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">df =</span> meg_df</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div id="tbl-ch5-8" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -516,6 +648,25 @@ Fonte: Elaborado pelo autor (2026).
 <section id="sec-estrutura-distributiva" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="sec-estrutura-distributiva"><span class="header-section-number">5.3</span> Estrutura distributiva das probabilidades</h2>
 <p>As Figuras <a href="#fig-ch5-6" class="quarto-xref">Figura&nbsp;<span>5.6</span></a> e <a href="#fig-ch5-7" class="quarto-xref">Figura&nbsp;<span>5.7</span></a> apresentam histogramas facetados pelos valores de <span class="math inline">\(\lambda\)</span>. O eixo horizontal registra as probabilidades de escolha, enquanto o eixo vertical informa a densidade das observações. As barras mostram a distribuição dessas probabilidades entre os agentes em cada modelo. As linhas pontilhadas marcam as medianas e ajudam a acompanhar o deslocamento típico das escolhas conforme <span class="math inline">\(\lambda\)</span> aumenta. Com isso, os histogramas acrescentam uma camada à análise das médias, pois permitem observar a dispersão das probabilidades em cada jogo.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: distribuição das probabilidades no BSG e no MEG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera os histogramas das probabilidades de escolha</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># para os jogos BSG e MEG.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_histogram</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bsg_df,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">bins =</span> grDevices<span class="sc">::</span><span class="fu">nclass.Sturges</span>(bsg_df<span class="sc">$</span>probabilidade),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">"figuras/figura_13.pdf"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_histogram</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> meg_df,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">bins =</span> grDevices<span class="sc">::</span><span class="fu">nclass.Sturges</span>(meg_df<span class="sc">$</span>probabilidade),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">file_name =</span> <span class="st">"figuras/figura_14.pdf"</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>No BSG, representado pela Figura <a href="#fig-ch5-6" class="quarto-xref">Figura&nbsp;<span>5.6</span></a>, o EWA apresenta, em <span class="math inline">\(\lambda = 0{,}1\)</span>, uma distribuição relativamente regular, concentrada entre 0,50 e 0,70. A maior presença de probabilidades intermediárias aponta para heterogeneidade moderada e exploração mais ampla das estratégias disponíveis. Com o aumento de <span class="math inline">\(\lambda\)</span>, a distribuição se amplia e parte das observações se desloca para valores mais altos, próximos de 0,80 e 1,00. As escolhas dos agentes passam a se diferenciar com mais intensidade. O BL preserva uma distribuição mais ordenada, embora assimétrica, com concentração em probabilidades intermediárias e altas. O RL segue outra configuração, já que suas observações permanecem enviesadas para o limite superior, próximas de 1 em quase todos os incrementos de <span class="math inline">\(\lambda\)</span>. O reforço opera de maneira intensa, porém pouco seletiva entre alternativas. No BSG, a partir disso, o aumento de <span class="math inline">\(\lambda\)</span> não altera apenas médias e medianas, também reorganiza-se a forma da distribuição, reduzindo a presença de probabilidades intermediárias e tornando as escolhas mais sensíveis às atrações acumuladas.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
@@ -553,10 +704,89 @@ Figura&nbsp;5.7: Distribuição das probabilidades de escolha por modelo no MEG
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>A Figura <a href="#fig-ch5-8" class="quarto-xref">Figura&nbsp;<span>5.8</span></a> apresenta as distribuições acumuladas empíricas das probabilidades de escolha das estratégias associadas ao equilíbrio teórico dos dois jogos. A figura está organizada em dois pares de comparação. Nos painéis (a1), (a2) e (a3), compara-se a probabilidade de o Comprador escolher “Rejeitar” no BSG com a probabilidade de a Empresa A escolher “Entrar” no MEG, considerando os modelos EWA, RL e BL. Nos painéis (b1), (b2) e (b3), a comparação envolve a probabilidade de o Vendedor escolher “Preço Alto” no BSG e a probabilidade de a Empresa B escolher “Entrar” no MEG. Como cada jogador possui apenas duas estratégias, observar uma delas também informa o comportamento da alternativa, já que o aumento da probabilidade de uma escolha implica a redução da outra.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: preparação das probabilidades para as curvas ECDF</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define os pares estratégicos comparados entre os jogos.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pares <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">p1 =</span> <span class="fu">list</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparacao =</span> <span class="st">"Comprador (BSG) vs Empresa A (MEG)"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">jogador_bsg =</span> <span class="st">"Comprador"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">estrategia_bsg =</span> <span class="st">"Rejeitar"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">jogador_meg =</span> <span class="st">"Empresa A"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">estrategia_meg =</span> <span class="st">"Entrar"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">p2 =</span> <span class="fu">list</span>(</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparacao =</span> <span class="st">"Vendedor (BSG) vs Empresa B (MEG)"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">jogador_bsg =</span> <span class="st">"Vendedor"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">estrategia_bsg =</span> <span class="st">"Preço Alto"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">jogador_meg =</span> <span class="st">"Empresa B"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">estrategia_meg =</span> <span class="st">"Entrar"</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói as bases de probabilidades para os dois pares.</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>probs_lista <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">imap</span>(</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  pares,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">build_probs_compare</span>(</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">bsg_df =</span> bsg_df,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">meg_df =</span> meg_df,</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">jogador_bsg =</span> .x<span class="sc">$</span>jogador_bsg,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">estrategia_bsg =</span> .x<span class="sc">$</span>estrategia_bsg,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">jogador_meg =</span> .x<span class="sc">$</span>jogador_meg,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">estrategia_meg =</span> .x<span class="sc">$</span>estrategia_meg,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">par_label =</span> .y</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>No eixo horizontal, estão as probabilidades individuais de adoção da estratégia selecionada, variando de 0, quando a estratégia não é escolhida, a 1, quando é sempre escolhida. O eixo vertical mostra a fração acumulada de observações até cada ponto, isto é, a proporção de casos com probabilidade de escolha menor ou igual ao valor indicado. Curvas próximas revelam distribuições semelhantes entre os jogos. Afastamentos maiores mostram que o modelo organiza as probabilidades de modo diferente nos papéis estratégicos comparados.</p>
 <p>A amostra de 200 mil observações por grupo foi adotada por razões computacionais e gráficas. A base completa contém milhões de observações, o que tornaria a construção das curvas mais custosa e visualmente redundante. A amostragem aleatória por grupo preserva a estrutura das comparações entre modelos e jogos, enquanto o tamanho amostral elevado reduz a instabilidade associada ao sorteio.</p>
 <p>Nos painéis (a1), (a2) e (a3), a comparação entre BSG e MEG mostra que os modelos de aprendizagem alteram não apenas o nível das probabilidades, mas também o formato das distribuições. No EWA, painel (a1), o BSG aparece mais polarizado. Entre as observações do Comprador, 32,6% estão entre 0 e 0,1, e outros 32,6% entre 0,9 e 1. No MEG, esses percentuais são menores, de 20,7% e 20,6%. O EWA, portanto, gera mais trajetórias extremas de rejeição no BSG, enquanto a Empresa A no MEG conserva maior presença em faixas intermediárias. No RL, painel (a2), o padrão é mais rígido. Quase metade das observações aparece em cada extremo, tanto no BSG quanto no MEG, com participação residual nas faixas centrais. As curvas quase se sobrepõem e assumem formato em degrau, traço de uma dinâmica de reforço pouco sensível às diferenças entre os jogos. No BL, painel (a3), o contraste é mais visível. O BSG mantém concentração nos extremos, mas também acumula massa nas faixas adjacentes, como 0,1–0,2 e 0,8–0,9, o que ajuda a explicar a curva mais irregular. O MEG, por sua vez, concentra-se mais no centro, prioritariamente entre 0,4 e 0,6.</p>
 <p>Nos painéis (b1), (b2) e (b3), a comparação entre o Vendedor no BSG e a Empresa B no MEG também revela importantes diferenças na forma das distribuições. No EWA, painel (b1), o BSG apresenta maior concentração em probabilidades intermediárias, com 18,7% das observações entre 0,4 e 0,5 e 18,2% entre 0,5 e 0,6. Os extremos concentram cerca de 24,1%. No MEG, a distribuição da Empresa B é mais polarizada, com 20,8% das observações entre 0 e 0,1 e 21,0% entre 0,9 e 1, embora ainda haja presença relevante nas faixas centrais. No RL, painel (b2), repete-se o padrão extremo do modelo. No BSG, 49,7% das observações estão entre 0 e 0,1, e 49,8% entre 0,9 e 1. No MEG, os valores são muito próximos, com 48,8% e 48,7%. A quase ausência de probabilidades intermediárias explica a sobreposição das curvas e o formato em degrau. No BL, painel (b3), o contraste entre os jogos é mais forte. O BSG concentra a maior parte das observações em duas faixas específicas, 0,3–0,4 e 0,6–0,7, ambas com cerca de 36,8%, formando uma distribuição em blocos, pouco concentrada nos extremos. No MEG, a Empresa B se concentra mais nas faixas centrais. As maiores participações aparecem entre 0,4–0,5 e 0,5–0,6, com 19,0% e 18,6%.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: construção das curvas ECDF entre BSG e MEG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">05052026</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepara uma amostra de 200 mil observações por grupo.</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>probs_plot_lista <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  probs_lista,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">prep_ecdf</span>(</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    .x,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_por_grupo =</span> <span class="dv">200000</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói os painéis do primeiro par estratégico.</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>comparacao_p1 <span class="ot">&lt;-</span> <span class="fu">make_ecdf_subpatch</span>(</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">df_probs =</span> probs_lista<span class="sc">$</span>p1,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">prefixo =</span> <span class="st">"a"</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">pal_jogo =</span> <span class="fu">c</span>(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">BSG =</span> color_main[<span class="dv">1</span>],</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">MEG =</span> color_main[<span class="dv">2</span>]</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">fonte_base =</span> fonte_base,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">base_size =</span> <span class="dv">16</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_por_grupo =</span> <span class="dv">200000</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">preparar =</span> <span class="cn">TRUE</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói os painéis do segundo par estratégico.</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>comparacao_p2 <span class="ot">&lt;-</span> <span class="fu">make_ecdf_subpatch</span>(</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">df_probs =</span> probs_lista<span class="sc">$</span>p2,</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">prefixo =</span> <span class="st">"b"</span>,</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">pal_jogo =</span> <span class="fu">c</span>(</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">BSG =</span> color_main[<span class="dv">1</span>],</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">MEG =</span> color_main[<span class="dv">2</span>]</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">fonte_base =</span> fonte_base,</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">base_size =</span> <span class="dv">16</span>,</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_por_grupo =</span> <span class="dv">200000</span>,</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">preparar =</span> <span class="cn">TRUE</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-ch5-8" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
@@ -576,9 +806,53 @@ Fonte: Elaborado pelo autor (2026).
 </p>
 <p>A comparação dos painéis bem separa o comportamento dos modelos. O RL concentra as probabilidades nos limites, tanto no BSG quanto no MEG, e com isso reduz a distinção entre os dois ambientes estratégicos. EWA e BL preservam diferenças mais visíveis entre os papéis analisados. No BL, o BSG apresenta uma distribuição mais segmentada, enquanto o MEG permanece mais concentrado nas faixas centrais. Esse formato combina com a estrutura do jogo de entrada, em que a decisão de cada empresa depende da expectativa sobre a ação da concorrente e tende a manter maior espaço para respostas intermediárias.</p>
 <p>O teste de Kolmogorov-Smirnov aponta diferenças estatisticamente significativas entre as distribuições em todos os casos. Como as simulações geram um número elevado de observações e há empates nas probabilidades, a análise se concentrou na estatística D, tomada como medida da distância distributiva entre os jogos. Nos painéis do EWA, as curvas do BSG e do MEG aparecem relativamente próximas, em especial no segundo par estratégico. Os valores de D acompanham essa proximidade: D = 0,139 para o par Comprador–Empresa A e D = 0,0969 para o par Vendedor–Empresa B.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: teste KS entre os jogos BSG e MEG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compara as distribuições do BSG e do MEG para cada</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># modelo de aprendizagem e par estratégico.</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ks_results_all <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">imap_dfr</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  probs_lista,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">run_ks_by_model</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    .x,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">comparacao_label =</span> pares[[.y]]<span class="sc">$</span>comparacao</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>No RL, no entanto, a leitura do teste exige mais cautela. A Figura <a href="#fig-ch5-8" class="quarto-xref">Figura&nbsp;<span>5.8</span></a> mostra forte semelhança visual entre BSG e MEG, já que ambos concentram quase toda a distribuição nos extremos do intervalo. Mesmo assim, os valores de D são elevados, com D = 0,469 no primeiro par e D = 0,451 no segundo. A distância, nesse caso, parece estar menos ligada à tendência central ou ao desenho geral das curvas e mais à distribuição fina das massas acumuladas nos extremos. O teste com a distribuição complementar <span class="math inline">\((1-p)\)</span> produziu resultado semelhante, afastando a hipótese de que a diferença decorra apenas de uma inversão entre estratégias complementares. O teste de Kolmogorov-Smirnov aponta diferenças estatisticamente significativas entre as distribuições em todos os casos.</p>
 <p>A Figura <a href="#fig-ch5-9" class="quarto-xref">Figura&nbsp;<span>5.9</span></a> apresenta a evolução da distância KS (D) entre os modelos de aprendizagem, calculada separadamente por jogo, papel estratégico e valor de <span class="math inline">\(\lambda\)</span>. No painel (a), referente ao BSG, aparecem os resultados para o Comprador e para o Vendedor. Para o Comprador, a distância entre EWA e RL começa elevada, em torno de D = 0,493 quando <span class="math inline">\(\lambda = 0{,}1\)</span>, e cai de forma acentuada à medida que <span class="math inline">\(\lambda\)</span> aumenta, chegando a aproximadamente D = 0,279 em <span class="math inline">\(\lambda = 1\)</span>. A distribuição do EWA, nesse papel, aproxima-se da distribuição do RL quando cresce a sensibilidade às atrações. A comparação entre RL e BL permanece praticamente constante e elevada, próxima de D = 0,496. Já a distância entre EWA e BL ocupa uma faixa intermediária, entre D = 0,32 e D = 0,35. Para o Vendedor, ainda no BSG, as distâncias que envolvem o RL ficam quase no limite superior observado. EWA vs RL e RL vs BL permanecem em torno de D = 0,498 ao longo de todos os valores de <span class="math inline">\(\lambda\)</span>. A distância entre EWA e BL é menor, variando aproximadamente entre D = 0,214 e D = 0,283. Nesse papel estratégico, EWA e BL apresentam distribuições mais próximas entre si, enquanto o RL se mantém afastado dos dois modelos em praticamente toda a faixa de <span class="math inline">\(\lambda\)</span>.</p>
 <p>No painel (b), referente ao MEG, as distâncias apresentam comportamento semelhante para Empresa A e Empresa B. Nas duas empresas, as comparações EWA vs RL e RL vs BL permanecem elevadas, próximas de D = 0,48 a D = 0,49. O RL mantém, com isso, uma distribuição bastante afastada das distribuições geradas por EWA e BL. A variação mais visível aparece na comparação entre EWA e BL. Para a Empresa A, a distância parte de D = 0,270, cai levemente até cerca de D = 0,261 em <span class="math inline">\(\lambda = 0{,}3\)</span> e depois cresce até D = 0,355 em <span class="math inline">\(\lambda = 1\)</span>. Na Empresa B, a trajetória é parecida, saindo de D = 0,268 e chegando a D = 0,368 em <span class="math inline">\(\lambda = 1\)</span>. No MEG, o aumento de <span class="math inline">\(\lambda\)</span> amplia gradualmente a separação distributiva entre EWA e BL, enquanto o RL permanece distante dos demais modelos em quase todo o intervalo analisado.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: distância KS entre modelos por valor de lambda</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compara os pares EWA–RL, EWA–BL e RL–BL</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dentro de cada jogo e valor de lambda.</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ks_lambda_all <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">imap_dfr</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  probs_lista,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(probs_par, nome_par) {</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">run_ks_all_pairs_lambda</span>(probs_par, <span class="st">"BSG"</span>),</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">run_ks_all_pairs_lambda</span>(probs_par, <span class="st">"MEG"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">comparacao_par =</span> pares[[nome_par]]<span class="sc">$</span>comparacao,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">p_value_adj =</span> stats<span class="sc">::</span><span class="fu">p.adjust</span>(</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>          p_value,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">method =</span> <span class="st">"bonferroni"</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói o gráfico da evolução da distância KS.</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>p16 <span class="ot">&lt;-</span> <span class="fu">plot_ks_lambda</span>(</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">ks_lambda_all =</span> ks_lambda_all,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">fonte_base =</span> fonte_base</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-ch5-9" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
@@ -607,6 +881,31 @@ Fonte: Elaborado pelo autor (2026).
 <p>A Tabela <a href="#tbl-ch5-9" class="quarto-xref">Tabela&nbsp;<span>5.7</span></a> apresenta a distribuição percentual agregada das probabilidades associadas às estratégias dos jogadores em cada jogo e modelo de aprendizagem. Em cada linha, as probabilidades das estratégias foram somadas e normalizadas para totalizar 100%. Os valores devem ser interpretados como participação relativa de cada estratégia no conjunto agregado de probabilidades produzido por cada modelo, sem associação direta a uma rodada específica da simulação. A linha “Total” resume a distribuição média sem separar EWA, RL e BL e serve como ponto de comparação para observar os desvios de cada dinâmica de aprendizagem.</p>
 <p>No BSG, a distribuição total se concentra mais em “Rejeitar” (36,8%) e “Preço Alto” (30,6%). Nos modelos EWA e BL, “Rejeitar” alcança 42,1%, acima da média agregada, e “Preço Alto” também aparece com maior presença em relação ao RL. O RL apresenta uma composição mais distribuída, com percentuais próximos entre as quatro estratégias, reduzindo a concentração nas alternativas que predominam nos demais modelos. No MEG, a distribuição entre as empresas é mais simétrica. EWA e BL concentram as escolhas em “Entrar”, com valores próximos de 31% para ambas as empresas. O RL se aproxima novamente de uma divisão quase uniforme entre Entrar e Não Entrar, com cerca de 25% em cada alternativa.</p>
 <p>No MEG, a simetria entre as empresas decorre do dilema estratégico comum às duas. A entrada pode gerar ganho individual quando a concorrente permanece fora do mercado, todavia também pode produzir perda quando ambas entram ao mesmo tempo. A distribuição percentual mostra como cada modelo organiza essa tensão. EWA e BL concentram maior participação nas estratégias associadas ao equilíbrio teórico, enquanto o RL mantém uma composição agregada mais balanceada, apesar da polarização observada nas distribuições completas. A Figura <a href="apendice.html#fig-ap-19" class="quarto-xref">Figura&nbsp;<span>A.2</span></a>, apresentada no Apêndice, reproduz a distribuição em barras empilhadas e permite comparar jogos, modelos e estratégias em uma mesma visualização.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: distribuição percentual das estratégias</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói as tabelas de contingência entre os modelos</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># de aprendizagem e as estratégias escolhidas.</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>contigencia <span class="ot">&lt;-</span> <span class="fu">contingency_plots</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_m1 =</span> bsg_df,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data_m2 =</span> meg_df,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">matrix_m1 =</span> matriz_bsg,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">matrix_m2 =</span> matriz_meg,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">tag_label_m1 =</span> <span class="st">"(a) BSG"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tag_label_m2 =</span> <span class="st">"(b) MEG"</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># As distribuições percentuais agregadas são armazenadas</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co"># separadamente para o BSG e o MEG.</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>tabela_9a <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">prob =</span> contigencia<span class="sc">$</span>tables<span class="sc">$</span>tab_rel_total_m1</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>tabela_9b <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">prob =</span> contigencia<span class="sc">$</span>tables<span class="sc">$</span>tab_rel_total_m2</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-ch5-9" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -631,6 +930,34 @@ Fonte: Elaborado pelo autor (2026).
 <p>As frequências esperadas e os resíduos padronizados do teste <span class="math inline">\(\chi^2\)</span> foram utilizados como recursos descritivos para examinar a distribuição empírica das estratégias geradas pelos modelos de aprendizagem. As frequências esperadas correspondem aos valores que seriam observados caso a distribuição das estratégias não variasse conforme o modelo de aprendizagem. Os resíduos mostram quais estratégias aparecem acima ou abaixo desse padrão médio. Resíduos padronizados positivos significam que determinada estratégia aparece mais naquele modelo do que seria esperado sob independência entre modelo e estratégia. Resíduos negativos apontam o contrário. Como a base simulada possui elevado número de observações, os resíduos assumem magnitudes expressivas. Por isso, a interpretação recai principalmente sobre o sinal e sobre o padrão relativo dos desvios, não sobre sua magnitude absoluta. A fundamental compreensão desses desvios depende de um passo adicional, que implica verificar se as estratégias sobrerrepresentadas se aproximam das estratégias associadas aos equilíbrios teóricos do BSG e do MEG, conforme apresentado na Tabela <a href="#tbl-ch5-10" class="quarto-xref">Tabela&nbsp;<span>5.8</span></a>.</p>
 <p>No BSG, os resíduos padronizados separam o RL dos modelos EWA e BL. Em EWA e BL, os resíduos são positivos para “Preço Alto” e “Rejeitar” e negativos para “Aceitar” e “Preço Baixo”, o que mostra maior presença dessas duas primeiras estratégias em relação ao padrão esperado sob independência. O RL ocupa a direção oposta. Seus resíduos são positivos em “Aceitar” e “Preço Baixo” e negativos em “Preço Alto” e “Rejeitar”. Do ponto de vista teórico, EWA e BL concentram devida importância nas estratégias associadas ao padrão de equilíbrio considerado para o BSG, enquanto o RL desloca parte da distribuição para alternativas fora desse eixo.</p>
 <p>No MEG, os resíduos assumem uma configuração mais simétrica entre as empresas. EWA e BL apresentam resíduos positivos para “Entrar” tanto na Empresa A quanto na Empresa B, acompanhados de resíduos negativos para “Não Entrar”. No RL, a distribuição se reorganiza em torno da não entrada, com sub-representação de “Entrar” e sobrerrepresentação de “Não Entrar”. Como a parametrização do MEG atribui maior relevância teórica à entrada no equilíbrio misto, EWA e BL permanecem mais alinhados à direção estratégica prevista pelo jogo. O RL se distancia desse esboço agregado ao concentrar maior valor relativo na não entrada.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: frequências esperadas e resíduos do teste qui-quadrado</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplica o teste qui-quadrado à tabela de frequências</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># observadas do BSG.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>chi_bsg <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">chisq.test</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  contigencia<span class="sc">$</span>tables<span class="sc">$</span>tab_abs_m1</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplica o teste qui-quadrado à tabela de frequências</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># observadas do MEG.</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>chi_meg <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">chisq.test</span>(</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  contigencia<span class="sc">$</span>tables<span class="sc">$</span>tab_abs_m2</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Organiza as frequências esperadas e os resíduos</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># padronizados utilizados na Tabela 10.</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>tabela_10_bsg <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">esperado =</span> chi_bsg<span class="sc">$</span>expected,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuo_padronizado =</span> chi_bsg<span class="sc">$</span>stdres</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>tabela_10_meg <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">esperado =</span> chi_meg<span class="sc">$</span>expected,</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">residuo_padronizado =</span> chi_meg<span class="sc">$</span>stdres</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-ch5-10" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch5-10-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -653,6 +980,52 @@ Tabela&nbsp;5.8: Frequências esperadas e resíduos padronizados do teste <span 
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>A Figura <a href="#fig-ch5-10" class="quarto-xref">Figura&nbsp;<span>5.10</span></a> apresenta a distância média ao alvo teórico nos jogos BSG e MEG para os modelos EWA, RL e BL ao longo dos valores de <span class="math inline">\(\lambda\)</span>. O eixo horizontal representa a sensibilidade do aprendizado. O eixo vertical mostra a distância média entre a proporção simulada e a probabilidade teórica definida para as estratégias de referência. No BSG, consideram-se “Rejeitar” para o Comprador e “Preço Alto” para o Vendedor. No MEG, a referência é “Entrar” para as duas empresas, com alvo teórico de <span class="math inline">\(5/6\)</span>. A medida corresponde à diferença absoluta entre a proporção observada e o alvo teórico, <span class="math inline">\(|p_t - p^*|\)</span>, resumida por jogo, modelo e valor de <span class="math inline">\(\lambda\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: cálculo da distância ao alvo teórico</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula as medidas de convergência de cada simulação</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># em relação às probabilidades teóricas de referência.</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>sim_nomes <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"sim"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>convergencias <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map2</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  plots[sim_nomes],</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  lambda_values,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  sim_convergence</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Reúne as medidas-resumo das simulações.</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>conv_full <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_dfr</span>(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  convergencias,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"summary"</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula a distância média ao alvo por jogo,</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co"># modelo de aprendizagem e valor de lambda.</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>conv_plot <span class="ot">&lt;-</span> conv_full <span class="sc">|&gt;</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    jogo,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    type,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    lambda</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">erro_medio =</span> <span class="fu">mean</span>(</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>      mean_error,</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">factor</span>(</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>      type,</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"EWA"</span>, <span class="st">"RL"</span>, <span class="st">"BL"</span>)</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">jogo =</span> <span class="fu">factor</span>(</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>      jogo,</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"BSG"</span>, <span class="st">"MEG"</span>)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>No BSG, EWA e BL reduzem gradualmente a distância em relação ao alvo teórico conforme <span class="math inline">\(\lambda\)</span> aumenta. O RL, por sua vez, permanece mais afastado da referência. A trajetória das distâncias aponta que modelos com crenças, memória e avaliação ampliada da experiência captam melhor o aprendizado associado às estratégias esperadas do jogo. A aproximação ao alvo teórico, porém, não implica comportamento idêntico entre Comprador e Vendedor. O Comprador reage de forma mais direta à relação entre preço, valoração e aceitação da oferta. O Vendedor precisa antecipar a resposta do outro agente antes de definir o preço. Quando a aderência ao alvo teórico é tomada como critério, EWA e BL organizam melhor essas diferenças de papel em torno das estratégias de referência. O RL, restrito ao reforço dos resultados realizados, capta parte da adaptação, contudo se ajusta com menor precisão ao padrão teórico agregado.</p>
 <p>No MEG, a distância ao alvo teórico varia sem seguir uma direção única. O BL apresenta a maior aderência relativa entre os três modelos. O EWA se aproxima da referência nos valores iniciais de <span class="math inline">\(\lambda\)</span>, todavia volta a se afastar quando a sensibilidade às atrações aumenta. A inflexão observada relaciona-se com a estrutura do jogo. A decisão de entrar depende do ganho realizado em cada rodada, da expectativa sobre a ação concorrente e do risco de entrada simultânea. Como o alvo teórico corresponde a uma probabilidade mista, valores elevados de <span class="math inline">\(\lambda\)</span> podem tornar o aprendizado mais reativo às diferenças acumuladas nas trajetórias e menos próximo da randomização esperada. O BL preserva maior proximidade com a referência porque atualiza as escolhas a partir de crenças sobre o comportamento da outra empresa. O EWA também permanece relativamente próximo, pois combina reforço e avaliação de alternativas não escolhidas, embora responda com maior intensidade às atrações acumuladas quando <span class="math inline">\(\lambda\)</span> aumenta. O RL fica mais distante por se apoiar no <em>payoff</em> próprio observado, e consequentemente, com menor alcance para representar a antecipação estratégica exigida pela entrada em mercado.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">

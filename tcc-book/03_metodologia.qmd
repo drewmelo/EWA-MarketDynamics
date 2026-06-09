@@ -124,6 +124,35 @@ $$
 \frac{1}{w}\sum_{j=t-w+1}^{t} I\left(\left|p_j - p_{j-1}\right| < \varepsilon\right) \geq m
 $$ {#eq-janela-estabilidade}
 
+```{r}
+#| label: code-criterio-estabilidade
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-summary: "Mostrar código: identificação do regime estável"
+
+# Calcula as proporções de escolha das estratégias.
+prop_bsg <- get_props(bsg_df)
+prop_meg <- get_props(meg_df)
+
+# Aplica o critério de estabilidade para cada valor de lambda.
+estabilidades <- purrr::map(
+  rlang::set_names(
+    1:10,
+    paste0("lambda_", seq(0.1, 1, by = 0.1))
+  ),
+  function(i) {
+    get_stability(
+      bsg = prop_bsg[[paste0("sim", i)]],
+      meg = prop_meg[[paste0("sim", i)]],
+      limiar = 0.03,
+      janela = 10,
+      min_estavel = 0.8
+    )
+  }
+)
+```
+
 Na expressão, $w$ corresponde ao tamanho da janela móvel, $m$ define a proporção mínima de períodos estáveis exigida nessa janela, $I(\cdot)$ indica a função indicadora e $\varepsilon$ estabelece o limiar de baixa variação. O índice $j$ percorre os períodos incluídos na janela móvel, de $t-w+1$ até $t$. A proporção dominante no período $j$ é dada por $p_j = \max_s p_s(j)$, enquanto $p_{j-1}$ corresponde à mesma medida no período imediatamente anterior.
 
 Neste trabalho, $w = 10$ e $m = 0{,}8$ foram adotados como critérios operacionais para identificar estabilidade local nas trajetórias simuladas. Como cada simulação possui 500 períodos, a janela de 10 períodos permite acompanhar oscilações em intervalos curtos. O parâmetro $m = 0{,}8$ exige que pelo menos 80% da janela satisfaça a condição de estabilidade. Em termos práticos, ao menos 8 dos 10 períodos devem apresentar variação inferior a $\varepsilon$. Com esse critério, a janela móvel atua como regra de entrada no regime estável e reduz o risco de tratar uma queda isolada da variação como sinal de estabilidade persistente, tendo em conta que a classificação exige repetição da baixa variação em uma sequência curta de períodos. Após essa identificação, as estatísticas-resumo descrevem o comportamento observado no trecho classificado como estável.
@@ -133,6 +162,41 @@ A condição de janela exige persistência mínima, mas a interpretação da est
 A escolha desse procedimento decorre de sua simplicidade operacional e da interpretação relativamente direta dos resultados. A estabilidade é identificada quando a trajetória apresenta baixa variação de modo recorrente e, em seguida, é descrita por medidas simples, como a taxa de estabilidade e a variação média. A etapa também aproxima o critério adotado da literatura sobre análise de saídas de simulação, campo em que séries temporais simuladas são examinadas para distinguir a fase transitória da entrada em um regime estacionário. A estimação do estado estacionário pode recorrer a diferentes estratégias, entre elas médias correntes, médias por blocos, janelas móveis e testes voltados à detecção do fim da fase de aquecimento. A escolha do método, no entanto, depende da trajetória analisada. Como observa-se, não há um estimador universalmente superior para todos os tipos de série simulada @leye2014composing.
 
 No presente trabalho, essa discussão é deslocada para a estabilidade das proporções estratégicas. Como $p_t$ é uma proporção definida no intervalo $[0,1]$, adotou-se $\varepsilon = 0{,}03$, o que corresponde a três pontos percentuais de variação entre períodos consecutivos. Para avaliar a dependência dos resultados em relação a esse limiar, realizou-se uma análise de sensibilidade com $\varepsilon$ variando de 0,01 a 0,05, em incrementos de 0,01, apresentada no Apêndice. Os demais parâmetros do critério foram mantidos constantes, incluindo o tamanho da janela móvel e a proporção mínima de períodos estáveis exigida dentro da janela. A análise de sensibilidade mostra uma resposta coerente ao aumento de $\varepsilon$. Com limiares menores, como $\varepsilon = 0{,}01$, a regra se torna mais restritiva, reconhece estabilidade em menos combinações e, em vários casos, apenas em períodos mais tardios. Com valores maiores, como $\varepsilon = 0{,}04$ e $\varepsilon = 0{,}05$, o critério passa a ser mais permissivo, e desse modo, a estabilidade aparece antes e as taxas se aproximam de 1. Nesse intervalo, $\varepsilon = 0{,}03$ ocupa uma posição intermediária. O limiar permite identificar estabilidade em todas as combinações analisadas, sem apagar as diferenças entre modelos, jogos e jogadores. Por esse motivo, foi mantido como valor de referência.
+
+```{r}
+#| label: code-sensibilidade-epsilon
+#| echo: true
+#| eval: false
+#| code-fold: true
+#| code-summary: "Mostrar código: análise de sensibilidade do limiar de estabilidade"
+
+# Define os limiares avaliados na análise de sensibilidade.
+epslons <- seq(0.01, 0.05, by = 0.01)
+
+# Aplica o critério de estabilidade para cada combinação
+# de epsilon e lambda.
+estabilidades_eps <- purrr::map(
+  rlang::set_names(
+    epslons,
+    paste0("eps_", epslons)
+  ),
+  ~ purrr::map(
+    rlang::set_names(
+      1:10,
+      paste0("lambda_", seq(0.1, 1, by = 0.1))
+    ),
+    function(i) {
+      get_stability(
+        bsg = prop_bsg[[paste0("sim", i)]],
+        meg = prop_meg[[paste0("sim", i)]],
+        limiar = .x,
+        janela = 10,
+        min_estavel = 0.8
+      )
+    }
+  )
+)
+```
 
 ## Comparação distributiva pelo teste KS
 

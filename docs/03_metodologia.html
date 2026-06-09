@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -356,11 +391,67 @@ E_i^j(t) = \frac{\rho \times N(t - 1) \times E_i^j(t - 1) + \pi_i(s_i^j, s_{-i}(
 <p><span id="eq-janela-estabilidade"><span class="math display">\[
 \frac{1}{w}\sum_{j=t-w+1}^{t} I\left(\left|p_j - p_{j-1}\right| &lt; \varepsilon\right) \geq m
 \tag{3.10}\]</span></span></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: identificação do regime estável</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula as proporções de escolha das estratégias.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>prop_bsg <span class="ot">&lt;-</span> <span class="fu">get_props</span>(bsg_df)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>prop_meg <span class="ot">&lt;-</span> <span class="fu">get_props</span>(meg_df)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplica o critério de estabilidade para cada valor de lambda.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>estabilidades <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  rlang<span class="sc">::</span><span class="fu">set_names</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"lambda_"</span>, <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(i) {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_stability</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">bsg =</span> prop_bsg[[<span class="fu">paste0</span>(<span class="st">"sim"</span>, i)]],</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">meg =</span> prop_meg[[<span class="fu">paste0</span>(<span class="st">"sim"</span>, i)]],</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">limiar =</span> <span class="fl">0.03</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">janela =</span> <span class="dv">10</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">min_estavel =</span> <span class="fl">0.8</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>Na expressão, <span class="math inline">\(w\)</span> corresponde ao tamanho da janela móvel, <span class="math inline">\(m\)</span> define a proporção mínima de períodos estáveis exigida nessa janela, <span class="math inline">\(I(\cdot)\)</span> indica a função indicadora e <span class="math inline">\(\varepsilon\)</span> estabelece o limiar de baixa variação. O índice <span class="math inline">\(j\)</span> percorre os períodos incluídos na janela móvel, de <span class="math inline">\(t-w+1\)</span> até <span class="math inline">\(t\)</span>. A proporção dominante no período <span class="math inline">\(j\)</span> é dada por <span class="math inline">\(p_j = \max_s p_s(j)\)</span>, enquanto <span class="math inline">\(p_{j-1}\)</span> corresponde à mesma medida no período imediatamente anterior.</p>
 <p>Neste trabalho, <span class="math inline">\(w = 10\)</span> e <span class="math inline">\(m = 0{,}8\)</span> foram adotados como critérios operacionais para identificar estabilidade local nas trajetórias simuladas. Como cada simulação possui 500 períodos, a janela de 10 períodos permite acompanhar oscilações em intervalos curtos. O parâmetro <span class="math inline">\(m = 0{,}8\)</span> exige que pelo menos 80% da janela satisfaça a condição de estabilidade. Em termos práticos, ao menos 8 dos 10 períodos devem apresentar variação inferior a <span class="math inline">\(\varepsilon\)</span>. Com esse critério, a janela móvel atua como regra de entrada no regime estável e reduz o risco de tratar uma queda isolada da variação como sinal de estabilidade persistente, tendo em conta que a classificação exige repetição da baixa variação em uma sequência curta de períodos. Após essa identificação, as estatísticas-resumo descrevem o comportamento observado no trecho classificado como estável.</p>
 <p>A condição de janela exige persistência mínima, mas a interpretação da estabilidade depende das medidas calculadas ao longo do trecho estável. A taxa de estabilidade informa com que frequência o critério é atendido, a variação média da proporção dominante mede quanto essa proporção ainda oscila, e a proporção média da estratégia dominante mostra em torno de qual escolha a trajetória se organiza. O procedimento separa duas etapas da análise, primeiro ao identificar o momento em que a estabilidade aparece, depois ao examinar se a estabilidade encontrada é apenas formal ou se corresponde a um trecho mais persistente e bem definido na simulação.</p>
 <p>A escolha desse procedimento decorre de sua simplicidade operacional e da interpretação relativamente direta dos resultados. A estabilidade é identificada quando a trajetória apresenta baixa variação de modo recorrente e, em seguida, é descrita por medidas simples, como a taxa de estabilidade e a variação média. A etapa também aproxima o critério adotado da literatura sobre análise de saídas de simulação, campo em que séries temporais simuladas são examinadas para distinguir a fase transitória da entrada em um regime estacionário. A estimação do estado estacionário pode recorrer a diferentes estratégias, entre elas médias correntes, médias por blocos, janelas móveis e testes voltados à detecção do fim da fase de aquecimento. A escolha do método, no entanto, depende da trajetória analisada. Como observa-se, não há um estimador universalmente superior para todos os tipos de série simulada <span class="citation" data-cites="leye2014composing">Leye e Ewald e Uhrmacher (2014)</span>.</p>
 <p>No presente trabalho, essa discussão é deslocada para a estabilidade das proporções estratégicas. Como <span class="math inline">\(p_t\)</span> é uma proporção definida no intervalo <span class="math inline">\([0,1]\)</span>, adotou-se <span class="math inline">\(\varepsilon = 0{,}03\)</span>, o que corresponde a três pontos percentuais de variação entre períodos consecutivos. Para avaliar a dependência dos resultados em relação a esse limiar, realizou-se uma análise de sensibilidade com <span class="math inline">\(\varepsilon\)</span> variando de 0,01 a 0,05, em incrementos de 0,01, apresentada no Apêndice. Os demais parâmetros do critério foram mantidos constantes, incluindo o tamanho da janela móvel e a proporção mínima de períodos estáveis exigida dentro da janela. A análise de sensibilidade mostra uma resposta coerente ao aumento de <span class="math inline">\(\varepsilon\)</span>. Com limiares menores, como <span class="math inline">\(\varepsilon = 0{,}01\)</span>, a regra se torna mais restritiva, reconhece estabilidade em menos combinações e, em vários casos, apenas em períodos mais tardios. Com valores maiores, como <span class="math inline">\(\varepsilon = 0{,}04\)</span> e <span class="math inline">\(\varepsilon = 0{,}05\)</span>, o critério passa a ser mais permissivo, e desse modo, a estabilidade aparece antes e as taxas se aproximam de 1. Nesse intervalo, <span class="math inline">\(\varepsilon = 0{,}03\)</span> ocupa uma posição intermediária. O limiar permite identificar estabilidade em todas as combinações analisadas, sem apagar as diferenças entre modelos, jogos e jogadores. Por esse motivo, foi mantido como valor de referência.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: análise de sensibilidade do limiar de estabilidade</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define os limiares avaliados na análise de sensibilidade.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>epslons <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="at">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplica o critério de estabilidade para cada combinação</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># de epsilon e lambda.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>estabilidades_eps <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  rlang<span class="sc">::</span><span class="fu">set_names</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    epslons,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"eps_"</span>, epslons)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    rlang<span class="sc">::</span><span class="fu">set_names</span>(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(<span class="st">"lambda_"</span>, <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(i) {</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">get_stability</span>(</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">bsg =</span> prop_bsg[[<span class="fu">paste0</span>(<span class="st">"sim"</span>, i)]],</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">meg =</span> prop_meg[[<span class="fu">paste0</span>(<span class="st">"sim"</span>, i)]],</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">limiar =</span> .x,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">janela =</span> <span class="dv">10</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">min_estavel =</span> <span class="fl">0.8</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 </section>
 <section id="comparação-distributiva-pelo-teste-ks" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="comparação-distributiva-pelo-teste-ks"><span class="header-section-number">3.5</span> Comparação distributiva pelo teste KS</h2>

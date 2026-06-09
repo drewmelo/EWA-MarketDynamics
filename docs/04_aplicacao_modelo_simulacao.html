@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -274,6 +309,23 @@ window.Quarto = {
 <section id="sec-configuracao-jogos" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="sec-configuracao-jogos"><span class="header-section-number">4.1</span> Configuração dos jogos matriciais</h2>
 <p>O BSG representa a dinâmica de negociação entre compradores e vendedores, e em como os agentes ajustam suas estratégias conforme as interações no mercado. Nesse jogo, o vendedor define o preço de venda e o comprador decide se aceita ou rejeita a oferta. O vendedor pode escolher entre um preço alto, <span class="math inline">\(p_1 = 45\)</span>, ou um preço baixo, <span class="math inline">\(p_2 = 35\)</span>, e o comprador pode adotar a estratégia <span class="math inline">\(s_2\)</span>, que corresponde à decisão de aceitar ou recusar a proposta. Considerando um custo fixo de produção de <span class="math inline">\(C = 25\)</span>, o <em>payoff</em> do vendedor, representado por <span class="math inline">\(\pi_1\)</span>, é apresentado na Equação <a href="#eq-payoff-vendedor-bsg" class="quarto-xref">Equação&nbsp;<span>4.1</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: payoff do vendedor</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>func_payoff1 <span class="ot">&lt;-</span> <span class="cf">function</span>(preco_vendedor, estrategia_comprador) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  payoff <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (estrategia_comprador <span class="sc">==</span> <span class="st">"Aceitar"</span>) {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (preco_vendedor <span class="sc">==</span> <span class="dv">45</span> <span class="sc">||</span> preco_vendedor <span class="sc">==</span> <span class="st">"Preço Alto"</span>)      </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      p <span class="ot">&lt;-</span> <span class="dv">45</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (preco_vendedor <span class="sc">==</span> <span class="dv">35</span> <span class="sc">||</span> preco_vendedor <span class="sc">==</span> <span class="st">"Preço Baixo"</span>) </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      p <span class="ot">&lt;-</span> <span class="dv">35</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> p <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    payoff <span class="ot">&lt;-</span> p <span class="sc">-</span> c</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  payoff</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p><span id="eq-payoff-vendedor-bsg"><span class="math display">\[
 \pi_1(p_i, s_2) =
     \begin{cases}
@@ -288,6 +340,26 @@ window.Quarto = {
 </ul>
 <p>A função de <em>payoff</em> do comprador, representada por <span class="math inline">\(\pi_2\)</span> na Equação <a href="#eq-payoff-comprador-bsg" class="quarto-xref">Equação&nbsp;<span>4.2</span></a>, depende de <span class="math inline">\(V\)</span>, isto é, da valoração atribuída ao bem. No modelo, esse valor é sorteado a partir de uma distribuição uniforme contínua no intervalo <span class="math inline">\([C + \epsilon, 45]\)</span>, de modo que <span class="math inline">\(V \sim U(C + \epsilon, 45)\)</span>, com o termo de ruído exógeno <span class="math inline">\(\epsilon\)</span> variando entre 1 e 10. A formulação do BSG segue uma lógica próxima à de <span class="citation" data-cites="kasbekar2010pricing">Kasbekar e Sarkar (2010)</span>, que analisam a formação de preços sob incerteza simétrica estocástica. Nos dois casos, a incerteza é exógena e compartilhada entre os agentes, uma vez que decorre de um valor de mercado distribuído em um intervalo conhecido.</p>
 <p>No presente modelo, <span class="math inline">\(V\)</span> é realizado e observado a cada rodada. O termo <span class="math inline">\(\epsilon\)</span> introduz flutuações na valoração do bem, associadas a variações de demanda, preços, inflação, choques de renda ou outros eventos externos ao ambiente de decisão dos jogadores. Como essas variações são observáveis para ambos os agentes, o ruído altera o valor do bem sem produzir assimetria de informação. A incerteza opera, nesse cenário, como perturbação externa comum ao comprador e ao vendedor. Tal simplificação aproxima o BSG de um ambiente com incerteza observável e preserva a coerência com <span class="citation" data-cites="kasbekar2010pricing">Kasbekar e Sarkar (2010)</span>, ao mesmo tempo que torna a estrutura operacional para a simulação adaptativa em uma matriz <span class="math inline">\(2 \times 2\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: payoff do comprador</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>func_payoff2 <span class="ot">&lt;-</span> <span class="cf">function</span>(preco_vendedor, estrategia_comprador) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  v_min <span class="ot">&lt;-</span> c <span class="sc">+</span> base<span class="sc">::</span><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  v_max <span class="ot">&lt;-</span> <span class="dv">45</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">runif</span>(<span class="dv">1</span>, <span class="at">min =</span> v_min, <span class="at">max =</span> v_max)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  payoff <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (estrategia_comprador <span class="sc">==</span> <span class="st">"Aceitar"</span>) {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (preco_vendedor <span class="sc">==</span> <span class="dv">45</span> <span class="sc">||</span> preco_vendedor <span class="sc">==</span> <span class="st">"Preço Alto"</span>)     </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>       p <span class="ot">&lt;-</span> <span class="dv">45</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> (preco_vendedor <span class="sc">==</span> <span class="dv">35</span> <span class="sc">||</span> preco_vendedor <span class="sc">==</span> <span class="st">"Preço Baixo"</span>) </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>       p <span class="ot">&lt;-</span> <span class="dv">35</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> p <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    payoff <span class="ot">&lt;-</span> base<span class="sc">::</span><span class="fu">round</span>(v <span class="sc">-</span> p, <span class="dv">2</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  payoff</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p><span id="eq-payoff-comprador-bsg"><span class="math display">\[
 \pi_2(p_i, s_2) =
     \begin{cases}
@@ -296,8 +368,59 @@ window.Quarto = {
     \end{cases}
 \tag{4.2}\]</span></span></p>
 <p>A aplicação do método de Monte Carlo permite estimar os <em>payoffs</em> esperados sob a estrutura estocástica adotada no BSG. Como <span class="math inline">\(V\)</span> varia por choques exógenos, a amostragem numérica torna possível incorporar essa variação diretamente no cálculo dos ganhos do comprador e do vendedor. A matriz de <em>payoffs</em> foi obtida a partir de 100.000 repetições, com sorteios aleatórios de <span class="math inline">\(V\)</span> no intervalo <span class="math inline">\([C + \epsilon, 45]\)</span>. Em cada repetição, os ganhos associados às combinações estratégicas foram calculados e, ao final, agregados por médias esperadas. O processo segue o respaldo teórico de <span class="citation" data-cites="schjaer2004modeling">Schjaer-Jacobsen (2004)</span>, ao demonstrar que as simulações Monte Carlo produzem resultados praticamente idênticos aos cálculos estocásticos teóricos quanto ao valor esperado e à variância. No presente modelo, a amostragem numérica cumpre justamente essa função ao transformar a incerteza econômica representada por <span class="math inline">\(V\)</span> em uma matriz operacional de <em>payoffs</em>, preservando a variação dos ganhos esperados gerada pelos choques de mercado.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: simulação de Monte Carlo</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>base<span class="sc">::</span><span class="fu">set.seed</span>(<span class="dv">06-08-2024</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulação de Monte Carlo para as quatro combinações estratégicas</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Preço Alto"</span>, <span class="st">"Preço Baixo"</span>)   <span class="co"># vendedor</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Aceitar"</span>, <span class="st">"Rejeitar"</span>)         <span class="co"># comprador</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">preco_vendedor =</span> s1,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">estrategia_comprador =</span> s2,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Cálculo do payoff médio em cada combinação</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>mc_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(f, preco, estr, N) {</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">replicate</span>(N, <span class="fu">f</span>(preco, estr)))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>mean1 <span class="ot">&lt;-</span> <span class="fu">mapply</span>(</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(p, e) <span class="fu">mc_mean</span>(func_payoff1, p, e, N),</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">$</span>preco_vendedor,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">$</span>estrategia_comprador</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>mean2 <span class="ot">&lt;-</span> <span class="fu">mapply</span>(</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(p, e) <span class="fu">mc_mean</span>(func_payoff2, p, e, N),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">$</span>preco_vendedor,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  grid<span class="sc">$</span>estrategia_comprador</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>A Tabela <a href="#tbl-matriz-bsg" class="quarto-xref">Tabela&nbsp;<span>4.1</span></a> apresenta o processo de decisão dos jogadores sob esse cenário de negociação com incerteza simétrica estocástica. Quando o comprador aceita o preço, o <em>payoff</em> do vendedor é calculado como a diferença entre o preço e o custo de produção, <span class="math inline">\(p_i - C\)</span>, enquanto o <em>payoff</em> do comprador é a diferença entre a valoração <span class="math inline">\(V\)</span> e o preço pago, <span class="math inline">\(V - p_i\)</span>. Se o comprador rejeita a oferta, ambos os <em>payoffs</em> são nulos, pois a transação não ocorre.</p>
 <p>É notável que, embora o jogo envolva aleatoriedade, sobretudo na percepção do comprador sobre o custo de produção, o equilíbrio em estratégias puras geralmente se alcança quando o vendedor opta pelo Preço Alto e o comprador decide Rejeitar. Para validar essa análise, realizou-se um <em>loop</em> de 100 iterações desse jogo, onde aproximadamente 75% dos resultados confirmaram o equilíbrio de Preço Alto e Rejeitar, e 25% revelaram um segundo equilíbrio possível, caracterizado por Preço Baixo e Rejeitar. Os detalhes dessas iterações, incluindo a contagem acumulada das ocorrências, são apresentados na Figura <span class="quarto-unresolved-ref">?fig-ch5-18</span> no Apêndice.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: matriz do BSG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Buyer-Seller Game (BSG)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz 2x2 com payoffs médios obtidos via simulação</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>matriz_bsg <span class="ot">&lt;-</span> rgamer<span class="sc">::</span><span class="fu">normal_form</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">players =</span> <span class="fu">c</span>(<span class="st">"Vendedor"</span>, <span class="st">"Comprador"</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pars    =</span> <span class="fu">c</span>(<span class="st">"preco_vendedor"</span>, <span class="st">"estrategia_comprador"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">s1      =</span> s1,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">s2      =</span> s2,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">payoffs1 =</span> pay1_avg,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">payoffs2 =</span> pay2_avg,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">discretize =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-matriz-bsg" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-matriz-bsg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -321,10 +444,17 @@ Fonte: Elaborado pelo autor (2026).
 </p>
 <p>No equilíbrio de Nash em estratégias puras, o vendedor pratica Preço Alto e o comprador rejeita a oferta, o que gera <em>payoffs</em> nulos para ambos. O <em>Buyer-Seller Game</em> também pode ser formulado em estratégias mistas, caso em que as escolhas passam a ser probabilísticas e dependem das condições de indiferença entre as ações disponíveis. Na parametrização adotada, porém, o equilíbrio misto degenera. O comprador rejeita com probabilidade 1, enquanto o vendedor permanece indiferente entre praticar Preço Alto ou Preço Baixo. A probabilidade de aproximadamente 27,7% corresponde apenas ao ponto teórico de indiferença do comprador, sem alterar a solução efetiva do jogo.</p>
 <p>A Figura <a href="#fig-ch4-1" class="quarto-xref">Figura&nbsp;<span>4.1</span></a> apresenta as probabilidades associadas às estratégias mistas dos jogadores no BSG. No eixo X, é representada a probabilidade de o vendedor praticar Preço Alto, enquanto o eixo Y mostra a probabilidade de o comprador aceitar a oferta. O ponto próximo de 27,7% indica a condição teórica de indiferença do comprador em relação à aceitação da proposta. Contudo, na parametrização adotada, essa condição não gera uma randomização efetiva entre aceitar e rejeitar, pois a solução do jogo conduz à rejeição com probabilidade 1. A estrutura dos <em>payoffs</em> auxilia no entendimento desse resultado, dado que o Preço Alto reduz a atratividade da compra e torna a rejeição a resposta mais consistente para o comprador. Com isso, o jogo se estabiliza em um equilíbrio puro marcado por coordenação imperfeita, no qual a tentativa do vendedor de ampliar o retorno por meio do preço elevado acaba associada à recusa da transação.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: equilíbrio de Nash do BSG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Resolve o BSG</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>s_matriz_bsg <span class="ot">&lt;-</span> rgamer<span class="sc">::</span><span class="fu">solve_nfg</span>(matriz_bsg, <span class="at">mark_br =</span> T)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <p>Nesse caso, o Vendedor adota uma estratégia pura, ao passo que o Comprador utiliza uma estratégia mista, o que caracteriza um equilíbrio misto assimétrico no jogo. Segundo <span class="citation" data-cites="john2005learning">Duffy e Hopkins (2005)</span>, equilíbrios mistos assimétricos ocorrem quando alguns jogadores seguem estratégias puras e outros distribuem suas escolhas entre diferentes alternativas, ou quando todos misturam suas estratégias, mas com probabilidades distintas. Em equilíbrios mistos simétricos, por outro lado, todos os jogadores distribuem suas escolhas entre as mesmas estratégias e com as mesmas probabilidades, de modo que o padrão estratégico entre eles se torna equivalente.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<div id="fig-ch4-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.1: Equilíbrio das probabilidades associadas às estratégias mistas dos jogadores no jogo BSG
@@ -342,6 +472,20 @@ Fonte: Elaborado pelo autor (2026).
 <p>O <em>Market Entry Game</em> é amplamente utilizado na Teoria dos Jogos para analisar o comportamento estratégico em mercados oligopolistas. Assim como o BSG, trata-se de um jogo de informação perfeita, no qual as empresas conhecem todas as estratégias e <em>payoffs</em> disponíveis. A diferença central está na natureza competitiva, enquanto o BSG representa decisões bilaterais de troca sujeitas a choques exógenos e flutuações aleatórias de mercado, o MEG captura a interação estratégica entre firmas que decidem entrar ou não em um mercado, de forma a equilibrar as oportunidades de lucro com os riscos decorrentes da competição direta, como mostrado na Tabela <a href="#tbl-matriz-meg" class="quarto-xref">Tabela&nbsp;<span>4.2</span></a>.</p>
 <p>Na análise da matriz, se ambas as empresas optam por não entrar no mercado, seus <em>payoffs</em> são zero (0, 0). Se apenas uma empresa entrar no mercado, ela captura todo o mercado, resultando em ganhos de (5, 0) para a Empresa A ou (0, 5) para a Empresa B. No entanto, se ambas as empresas entrarem no mercado, a competição intensa leva a perdas para ambas, com <em>payoffs</em> de (-1, -1).</p>
 <p>Os equilíbrios de Nash em estratégias puras para este jogo ocorrem em dois cenários opostos. No primeiro, a Empresa A decide entrar no mercado, enquanto a Empresa B opta por não entrar. No segundo, é a Empresa B que entra no mercado, enquanto a Empresa A decide não participar. Se uma empresa que inicialmente decidiu não entrar no mercado resolvesse mudar de ideia e competir, enfrentaria concorrência direta, o que resultaria em um <em>payoff</em> negativo. Destarte, tanto a configuração (Entrar, Não Entrar) quanto (Não Entrar, Entrar) representam equilíbrios de Nash, uma vez que, nessas situações, as empresas maximizam seus resultados e não têm incentivo para alterar suas estratégias, dado o comportamento da outra.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: matriz do MEG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Market Entry Game (MEG)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Jogo de entrada estratégica entre duas empresas</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>matriz_meg <span class="ot">&lt;-</span> rgamer<span class="sc">::</span><span class="fu">normal_form</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">players =</span> <span class="fu">c</span>(<span class="st">"Empresa A"</span>, <span class="st">"Empresa B"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">s1 =</span> <span class="fu">c</span>(<span class="st">"Não Entrar"</span>, <span class="st">"Entrar"</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">s2 =</span> <span class="fu">c</span>(<span class="st">"Não Entrar"</span>, <span class="st">"Entrar"</span>),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">payoffs1 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">payoffs2 =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">5</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div id="tbl-matriz-meg" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-matriz-meg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -364,9 +508,16 @@ Tabela&nbsp;4.2: Matriz de ganhos do jogo MEG
 Fonte: Elaborado pelo autor (2026).
 </p>
 <p>A Figura <a href="#fig-ch4-2" class="quarto-xref">Figura&nbsp;<span>4.2</span></a> mostra as probabilidades de as empresas não entrarem no mercado. No eixo X, é mostrada a probabilidade de a Empresa A não entrar, enquanto o eixo Y exibe a probabilidade de a Empresa B não entrar. O ponto onde as linhas de melhores respostas se cruzam indica o equilíbrio de Nash em estratégias mistas, ou seja, quando a probabilidade de ambas as empresas não entrarem no mercado é de aproximadamente 16,67% (<span class="math inline">\(p =\)</span> 0,1667). Em contrapartida, tanto a Empresa A quanto a Empresa B escolhem entrar no mercado com uma probabilidade de 83,33% (<span class="math inline">\(1 - p =  0,8333\)</span>). Esse equilíbrio, ao contrário do primeiro jogo, configura-se como simétrico, pois ambas as empresas estão randomizando suas estratégias com probabilidades iguais, ajustando-se às incertezas relacionadas às decisões da concorrente.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: equilíbrio de Nash do MEG</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Resolve o MEG</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>s_matriz_meg <span class="ot">&lt;-</span> rgamer<span class="sc">::</span><span class="fu">solve_nfg</span>(matriz_meg, <span class="at">mark_br =</span> T)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<div id="fig-ch4-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.2: Equilíbrio das probabilidades associadas às estratégias mistas dos jogadores no jogo MEG
@@ -384,7 +535,7 @@ Fonte: Elaborado pelo autor (2026).
 <p>A Figura <a href="#fig-ch4-3" class="quarto-xref">Figura&nbsp;<span>4.3</span></a> ilustra o processo de criação das matrizes, subdivididas nas Figuras (a) e (b), que representam os modelos BSG e MEG, respectivamente. Nos parâmetros da função <em>normal form</em> do pacote <em>Rgamer</em>, especificam-se os jogadores em <em>players</em>, as estratégias dos jogadores 1 e 2 em <em>s1</em> e <em>s2</em>, e os respectivos ganhos em <em>payoffs1</em> e <em>payoffs2</em>.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<div id="fig-ch4-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.3: Rotina de programação das matrizes BSG e MEG
@@ -406,7 +557,7 @@ Fonte: Elaborado pelo autor (2026).
 <p>A implementação dos algoritmos de aprendizado EWA, RL e BL foi realizada utilizando a função <em>sim learning</em>, com os parâmetros configurados conforme ilustrado na Figura <a href="#fig-ch4-4" class="quarto-xref">Figura&nbsp;<span>4.4</span></a>. Os intervalos utilizados para <span class="math inline">\(\phi\)</span> e <span class="math inline">\(\delta\)</span> foram baseados no estudo de <span class="citation" data-cites="JOSEPHSON20081569">Josephson (2008)</span>, que empregou o modelo EWA em jogos de matriz <span class="math inline">\(2 \times 2\)</span> e adotou o método de máxima verossimilhança para estimar os parâmetros, ajustando os valores de <span class="math inline">\(\phi\)</span> e <span class="math inline">\(\delta\)</span> para minimizar a discrepância entre as previsões do modelo e os comportamentos observados. Os intervalos estimados foram de 0,5 a 0,75 para <span class="math inline">\(\phi\)</span>, e de 0,5 a 1 para <span class="math inline">\(\delta\)</span>. A abordagem permitiu identificar esses intervalos como os que melhor representavam o aprendizado em jogos <span class="math inline">\(2 \times 2\)</span>.</p>
 <div class="cell fig-cap-location-top" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ch4-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="top" data-fig-align="center">
+<div id="fig-ch4-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="top">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-ch4-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.4: Configuração dos algoritmos de aprendizagem
@@ -428,6 +579,33 @@ Fonte: Elaborado pelo autor (2026).
 <p>O procedimento parte da criação de um vetor com valores de <span class="math inline">\(\lambda\)</span> entre 0,1 e 1, em incrementos de 0,1. Para cada valor, o <em>script</em> executa uma simulação sobre a matriz do jogo, mantendo constantes os demais parâmetros definidos anteriormente. A função <em>sim learning</em> calcula os resultados de acordo com o número de amostras, os períodos simulados e o modelo de aprendizagem selecionado. Os resultados de cada execução são armazenados em uma lista, o qual permite recuperar, comparar e organizar posteriormente as trajetórias geradas para cada nível de sensibilidade às atrações.</p>
 <p>A Lei dos Grandes Números estabelece que, com o aumento das repetições de um experimento, a média observada tende a se aproximar do valor esperado. Em simulações computacionais, esse princípio ajuda a reduzir a influência de oscilações pontuais e torna os resultados menos dependentes de realizações específicas do processo aleatório.</p>
 <p>Com base nessa lógica, foram definidos 500 <em>samples</em> e 500 <em>periods</em> para cada simulação. A escolha busca produzir trajetórias suficientemente estáveis para representar o comportamento teórico dos modelos, sem elevar desnecessariamente o custo computacional. Valores muito baixos poderiam deixar os resultados excessivamente sensíveis à aleatoriedade das rodadas. Valores muito altos, por outro lado, aumentariam o volume de dados gerados e o tempo de processamento, sem ganho proporcional para os objetivos da análise. A parametrização adotada procura, por conseguinte, equilibrar representatividade estatística e viabilidade operacional.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Mostrar código: simulações dos modelos</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixa a semente para garantir reprodutibilidade.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>base<span class="sc">::</span><span class="fu">set.seed</span>(<span class="dv">07-02-2025</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulação da matriz 1 - BSG</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>results_bsg <span class="ot">&lt;-</span> <span class="fu">sim_lambda</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">matriz =</span> matriz_bsg,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">game_label =</span> <span class="st">"BSG"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">learning_types =</span> learning_types,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda_values =</span> lambda_values,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_samples =</span> <span class="dv">500</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_periods =</span> <span class="dv">500</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulação da matriz 2 - MEG</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>results_meg <span class="ot">&lt;-</span> <span class="fu">sim_lambda</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">matriz =</span> matriz_meg,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">game_label =</span> <span class="st">"MEG"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">learning_types =</span> learning_types,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda_values =</span> lambda_values,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_samples =</span> <span class="dv">500</span>,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_periods =</span> <span class="dv">500</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 
 
 </section>
